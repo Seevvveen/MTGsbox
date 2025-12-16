@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
 
 /// <summary>
-/// Scene system that manages card indexes for fast card lookups.
-/// Depends on BulkCacheSystem for card data files.
-/// Uses GlobalCardIndexBuilder for process-wide index caching.
+/// Turn Bulk Json into lookup tables for runtime usage
 /// </summary>
 public sealed class LocalCardIndexSystem : GameObjectSystem, ISceneStartup
 {

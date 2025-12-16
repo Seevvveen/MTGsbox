@@ -2,6 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+
+/// <summary>
+/// Fetch from api and write the files
+/// </summary>
 public sealed class BulkCacheSystem : GameObjectSystem, ISceneStartup
 {
 	private const string BulkIndexApiEndpoint = "https://api.scryfall.com/bulk-data";

@@ -2,9 +2,7 @@
 using System.Threading.Tasks;
 
 /// <summary>
-/// Global, one-time-per-process builder for card indexes.
-/// Ensures JSON is parsed and LocalCardIndex instances are built once,
-/// with retry semantics, validation, and comprehensive error handling.
+/// Static helper to turn List of Cards into CardIndex
 /// </summary>
 public static class GlobalCardIndexBuilder
 {
