@@ -155,95 +155,6 @@
       "Children": []
     },
     {
-      "__guid": "e2bd07af-1a33-43ab-b4ee-9004e0d576e3",
-      "__version": 1,
-      "__Prefab": "prefabs/gamecard.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "6295829d-702b-43bc-abcc-652826178004"
-            },
-            "Property": "Flags",
-            "Value": 32
-          },
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "6295829d-702b-43bc-abcc-652826178004"
-            },
-            "Property": "Name",
-            "Value": "Card Test"
-          },
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "6295829d-702b-43bc-abcc-652826178004"
-            },
-            "Property": "Position",
-            "Value": "-0.0000009536743,0,5"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "ebd74218-92c0-4f05-a925-a8ad5ed25cb5"
-            },
-            "Property": "CardIdentifier",
-            "Value": "56ebc372-aabd-4174-a943-c7bf59e5028d"
-          },
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "a3126eb5-a1b2-4235-a10e-8dd7f063322e"
-            },
-            "Property": "Flags",
-            "Value": 32
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "6295829d-702b-43bc-abcc-652826178004": "e2bd07af-1a33-43ab-b4ee-9004e0d576e3",
-        "aebdb0ee-147b-43bb-b22b-e4ef91e2b099": "becdeab4-ace0-428c-8175-cb5b6029410b",
-        "ebd74218-92c0-4f05-a925-a8ad5ed25cb5": "cf556dfe-39f9-446f-ac16-99693b0b3941",
-        "a3126eb5-a1b2-4235-a10e-8dd7f063322e": "a5878211-8012-4f5a-9220-2bfb66c86e63",
-        "2b83db56-8065-4a13-bbe9-ad26532e470b": "c8c951fa-acb9-422a-8038-3901c0ede947",
-        "78af2a40-fe14-4cf4-bf66-bc3b9cb2875b": "c4166da0-ad94-4903-be25-a8468ab631af"
-      }
-    },
-    {
-      "__guid": "93382110-7bfc-4ead-a986-2f4ae233fbe3",
-      "__version": 1,
-      "__Prefab": "player.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "2712085c-9536-4be3-8fbc-2e638db622db"
-            },
-            "Property": "Position",
-            "Value": "66.46516,1.89651,86.6296"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "2712085c-9536-4be3-8fbc-2e638db622db": "93382110-7bfc-4ead-a986-2f4ae233fbe3",
-        "c6c56fc0-0325-43f3-bebc-49daca540d05": "bfc5ed50-2270-4e23-8b1d-8bd5a145c285",
-        "0d4d0a12-7446-4629-bdb6-72fa66df036b": "1a783b07-77d6-4a0c-be77-9bf86a9bdba0",
-        "63ca33e4-27f9-4fbc-bfd5-8c5f3a8ace6e": "e0115b7a-886c-4c09-9a49-69a24b5d1cbd",
-        "fa104f48-3a78-49fc-9c06-3b2aa839a0b9": "611b5cb4-d948-412d-a05c-11a7bd72be52",
-        "98a90b83-4eb8-4336-babe-665306cf89e4": "f220729f-62be-407f-af79-8dfc13114a68",
-        "beb236cb-7687-4d6b-9759-d922579bb195": "bf1a608b-c853-42dd-9ac4-0fa4e1fb5d83"
-      }
-    },
-    {
       "__guid": "3a1b641c-03f7-48a8-a48d-2e4a97a711e3",
       "__version": 1,
       "Flags": 0,
@@ -263,6 +174,7 @@
           "__type": "WorldCard",
           "__guid": "cb3f48d5-d9e9-4cdf-baf3-aacb3940ade9",
           "__enabled": true,
+          "CardID": "56ebc372-aabd-4174-a943-c7bf59e5028d",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -287,14 +199,14 @@
           "__enabled": true,
           "HorizontalAlign": "Center",
           "InteractionRange": 1000,
-          "LookAtCamera": true,
+          "LookAtCamera": false,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "PanelSize": "512,512",
+          "PanelSize": "367,512",
           "RenderOptions": {
             "GameLayer": true,
             "OverlayLayer": false,
@@ -306,6 +218,35 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "6c424a4c-b027-4560-9505-e291e2bd8062",
+      "__version": 1,
+      "__Prefab": "player.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "2712085c-9536-4be3-8fbc-2e638db622db"
+            },
+            "Property": "Position",
+            "Value": "75.98501,2.168149,99.03761"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "2712085c-9536-4be3-8fbc-2e638db622db": "6c424a4c-b027-4560-9505-e291e2bd8062",
+        "c6c56fc0-0325-43f3-bebc-49daca540d05": "06b9b82e-3a52-4f48-9a35-1850c4f65aa7",
+        "0d4d0a12-7446-4629-bdb6-72fa66df036b": "de157ce0-f247-4383-83af-4dd17f93a8ed",
+        "63ca33e4-27f9-4fbc-bfd5-8c5f3a8ace6e": "fe8407c8-c8b6-495e-b790-8419b6159e6e",
+        "fa104f48-3a78-49fc-9c06-3b2aa839a0b9": "45f3d2e1-7861-40b7-bcf7-57649c97a01e",
+        "98a90b83-4eb8-4336-babe-665306cf89e4": "51708cc8-5f85-4700-82c5-aa6a3e2904a1",
+        "beb236cb-7687-4d6b-9759-d922579bb195": "44c4e3e4-83ea-4d1e-87ed-578734a745bb"
+      }
     }
   ],
   "SceneProperties": {
