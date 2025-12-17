@@ -13,7 +13,7 @@ namespace Sandbox.Scryfall;
 /// <summary>
 /// Interact with the scryfall API
 /// </summary>
-public class ScryfallClient
+public class Scryfall
 {
 	private const string BaseUrl = "https://api.scryfall.com";
 	private readonly SemaphoreSlim _gate = new( 1, 1 );
