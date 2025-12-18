@@ -155,72 +155,7 @@
       "Children": []
     },
     {
-      "__guid": "3a1b641c-03f7-48a8-a48d-2e4a97a711e3",
-      "__version": 1,
-      "Flags": 0,
-      "Name": "TestCard",
-      "Position": "0,-24.95368,22.0601",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkInterpolation": true,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "WorldCard",
-          "__guid": "cb3f48d5-d9e9-4cdf-baf3-aacb3940ade9",
-          "__enabled": true,
-          "CardID": "56ebc372-aabd-4174-a943-c7bf59e5028d",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null
-        },
-        {
-          "__type": "CardRenderer",
-          "__guid": "2d13f0f6-eba3-43dc-a093-c0a279c1ecf5",
-          "__enabled": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null
-        },
-        {
-          "__type": "Sandbox.WorldPanel",
-          "__guid": "3aa405d1-1118-461d-b8a4-dc04ad95204b",
-          "__enabled": true,
-          "HorizontalAlign": "Center",
-          "InteractionRange": 1000,
-          "LookAtCamera": false,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PanelSize": "367,512",
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
-          },
-          "RenderScale": 1,
-          "VerticalAlign": "Center"
-        }
-      ],
-      "Children": []
-    },
-    {
-      "__guid": "6c424a4c-b027-4560-9505-e291e2bd8062",
+      "__guid": "a3dc244e-f24b-4102-91b2-1cd440a10a0f",
       "__version": 1,
       "__Prefab": "player.prefab",
       "__PrefabInstancePatch": {
@@ -233,20 +168,85 @@
               "IdValue": "2712085c-9536-4be3-8fbc-2e638db622db"
             },
             "Property": "Position",
-            "Value": "75.98501,2.168149,99.03761"
+            "Value": "94.19785,2.687832,122.7759"
           }
         ],
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {
-        "2712085c-9536-4be3-8fbc-2e638db622db": "6c424a4c-b027-4560-9505-e291e2bd8062",
-        "c6c56fc0-0325-43f3-bebc-49daca540d05": "06b9b82e-3a52-4f48-9a35-1850c4f65aa7",
-        "0d4d0a12-7446-4629-bdb6-72fa66df036b": "de157ce0-f247-4383-83af-4dd17f93a8ed",
-        "63ca33e4-27f9-4fbc-bfd5-8c5f3a8ace6e": "fe8407c8-c8b6-495e-b790-8419b6159e6e",
-        "fa104f48-3a78-49fc-9c06-3b2aa839a0b9": "45f3d2e1-7861-40b7-bcf7-57649c97a01e",
-        "98a90b83-4eb8-4336-babe-665306cf89e4": "51708cc8-5f85-4700-82c5-aa6a3e2904a1",
-        "beb236cb-7687-4d6b-9759-d922579bb195": "44c4e3e4-83ea-4d1e-87ed-578734a745bb"
+        "2712085c-9536-4be3-8fbc-2e638db622db": "a3dc244e-f24b-4102-91b2-1cd440a10a0f",
+        "c6c56fc0-0325-43f3-bebc-49daca540d05": "e9d650a7-e869-4dcb-ae38-53b1e5a93fbd",
+        "0d4d0a12-7446-4629-bdb6-72fa66df036b": "d91154f1-5a00-4d8a-ac68-8dad4867df11",
+        "63ca33e4-27f9-4fbc-bfd5-8c5f3a8ace6e": "4bc79b15-e191-4638-b220-b8b632737eb2",
+        "fa104f48-3a78-49fc-9c06-3b2aa839a0b9": "10e53d9e-c6eb-4968-ba56-bd80669821f8",
+        "98a90b83-4eb8-4336-babe-665306cf89e4": "df279482-45db-4fa5-9a9d-5153d2cb9e9c",
+        "beb236cb-7687-4d6b-9759-d922579bb195": "73490c56-6910-4798-82b4-4f0d69cc7fd7"
       }
+    },
+    {
+      "__guid": "1fc07f6e-4fd0-4c23-81c4-19b397758d05",
+      "__version": 1,
+      "Flags": 32,
+      "Name": "Object",
+      "Position": "0,0,19.53731",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkInterpolation": true,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "WorldCard",
+          "__guid": "e817d91a-a378-4f0c-9f40-b07d136a9292",
+          "__enabled": true,
+          "CardID": "56ebc372-aabd-4174-a943-c7bf59e5028d",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "CardRenderer",
+          "__guid": "71b9a5f1-cbae-4647-929a-0957cb482538",
+          "__enabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.WorldPanel",
+          "__guid": "380a8e3a-3f16-4752-987e-8295a04d2761",
+          "__enabled": true,
+          "HorizontalAlign": "Center",
+          "InteractionRange": 1000,
+          "LookAtCamera": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PanelSize": "512,512",
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": true,
+            "BloomLayer": true,
+            "AfterUILayer": true
+          },
+          "RenderScale": 1,
+          "VerticalAlign": "Center"
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {

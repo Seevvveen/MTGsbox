@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 /// <summary>
 /// Write Bulk Api responses into Filesystem.Data at scene startup
 /// </summary>
-public sealed class BulkCacheSystem : GameObjectSystem, ISceneStartup
+public sealed class BulkCacheSystem : GameObjectSystem<BulkCacheSystem>, ISceneStartup
 {
 	//Names
 	private const string BulkIndexFileName = "ScryfallBulkResponse.json";
@@ -133,6 +133,7 @@ public sealed class BulkCacheSystem : GameObjectSystem, ISceneStartup
 			if ( FileSystem.Data.FileExists( filename ) )
 				FileSystem.Data.DeleteFile( filename );
 
+			//Rewrite this so we dont load entire file into memory
 			var data = FileSystem.Data.ReadAllBytes( tempFile );
 			FileSystem.Data.WriteAllBytes( filename, data.ToArray() );
 			FileSystem.Data.DeleteFile( tempFile );
