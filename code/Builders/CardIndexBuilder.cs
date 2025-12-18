@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 /// </summary>
 public sealed class CardIndexBuilder
 {
-	/// <summary>
-	/// Opens a filestream to read large files of cards ~50k, used for bulk
-	/// </summary>
 	public async Task<IReadOnlyDictionary<Guid, Card>> FromLargeFile( string file )
 	{
 		await GameTask.MainThread();
@@ -44,8 +41,8 @@ public sealed class CardIndexBuilder
 			dict[card.Id] = card;
 		}
 
-
 		Log.Info( $"[CardIndexBuilder] Loaded {dict.Count} cards from {file}" );
 		return dict;
 	}
+
 }

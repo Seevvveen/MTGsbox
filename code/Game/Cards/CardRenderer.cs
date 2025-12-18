@@ -50,10 +50,6 @@ public class CardRenderer : PanelComponent
 		try
 		{
 
-			// Initialize UI
-			_image = new Image();
-			_image.Parent = Panel;
-
 			_cardProvider = Components.GetInParentOrSelf<ICardProvider>();
 			if ( _cardProvider == null )
 			{
