@@ -18,50 +18,42 @@ public sealed class BulkCacheSystem : GameObjectSystem<BulkCacheSystem>, ISceneS
 	private readonly ScryfallClient _apiClient = new();
 	public ApiList<BulkItem> BulkIndex { get; private set; }
 	//Signals
-	private readonly TaskCompletionSource<bool> _SignalReady = new();
-	public Task WhenReady => _SignalReady.Task;
-	public bool IsReady { get; private set; }
-	private TaskSource _SignalLife;
-
+	private readonly AsyncGate _readyGate = new();
+	public Task WhenReady => _readyGate.WhenReady;
+	public bool IsReady => _readyGate.IsSucceeded;
+	private TaskSource _taskSource;
 
 	//ctor
-	public BulkCacheSystem( Scene scene ) : base( scene ) { }
+	public BulkCacheSystem( Scene scene ) : base( scene )
+	{
+		_taskSource = TaskSource.Create();
+	}
 
 	// Refactor When Multiplayer
 	// Main System
-	async void ISceneStartup.OnHostInitialize()
+	void ISceneStartup.OnHostInitialize()
 	{
-		try
-		{
-			//Init
-			await LoadOrRefreshBulkIndexAsync();
-			await DownloadMissingFileAsync();
-
-			bool hasCards = FileSystem.Data.FileExists( OracleCardsFileName )
-				|| FileSystem.Data.FileExists( DefaultCardsFileName );
-
-			if ( !hasCards )
-			{
-				Log.Error( "[BulkCache] No Cards found download" );
-				IsReady = false;
-			}
-			else
-			{
-				IsReady = true;
-				Log.Info( "[BulkCache] Ready" );
-			}
-		}
-		catch ( Exception ex )
-		{
-			//Failed Init
-			Log.Error( ex, "[BulkCacheSystem] Bulk Cache System Failed" );
-		}
-		finally
-		{
-			_SignalReady.TrySetResult( IsReady );
-		}
+		// Fire and forget - gate handles all signaling
+		_readyGate.Run( _taskSource, InitializeAsync );
 	}
 
+	private async Task InitializeAsync()
+	{
+		//Init
+		await LoadOrRefreshBulkIndexAsync();
+		await DownloadMissingFileAsync();
+
+		bool hasCards = FileSystem.Data.FileExists( OracleCardsFileName )
+			|| FileSystem.Data.FileExists( DefaultCardsFileName );
+
+		if ( !hasCards )
+		{
+			Log.Error( "[BulkCache] No Cards found - download failed" );
+			throw new Exception( "No card files available after initialization" );
+		}
+
+		Log.Info( "[BulkCache] Ready" );
+	}
 
 	private async Task LoadOrRefreshBulkIndexAsync()
 	{
@@ -100,16 +92,16 @@ public sealed class BulkCacheSystem : GameObjectSystem<BulkCacheSystem>, ISceneS
 			return;
 
 		//Downloading
-		//Parrallel downloading with Semaphore
+		//Parallel downloading with Semaphore
 		using var semaphore = new SemaphoreSlim( MaxConcurrentDownloads );
 		var tasks = toDownload.Select( async item =>
-			{
-				await semaphore.WaitAsync();
-				try { await DownloadFileAsync( item ); }
-				finally { semaphore.Release(); }
-			}
+		{
+			await semaphore.WaitAsync();
+			try { await DownloadFileAsync( item ); }
+			finally { semaphore.Release(); }
+		}
 		);
-		await _SignalLife.WhenAll( tasks );
+		await _taskSource.WhenAll( tasks );
 	}
 
 	private async Task DownloadFileAsync( BulkItem item )
@@ -119,7 +111,7 @@ public sealed class BulkCacheSystem : GameObjectSystem<BulkCacheSystem>, ISceneS
 
 		try
 		{
-			Log.Info( "[BulkCache] Downloading {item.Type}" );
+			Log.Info( $"[BulkCache] Downloading {item.Type}" );
 
 			using var stream = await _apiClient.FetchStreamAsync( item.DownloadUri );
 			using var fileStream = FileSystem.Data.OpenWrite( tempFile );
@@ -137,8 +129,6 @@ public sealed class BulkCacheSystem : GameObjectSystem<BulkCacheSystem>, ISceneS
 			var data = FileSystem.Data.ReadAllBytes( tempFile );
 			FileSystem.Data.WriteAllBytes( filename, data.ToArray() );
 			FileSystem.Data.DeleteFile( tempFile );
-
-
 		}
 		catch ( Exception ex )
 		{
@@ -149,10 +139,5 @@ public sealed class BulkCacheSystem : GameObjectSystem<BulkCacheSystem>, ISceneS
 
 			throw;
 		}
-
 	}
-
-
-
-
 }

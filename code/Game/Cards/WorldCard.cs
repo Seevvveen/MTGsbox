@@ -8,7 +8,8 @@ public class WorldCard : Component, ICardProvider
 
 	//Composite
 	public CardIndexSystem IndexSystem { get; set; }
-	[RequireComponent] public CardRenderer CardRenderer { get; set; }
+	[RequireComponent] public CardRenderer CardRenderer { get; private set; }
+	[RequireComponent] public PlaneCollider PlaneCollider { get; private set; }
 
 	// Ready signal
 	private TaskCompletionSource<bool> _readySignal = new();
@@ -19,9 +20,7 @@ public class WorldCard : Component, ICardProvider
 	{
 		IndexSystem = Scene.GetSystem<CardIndexSystem>();
 
-		Log.Info( $"[WorldCard] IndexSystem.WhenReady task status: {IndexSystem.WhenReady.Status}" );
 		await IndexSystem.WhenReady;
-		Log.Info( "[WorldCard] CardIndexSystem ready!" );
 
 		if ( !IndexSystem.IsReady )
 			Log.Error( "[WorldCard] Cannot Display due to IndexSystem not being ready" );
@@ -36,9 +35,13 @@ public class WorldCard : Component, ICardProvider
 			return;
 		}
 
-		Log.Info( "[WorldCard] Ready" );
+		//Log.Info( "[WorldCard] Ready" );
 		IsReady = true;
 		_readySignal.TrySetResult( true );
+	}
+
+	protected override void OnAwake()
+	{
 	}
 
 
@@ -50,6 +53,7 @@ public class WorldCard : Component, ICardProvider
 	protected override void OnDestroy()
 	{
 		CardRenderer?.Destroy();
+		PlaneCollider?.Destroy();
 	}
 
 }

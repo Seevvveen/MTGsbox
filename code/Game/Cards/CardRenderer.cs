@@ -31,6 +31,18 @@ public class CardRenderer : PanelComponent
 	}
 
 
+	private void EnsureImage()
+	{
+		if ( Panel == null ) return;
+
+		// If we lost the field (hotload), re-find an existing one in the tree
+		_image ??= Panel.ChildrenOfType<Image>().FirstOrDefault();
+
+		// Or create it if it doesn't exist
+		_image ??= new Image { Parent = Panel };
+	}
+
+
 	protected override void OnAwake()
 	{
 		try
@@ -49,18 +61,12 @@ public class CardRenderer : PanelComponent
 	{
 		try
 		{
+			_cardProvider = Components.GetInParentOrSelf<ICardProvider>()
+				?? throw new Exception("[CardRender] No Card Provider Found");
 
-			_cardProvider = Components.GetInParentOrSelf<ICardProvider>();
-			if ( _cardProvider == null )
-			{
-				Log.Error( "[CardRenderer] No ICardProvider found" );
-				return;
-			}
-
-			// Wait for provider to be ready
 			Log.Info( "[CardRenderer] Waiting on Card Provider" );
+			
 			await _cardProvider.WhenReady;
-
 			if ( !_cardProvider.IsReady )
 			{
 				Log.Error( "[CardRenderer] Card provider failed to initialize" );
@@ -90,9 +96,12 @@ public class CardRenderer : PanelComponent
 				return;
 			}
 
+			EnsureImage();
+			if ( _image == null )
+				Log.Info( message: "Image Panel was null" );
 			_image.SetTexture( imageUrl );
 
-			Log.Info( $"[CardRenderer] Successfully loaded card {_card.Name}" );
+			//Log.Info( $"[CardRenderer] Successfully loaded card {_card.Name}" );
 		}
 		catch ( Exception ex )
 		{
