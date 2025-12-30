@@ -2,41 +2,47 @@
 namespace Sandbox.Scryfall.Types.Responses;
 
 /// <summary>
-/// Represents an error response from the Scryfall API.
-/// Always accompanied by a 4XX or 5XX HTTP status code.
+/// Scryfall Error so capture it using this type
 /// </summary>
 public record ScryfallError
 {
 	[JsonPropertyName( "object" )]
 	public string Object { get; init; } = "error";
-
-	/// <summary>
-	/// The HTTP status code (e.g., 404, 500)
-	/// </summary>
+	
 	[JsonPropertyName( "status" )]
 	public int Status { get; init; }
-
-	/// <summary>
-	/// Computer-readable HTTP status code string
-	/// </summary>
+	
+	// Https Status code
 	[JsonPropertyName( "code" )]
 	public string Code { get; init; } = string.Empty;
 
-	/// <summary>
-	/// Human-readable explanation of the error
-	/// </summary>
+	// Human-readable
 	[JsonPropertyName( "details" )]
 	public string Details { get; init; } = string.Empty;
-
-	/// <summary>
-	/// Additional context for the error (e.g., "ambiguous" for 404s)
-	/// </summary>
+	
+	// Additional context for the error (e.g., "ambiguous" for 404s)
 	[JsonPropertyName( "type" )]
 	public string? Type { get; init; }
-
-	/// <summary>
-	/// Non-fatal warnings that also occurred
-	/// </summary>
+	
+	// Non-fatal warnings that also occurred
 	[JsonPropertyName( "warnings" )]
 	public List<string>? Warnings { get; init; }
 }
+
+
+// Reponse Example from website
+/*
+*	HTTP 400 error
+*	Content-Type: application/json; charset=utf-8
+*
+*	{
+*		"object": "error",
+*		"code": "bad_request",
+*		"status": 400,
+*		"warnings": [
+*			"Invalid expression “is:slick” was ignored. Checking if cards are “slick” is not supported",
+*			"Invalid expression “cmc>cmc” was ignored. The sides of your comparison must be different."
+*		],
+*		"details": "All of your terms were ignored."
+*	}
+*/

@@ -5,8 +5,8 @@
 public sealed class GamePlayer : Component
 {
 	[Property, RequireComponent] public required StrategyCameraController CameraController { get; set; }
-	public WorldCard? HoverCard { get; private set; } = null;
-	public WorldCard? LastHoverCard { get; private set; } = null;
+	public OLD_WorldCard_OLD? HoverCard { get; private set; } = null;
+	public OLD_WorldCard_OLD? LastHoverCard { get; private set; } = null;
 
 	protected override void OnStart()
 	{
@@ -17,7 +17,7 @@ public sealed class GamePlayer : Component
 	{
 		var r = CameraController.Camera.TraceCursor();
 		DebugOverlay.Sphere( new Sphere( r.HitPosition, 10 ) );
-		if ( r.Hit && r.GameObject.Components.TryGet<WorldCard>( out var worldCard ) )
+		if ( r.Hit && r.GameObject.Components.TryGet<OLD_WorldCard_OLD>( out var worldCard ) )
 		{
 			HoverCard = worldCard;
 		}
