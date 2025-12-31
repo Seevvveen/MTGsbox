@@ -79,3 +79,5 @@ public class OLD_WorldCard_OLD : Component, Component.ExecuteInEditor
 		CardRenderer.Card = Card;
 	}
 }
+
+*/

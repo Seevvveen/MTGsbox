@@ -13,7 +13,7 @@ public sealed record ScryfallBulkData
 	[JsonPropertyName( "uri" )] public string? Uri { get; init; }
 	[JsonPropertyName( "name" )] public string? Name { get; init; }
 	[JsonPropertyName( "description" )] public string? Description { get; init; }
-	[JsonPropertyName( "size" )] public int Size { get; init; }
+	[JsonPropertyName( "size" )] public long Size { get; init; }
 	[JsonPropertyName( "download_uri" )] public string? DownloadUri { get; init; }
 	[JsonPropertyName( "content_type" )] public string? ContentType { get; init; }
 	[JsonPropertyName( "content_encoding" )] public string? ContentEncoding { get; init; }

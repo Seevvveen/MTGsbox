@@ -80,13 +80,32 @@ public class ScryfallClient
 		=> RequestAsync<ScryfallList<ScryfallCard>>( $"cards/search?q={Uri.EscapeDataString( query )}" );
 
 	
-	/// <summary></summary>
-	public async Task<Stream> FetchStreamAsync( string url, CancellationToken token )
+	/// <summary>
+	/// Stream an HTTP response directly into a destination stream while keeping the HTTP response alive.
+	/// Avoids Http.RequestStreamAsync (it disposes the response before you can use the stream).
+	/// </summary>
+	public async Task CopyUrlToStreamAsync(
+		string url,
+		Stream destination,
+		int bufferSize = 1024 * 1024,
+		CancellationToken token = default )
 	{
+		ArgumentNullException.ThrowIfNull( destination );
+		if ( !destination.CanWrite )
+			throw new InvalidOperationException( "[Scryfall] Destination stream is not writable." );
+
 		token.ThrowIfCancellationRequested();
-			
 		await ApiDelay();
-		return await Http.RequestStreamAsync( url, cancellationToken: token );
+
+		// Keep response alive while reading its content stream
+		using var response = await Http.RequestAsync( url, cancellationToken: token );
+
+		// If EnsureSuccessStatusCode isn't available/allowed, do manual check
+		if ( !response.IsSuccessStatusCode )
+			throw new InvalidOperationException( $"[Scryfall] HTTP {(int)response.StatusCode} downloading {url}" );
+
+		using var src = await response.Content.ReadAsStreamAsync( token );
+		await src.CopyToAsync( destination, bufferSize, token );
 	}
 }
 

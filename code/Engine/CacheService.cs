@@ -95,7 +95,7 @@ public sealed class CacheService( ScryfallClient api )
 		long? maxBytes = null,
 		CancellationToken token = default )
 	{
-		token.ThrowIfCancellationRequested();
+		//token.ThrowIfCancellationRequested();
 		ValidateUri( uri );
 		ValidateFileName( filename );
 
@@ -103,12 +103,11 @@ public sealed class CacheService( ScryfallClient api )
 
 		try
 		{
-			await using ( var netStream = await _api.FetchStreamAsync( uri, token ) )
-				await using ( var tmpStream = FileSystem.Data.OpenWrite( tmpFile ) )
-				{
-					await netStream.CopyToAsync( tmpStream, BufferSize, token );
-					await tmpStream.FlushAsync( token );
-				}
+			using ( var tmpStream = FileSystem.Data.OpenWrite( tmpFile ) )
+			{
+				await _api.CopyUrlToStreamAsync( uri, tmpStream, BufferSize, token );
+				await tmpStream.FlushAsync( token );
+			}
 
 			var bytes = FileSystem.Data.FileSize( tmpFile );
 			if ( bytes <= 0 )
@@ -143,15 +142,15 @@ public sealed class CacheService( ScryfallClient api )
 
 	private static async Task CommitTempByCopyAsync( string tmpFile, string destinationFile, CancellationToken token )
 	{
-		token.ThrowIfCancellationRequested();
+		//token.ThrowIfCancellationRequested();
 		ValidateFileName( tmpFile );
 		ValidateFileName( destinationFile );
 
 		if ( !FileSystem.Data.FileExists( tmpFile ) )
 			throw new InvalidOperationException( $"Temp file missing: '{tmpFile}'." );
 
-		await using var input = FileSystem.Data.OpenRead( tmpFile );
-		await using var output = FileSystem.Data.OpenWrite( destinationFile );
+		using var input = FileSystem.Data.OpenRead( tmpFile );
+		using var output = FileSystem.Data.OpenWrite( destinationFile );
 		await input.CopyToAsync( output, BufferSize, token );
 		await output.FlushAsync( token );
 	}
