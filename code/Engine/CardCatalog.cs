@@ -1,182 +1,162 @@
-﻿using Sandbox.Scryfall.Types.Dtos;
-using Sandbox.Scryfall.Types.DTOs;
+﻿#nullable enable
+using System;
+using System.Collections.Generic;
+using Sandbox.Diagnostics;
+using Sandbox.Scryfall.Types.Dtos;
+
+namespace Sandbox.Engine;
 
 /// <summary>
-/// Immutable, session-scoped catalog providing O(1) card lookups.
-/// This is application infrastructure, not a gameplay object.
-/// 
-/// Lifetime:
-/// - Controlled by explicit TaskSource
-/// - Becomes invalid when TaskSource is cancelled
-/// - Not a Component - lives outside scene graph
+/// Holds completed card indexes for the duration of the game.
+/// The catalog does not build; it is populated atomically via Set(result).
 /// </summary>
-public sealed class CardCatalog : IDisposable
+public sealed class CardCatalog
 {
-    public enum BuildState
-    {
-        NotStarted,
-        Building,
-        Ready,
-        Failed,
-        Disposed
-    }
-    
-    private readonly TaskSource _lifetime;
-    private IReadOnlyDictionary<Guid, ScryfallCard> _cards;
-    private BuildState _state = BuildState.NotStarted;
-    private Exception _buildError;
-    
-    /// <summary>
-    /// Creates a new catalog with explicit lifetime scope.
-    /// </summary>
-    /// <param name="lifetime">TaskSource that controls this catalog's lifetime</param>
-    public CardCatalog(TaskSource lifetime)
-    {
-        _lifetime = lifetime;
-    }
-    
-    /// <summary>
-    /// Current state of the catalog.
-    /// Thread-safe to read.
-    /// </summary>
-    public BuildState State => _state;
-    
-    /// <summary>
-    /// Whether the catalog is ready for queries.
-    /// </summary>
-    public bool IsReady => _state == BuildState.Ready;
-    
-    /// <summary>
-    /// Number of cards in the catalog.
-    /// Only valid when State == Ready.
-    /// </summary>
-    public int Count => _cards?.Count ?? 0;
-    
-    /// <summary>
-    /// Error from build process, if any.
-    /// </summary>
-    public Exception BuildError => _buildError;
-    
-    /// <summary>
-    /// The TaskSource controlling this catalog's lifetime.
-    /// Use this to scope async operations to the catalog's lifetime.
-    /// </summary>
-    public TaskSource Lifetime => _lifetime;
-    
-    // Internal: Only builder can populate
-    internal void SetCards(IReadOnlyDictionary<Guid, ScryfallCard> cards)
-    {
-        EnsureNotDisposed();
-        
-        if (_state == BuildState.Ready)
-            throw new InvalidOperationException("Catalog already built");
-        
-        _cards = cards ?? throw new ArgumentNullException(nameof(cards));
-        _state = BuildState.Ready;
-        
-        Log.Info($"CardCatalog ready: {cards.Count} cards loaded");
-    }
-    
-    internal void SetBuilding()
-    {
-        EnsureNotDisposed();
-        _state = BuildState.Building;
-    }
-    
-    internal void SetFailed(Exception error)
-    {
-        if (_state == BuildState.Disposed)
-            return; // Already disposed, ignore
-        
-        _buildError = error;
-        _state = BuildState.Failed;
-        Log.Error($"CardCatalog build failed: {error.Message}");
-    }
-    
-    /// <summary>
-    /// Get a card by ID.
-    /// Throws if card not found or catalog not ready.
-    /// </summary>
-    public ScryfallCard Get(Guid cardId)
-    {
-        EnsureReady();
-        
-        if (!_cards.TryGetValue(cardId, out var card))
-            throw new KeyNotFoundException($"Card not found: {cardId}");
-        
-        return card;
-    }
-    
-    /// <summary>
-    /// Try to get a card by ID.
-    /// Returns false if not found or catalog not ready.
-    /// </summary>
-    public bool TryGet(Guid cardId, out ScryfallCard card)
-    {
-        card = null;
-        
-        if (_state != BuildState.Ready)
-            return false;
-        
-        return _cards.TryGetValue(cardId, out card);
-    }
-    
-    /// <summary>
-    /// Check if a card exists in the catalog.
-    /// </summary>
-    public bool Contains(Guid cardId)
-    {
-        return _state == BuildState.Ready && _cards.ContainsKey(cardId);
-    }
-    
-    /// <summary>
-    /// Get all cards in the catalog.
-    /// Throws if catalog not ready.
-    /// </summary>
-    public IEnumerable<ScryfallCard> GetAll()
-    {
-        EnsureReady();
-        return _cards.Values;
-    }
-    
-    /// <summary>
-    /// Query cards matching a predicate.
-    /// </summary>
-    public IEnumerable<ScryfallCard> Where(Func<ScryfallCard, bool> predicate)
-    {
-        EnsureReady();
-        return _cards.Values.Where(predicate);
-    }
-    
-    private void EnsureReady()
-    {
-        EnsureNotDisposed();
-        
-        if (_state == BuildState.NotStarted)
-            throw new InvalidOperationException("Catalog build never started");
-        
-        if (_state == BuildState.Building)
-            throw new InvalidOperationException("Catalog still building");
-        
-        if (_state == BuildState.Failed)
-            throw new InvalidOperationException($"Catalog build failed: {_buildError?.Message}");
-    }
-    
-    private void EnsureNotDisposed()
-    {
-        if (_state == BuildState.Disposed)
-            throw new ObjectDisposedException(nameof(CardCatalog));
-    }
-    
-    public void Dispose()
-    {
-        if (_state == BuildState.Disposed)
-            return;
-        
-        _state = BuildState.Disposed;
-        _cards = null;
-        _buildError = null;
-        
-        Log.Info("CardCatalog disposed");
-    }
+	private readonly Logger _logger = new( "CardCatalog" );
+
+	private IReadOnlyDictionary<Guid, ScryfallCard>? _byId;
+	private IReadOnlyDictionary<Guid, ScryfallCard>? _byOracleId;
+	private IReadOnlyDictionary<string, IReadOnlyList<Guid>>? _byExactName;
+
+	public bool IsReady => _byId is not null;
+	public int Count => _byId?.Count ?? 0;
+
+	/// <summary>
+	/// Publish a completed build result.
+	/// Caller is responsible for sequencing (startup must finish before gameplay uses this).
+	/// </summary>
+	public void Set( CardIndexBuildJob.BuildResult result, bool allowOverwrite = false )
+	{
+		if ( result is null ) throw new ArgumentNullException( nameof(result) );
+
+		if ( IsReady && !allowOverwrite )
+			throw new InvalidOperationException( "CardCatalog has already been set." );
+
+		_byId = result.ById;
+		_byOracleId = result.ByOracleId;
+		_byExactName = result.ByExactName;
+
+		_logger.Info(
+			$"Catalog ready. Cards={result.ById.Count:n0}, OracleIds={result.ByOracleId.Count:n0}, Names={result.ByExactName.Count:n0}"
+		);
+	}
+
+	private void EnsureReady()
+	{
+		if ( !IsReady )
+			throw new InvalidOperationException( "CardCatalog is not ready. Startup must call Set(result) first." );
+	}
+
+	// -------------------------
+	// Lookups: Card Id
+	// -------------------------
+
+	public bool TryGetById( Guid id, out ScryfallCard? card )
+	{
+		if ( _byId is not null && _byId.TryGetValue( id, out card ) )
+			return true;
+
+		card = null!;
+		return false;
+	}
+
+	public ScryfallCard GetById( Guid id )
+	{
+		EnsureReady();
+
+		if ( !_byId!.TryGetValue( id, out var card ) )
+			throw new KeyNotFoundException( $"Card not found by Id: {id}" );
+
+		return card;
+	}
+
+	// -------------------------
+	// Lookups: Oracle Id
+	// -------------------------
+
+	public bool TryGetByOracleId( Guid oracleId, out ScryfallCard? card )
+	{
+		if ( _byOracleId is not null && _byOracleId.TryGetValue( oracleId, out card ) )
+			return true;
+
+		card = null!;
+		return false;
+	}
+
+	public ScryfallCard GetByOracleId( Guid oracleId )
+	{
+		EnsureReady();
+
+		if ( !_byOracleId!.TryGetValue( oracleId, out var card ) )
+			throw new KeyNotFoundException( $"Card not found by OracleId: {oracleId}" );
+
+		return card;
+	}
+
+	// -------------------------
+	// Lookups: Exact Name
+	// -------------------------
+
+	public bool TryGetIdsByExactName( string name, out IReadOnlyList<Guid>? ids )
+	{
+		if ( string.IsNullOrWhiteSpace( name ) )
+		{
+			ids = Array.Empty<Guid>();
+			return false;
+		}
+
+		if ( _byExactName is not null && _byExactName.TryGetValue( name, out ids ) )
+			return true;
+
+		ids = Array.Empty<Guid>();
+		return false;
+	}
+
+	public IReadOnlyList<Guid> GetIdsByExactName( string name )
+	{
+		EnsureReady();
+
+		if ( string.IsNullOrWhiteSpace( name ) )
+			throw new ArgumentException( "Name is null/empty.", nameof(name) );
+
+		return _byExactName!.TryGetValue( name, out var ids )
+			? ids
+			: Array.Empty<Guid>();
+	}
+
+	/// <summary>Common UI convenience: get the first card with an exact name.</summary>
+	public bool TryGetFirstByExactName( string name, out ScryfallCard card )
+	{
+		card = null!;
+
+		if ( !TryGetIdsByExactName( name, out var ids ) || ids.Count == 0 )
+			return false;
+
+		return TryGetById( ids[0], out card );
+	}
+
+	/// <summary>Convenience: map exact-name IDs to cards (O(k)).</summary>
+	public IEnumerable<ScryfallCard> GetCardsByExactName( string name )
+	{
+		EnsureReady();
+
+		if ( !_byExactName!.TryGetValue( name, out var ids ) )
+			yield break;
+
+		foreach ( var id in ids )
+		{
+			if ( _byId!.TryGetValue( id, out var card ) )
+				yield return card;
+		}
+	}
+
+	// -------------------------
+	// Enumerations (optional)
+	// -------------------------
+
+	public IEnumerable<ScryfallCard> AllCards()
+	{
+		EnsureReady();
+		return _byId!.Values;
+	}
 }

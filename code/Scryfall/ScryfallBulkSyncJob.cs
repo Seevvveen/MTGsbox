@@ -10,7 +10,7 @@ namespace Sandbox.Scryfall;
 /// <summary>
 /// Runs once at start-up to ensure the users local copy of Scryfalls bulk data is up-to-date
 ///
-/// Constructs -> Runs Async -> Discards
+/// Construct -> Run Async -> Discard
 /// </summary>
 public sealed class ScryfallBulkSyncJob( CacheService cache )
 {
