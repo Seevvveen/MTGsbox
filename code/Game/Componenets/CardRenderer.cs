@@ -1,4 +1,4 @@
-﻿using Sandbox.Scryfall.Types.Dtos;
+﻿using Sandbox.Scryfall.Types.DTOs;
 
 
 /// <summary>

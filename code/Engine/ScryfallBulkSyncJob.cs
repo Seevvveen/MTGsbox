@@ -1,10 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Sandbox.Diagnostics;
-using Sandbox.Engine;
 using Sandbox.Scryfall.Types.Responses;
 
-namespace Sandbox.Scryfall;
+namespace Sandbox.Engine.StartUp;
 
 
 /// <summary>

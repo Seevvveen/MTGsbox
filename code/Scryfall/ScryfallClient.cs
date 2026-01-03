@@ -5,7 +5,6 @@ global using Sandbox.Scryfall.Types.DTOs;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Sandbox.Scryfall.Types.Dtos;
 using Sandbox.Scryfall.Types.Responses;
 
 namespace Sandbox.Scryfall;

@@ -1,12 +1,10 @@
 ﻿#nullable enable
 
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 using Sandbox.Diagnostics;
 using Sandbox.Scryfall;
 
-namespace Sandbox.Engine;
+namespace Sandbox.Engine.StartUp;
 
 public sealed class GameStartupSystem : GameObjectSystem<GameStartupSystem>, ISceneStartup
 {
@@ -16,20 +14,20 @@ public sealed class GameStartupSystem : GameObjectSystem<GameStartupSystem>, ISc
 	// Persist for the whole game runtime
 	public CardCatalog Catalog { get; } = new();
 
-	// Optional: expose a task for “wait until ready”
-	private Task? _startupTask;
+	// expose “wait until ready”
+	public Task? StartupTask;
 
 	public GameStartupSystem( Scene scene ) : base( scene )
 	{
-		// Don’t do work here; let startup hook trigger it.
+		//let startup hook trigger it.
 	}
 
 	void ISceneStartup.OnHostPreInitialize( SceneFile scene )
 	{
-		_logger.Info( "GameStartupSystem OnHostPreInitialize called" );
+		_logger.Info( "OnHostPreInitialize called" );
 
 		// Kick off startup once
-		_startupTask ??= RunStartupAsync();
+		StartupTask ??= RunStartupAsync();
 	}
 
 	private async Task RunStartupAsync()
@@ -51,6 +49,11 @@ public sealed class GameStartupSystem : GameObjectSystem<GameStartupSystem>, ISc
 			// 3) Publish atomically to long-lived catalog
 			Catalog.Set( result );
 
+			// Symbols
+			var symbolsJob = new ScryfallSymbologySyncJob( _cache );
+			await symbolsJob.RunAsync( cts.Token );
+			
+			
 			_logger.Info( "Card catalog ready" );
 		}
 		catch ( OperationCanceledException )
@@ -61,8 +64,7 @@ public sealed class GameStartupSystem : GameObjectSystem<GameStartupSystem>, ISc
 		catch ( Exception e )
 		{
 			_logger.Error( $"Startup failed: {e}" );
-			// Decide: rethrow (hard fail) or swallow and keep game running without cards.
-			// I’d usually rethrow in dev builds.
+			throw;
 		}
 	}
 }

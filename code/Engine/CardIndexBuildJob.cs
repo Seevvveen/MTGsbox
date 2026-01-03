@@ -1,13 +1,10 @@
 ﻿#nullable enable
-using System;
-using System.Collections.Generic;
+
 using System.Threading;
 using System.Threading.Tasks;
-using Sandbox;
 using Sandbox.Diagnostics;
-using Sandbox.Scryfall.Types.Dtos;
 
-namespace Sandbox.Engine;
+namespace Sandbox.Engine.StartUp;
 
 /// <summary>
 /// Startup-only job:
