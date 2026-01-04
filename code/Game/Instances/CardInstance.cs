@@ -1,10 +1,21 @@
-﻿namespace Sandbox.Game.Cards;
+﻿using Sandbox.Game.Cards;
+
+namespace Sandbox.Game.Instances;
 
 /// <summary>
-/// Mutable gameplay object tied to a specific card during the match.
-/// To be used by the main Card Component to track the data of the card
+/// Mutable gameplay object representing one physical card in a match.
+/// References immutable definitions and tracks runtime state only.
 /// </summary>
-public class CardInstance
+public sealed class CardInstance
 {
+	// Definitions (read-only)
+	public CardRuleDefinition Rules { get; }
 	
+	// State
+	public bool IsTapped { get; set; }
+	
+	public CardInstance( CardRuleDefinition rules )
+	{
+		Rules = rules;
+	}
 }

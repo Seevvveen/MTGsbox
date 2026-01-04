@@ -148,6 +148,27 @@ public sealed class CardCatalog
 				yield return card;
 		}
 	}
+	
+	
+	public ScryfallCard GetRandomCard( Random? rng = null )
+	{
+		EnsureReady();
+
+		rng ??= Random.Shared;
+
+		int index = rng.Next( _byId!.Count );
+
+		// IReadOnlyDictionary doesn't support indexing, so enumerate to the Nth element.
+		// This is fine for debug usage. If you need this frequently, cache an array of ids.
+		foreach ( var card in _byId.Values )
+		{
+			if ( index-- == 0 )
+				return card;
+		}
+
+		throw new InvalidOperationException( "Catalog is empty." );
+	}
+	
 
 	// -------------------------
 	// Enumerations (optional)

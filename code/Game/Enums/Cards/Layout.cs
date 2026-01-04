@@ -1,9 +1,9 @@
-﻿namespace Sandbox.Game.Enums;
+﻿namespace Sandbox.Game.Enums.Cards;
 
 /// <summary>
 /// Card Layout
 /// </summary>
-public enum CardLayout
+public enum Layout
 {
 	Normal,
 	Split,

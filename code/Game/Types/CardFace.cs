@@ -1,6 +1,8 @@
-﻿using Sandbox.Game.Enums;
+﻿using Sandbox.Game.Cards;
+using Sandbox.Game.Enums;
+using Sandbox.Game.Enums.Cards;
 
-namespace Sandbox.Game.Cards;
+namespace Sandbox.Game.Types;
 
 public record CardFace
 {
@@ -14,7 +16,7 @@ public record CardFace
 	public string FlavorText;
 	public Guid IllustrationId;
 	public ImageUris ImageUris;
-	public CardLayout Layout;
+	public Layout Layout;
 	public Loyalty Loyalty;
 	public ManaCost ManaCost;
 	public string Name;

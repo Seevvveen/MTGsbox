@@ -1,7 +1,11 @@
 ﻿using Sandbox.Game.Enums;
+using Sandbox.Game.Types;
 
 namespace Sandbox.Game.Cards;
 
+/// <summary>
+/// !!! PROTOTYPE DO NOT USE IN PRODUCTIONS
+/// </summary>
 public class FullCardDefinition
 {
 	//Core Card Fields
