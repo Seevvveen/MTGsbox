@@ -15,8 +15,9 @@ public record CardFace
 	public Guid IllustrationId;
 	public ImageUris ImageUris;
 	public CardLayout Layout;
-	public CardLoyalty Loyalty;
-	
+	public Loyalty Loyalty;
+	public ManaCost ManaCost;
+
 
 
 }
