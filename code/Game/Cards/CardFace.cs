@@ -26,5 +26,5 @@ public record CardFace
 	public string PrintedText;     //Localized
 	public string PrintedTypeLine; //Localized
 	public Toughness Toughness;
-	public string TypeLine; //TODO actual type system
+	public string TypeLine; //TODO actual type system - Main Types Stable, SubTypes Dynamics
 }
