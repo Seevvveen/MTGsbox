@@ -17,7 +17,14 @@ public record CardFace
 	public CardLayout Layout;
 	public Loyalty Loyalty;
 	public ManaCost ManaCost;
-
-
-
+	public string Name;
+	public string Object;
+	public Guid OracleId;
+	public string OracleText;
+	public Power Power;
+	public string PrintedName;     //Localized
+	public string PrintedText;     //Localized
+	public string PrintedTypeLine; //Localized
+	public Toughness Toughness;
+	public string TypeLine; //TODO actual type system
 }
