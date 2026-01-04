@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using Sandbox.Game.Enums;
 
-namespace Sandbox.Engine.StartUp;
+namespace Sandbox.Engine;
 
 /// <summary>
 /// Singleton Owner for Card Symbols, Loaded at StartUp?

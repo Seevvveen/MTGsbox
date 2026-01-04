@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Sandbox.Diagnostics;
 
-namespace Sandbox.Engine.StartUp;
+namespace Sandbox.Engine;
 
 /// <summary>
 /// Startup-only job:

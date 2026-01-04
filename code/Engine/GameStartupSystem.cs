@@ -2,9 +2,10 @@
 
 using System.Threading.Tasks;
 using Sandbox.Diagnostics;
+using Sandbox.Engine;
 using Sandbox.Scryfall;
 
-namespace Sandbox.Engine.StartUp;
+namespace Sandbox.Engine;
 
 public sealed class GameStartupSystem : GameObjectSystem<GameStartupSystem>, ISceneStartup
 {
