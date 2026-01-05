@@ -9,12 +9,6 @@ using Sandbox.Scryfall.Types.Responses;
 
 namespace Sandbox.Scryfall;
 
-
-// DOCUMENTATION
-// DTOs types aim to 'dumbly' mirror scryfall fix
-// Reponses Indicate a preset type return from scryfall e.g. Error vs List Vs Item
-
-
 /// <summary>
 /// Interact with the scryfall API
 /// </summary>

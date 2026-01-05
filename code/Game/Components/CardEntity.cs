@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Sandbox;
 using Sandbox.Engine;
-using Sandbox.Game.Instances;
 
-namespace Sandbox.Game.Cards;
+namespace Sandbox.Game.Components;
 
 /// <summary>
 /// Debug card entity that waits for GameStartupSystem to finish (bulk sync + index build)
@@ -16,16 +14,14 @@ public sealed class CardEntity : Component, Component.ExecuteInEditor
 
 	// Pick a specific Scryfall card id (printing id) or leave empty for random.
 	[Property, Change( nameof( OnIdChanged ) )]
-	public string Id { get; set; } = "";
-
-	[Property, ReadOnly] public CardInstance? Instance { get; private set; }
+	public new string Id { get; set; } = "";
 
 	private GameStartupSystem Startup => Scene.GetSystem<GameStartupSystem>();
 
-	public const float CardHeight = 512f;
-	public const float CardAspectRatio = 63f / 88f;
-	public static readonly float CardWidth = CardHeight * CardAspectRatio;
-	public static readonly Vector2 CardSize = new( CardWidth, CardHeight );
+	private const float CardHeight = 512f;
+	private const float CardAspectRatio = 63f  / 88f;
+	private const float CardWidth = CardHeight * CardAspectRatio;
+	private static readonly Vector2 CardSize = new( CardWidth, CardHeight );
 
 	protected override void OnAwake()
 	{
@@ -67,14 +63,9 @@ public sealed class CardEntity : Component, Component.ExecuteInEditor
 
 	private void SetById( string id )
 	{
-		// TODO: Replace these with your real CardCatalog API names.
-		// The important change is: we now read from Startup.Catalog (which is populated after startup).
 		var card = Startup.Catalog.TryGetById( Guid.Parse(id), out ScryfallCard scryfallCard ); // throws if invalid (same as old)
 
 		CardRenderer.Card = scryfallCard;
-
-		// TODO: when you split rules/print definitions, build a real CardInstance here.
-		Instance = null;
 
 		Log.Info( $"[CardEntity] Set card to {scryfallCard.Name} ({id})" );
 	}
@@ -89,8 +80,6 @@ public sealed class CardEntity : Component, Component.ExecuteInEditor
 
 		Id = card.Id.ToString();
 		CardRenderer.Card = card;
-
-		Instance = null;
 
 		Log.Info( $"[CardEntity] Random card: {card.Name} ({Id})" );
 	}

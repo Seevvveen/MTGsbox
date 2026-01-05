@@ -1,7 +1,7 @@
 ﻿namespace Sandbox.Game.Enums;
 
 /// <summary>
-/// Bitmask for MTG colors (game-side). Designed for fast checks.
+/// Same as ManaColor But Saving Just in case
 /// </summary>
 [Flags]
 public enum ColorIdentity : byte

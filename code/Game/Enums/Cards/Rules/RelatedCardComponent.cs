@@ -1,4 +1,4 @@
-﻿namespace Sandbox.Game.Enums;
+﻿namespace Sandbox.Game.Enums.Cards.Rules;
 
 /// <summary>
 /// Details what relation a related card is to the main card

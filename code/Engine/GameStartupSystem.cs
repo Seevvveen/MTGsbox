@@ -18,14 +18,11 @@ public sealed class GameStartupSystem : GameObjectSystem<GameStartupSystem>, ISc
 	// expose “wait until ready”
 	public Task? StartupTask;
 
-	public GameStartupSystem( Scene scene ) : base( scene )
-	{
-		//let startup hook trigger it.
-	}
+	public GameStartupSystem( Scene scene ) : base( scene ) { }
 
 	void ISceneStartup.OnHostPreInitialize( SceneFile scene )
 	{
-		_logger.Info( "OnHostPreInitialize called" );
+		_logger.Info( "Started" );
 
 		// Kick off startup once
 		StartupTask ??= RunStartupAsync();
@@ -47,6 +44,7 @@ public sealed class GameStartupSystem : GameObjectSystem<GameStartupSystem>, ISc
 			var indexJob = new CardIndexBuildJob( ts, "default_cards.json" );
 			var result = await indexJob.RunAsync( cts.Token );
 
+			
 			// 3) Publish atomically to long-lived catalog
 			Catalog.Set( result );
 

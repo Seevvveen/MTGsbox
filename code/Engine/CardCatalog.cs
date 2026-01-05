@@ -19,11 +19,20 @@ public sealed class CardCatalog
 
 	public bool IsReady => _byId is not null;
 	public int Count => _byId?.Count ?? 0;
-
+	
+	private void EnsureReady()
+	{
+		if ( !IsReady )
+			throw new InvalidOperationException( "CardCatalog is not ready. Startup must call Set(result) first." );
+	}
+	
 	/// <summary>
-	/// Publish a completed build result.
-	/// Caller is responsible for sequencing (startup must finish before gameplay uses this).
+	/// 
 	/// </summary>
+	/// <param name="result"></param>
+	/// <param name="allowOverwrite"></param>
+	/// <exception cref="ArgumentNullException"></exception>
+	/// <exception cref="InvalidOperationException"></exception>
 	public void Set( CardIndexBuildJob.BuildResult result, bool allowOverwrite = false )
 	{
 		if ( result is null ) throw new ArgumentNullException( nameof(result) );
@@ -39,17 +48,7 @@ public sealed class CardCatalog
 			$"Catalog ready. Cards={result.ById.Count:n0}, OracleIds={result.ByOracleId.Count:n0}, Names={result.ByExactName.Count:n0}"
 		);
 	}
-
-	private void EnsureReady()
-	{
-		if ( !IsReady )
-			throw new InvalidOperationException( "CardCatalog is not ready. Startup must call Set(result) first." );
-	}
-
-	// -------------------------
-	// Lookups: Card Id
-	// -------------------------
-
+	
 	public bool TryGetById( Guid id, out ScryfallCard? card )
 	{
 		if ( _byId is not null && _byId.TryGetValue( id, out card ) )
@@ -69,10 +68,6 @@ public sealed class CardCatalog
 		return card;
 	}
 
-	// -------------------------
-	// Lookups: Oracle Id
-	// -------------------------
-
 	public bool TryGetByOracleId( Guid oracleId, out ScryfallCard? card )
 	{
 		if ( _byOracleId is not null && _byOracleId.TryGetValue( oracleId, out card ) )
@@ -91,10 +86,7 @@ public sealed class CardCatalog
 
 		return card;
 	}
-
-	// -------------------------
-	// Lookups: Exact Name
-	// -------------------------
+	
 
 	public bool TryGetIdsByExactName( string name, out IReadOnlyList<Guid>? ids )
 	{
