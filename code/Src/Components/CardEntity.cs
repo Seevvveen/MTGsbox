@@ -16,7 +16,7 @@ public sealed class CardEntity : Component, Component.ExecuteInEditor
 	[Property, Change( nameof( OnIdChanged ) )]
 	public new string Id { get; set; } = "";
 
-	private GameStartupSystem Startup => Scene.GetSystem<GameStartupSystem>();
+	private ApplicationStartupSystem Startup => Scene.GetSystem<ApplicationStartupSystem>();
 
 	private const float CardHeight = 512f;
 	private const float CardAspectRatio = 63f  / 88f;
