@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Sandbox.Diagnostics;
 
-namespace Sandbox.Engine;
+namespace Sandbox.Engine.Jobs;
 
 /// <summary>
 /// Runs once at start-up to ensure the users local copy of Scryfalls symbology is up-to-date

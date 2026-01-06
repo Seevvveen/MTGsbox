@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Sandbox.Diagnostics;
 using Sandbox.Scryfall.Types.Responses;
 
-namespace Sandbox.Engine;
+namespace Sandbox.Engine.Jobs;
 
 
 /// <summary>

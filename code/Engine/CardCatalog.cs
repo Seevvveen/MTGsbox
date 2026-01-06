@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using Sandbox.Diagnostics;
 using Sandbox.Engine;
+using Sandbox.Engine.Jobs;
 using Sandbox.Scryfall.Types.DTOs;
 
 namespace Sandbox.Engine;

@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 using Sandbox.Diagnostics;
 using Sandbox.Engine;
+using Sandbox.Engine.Jobs;
 using Sandbox.Scryfall;
 
 namespace Sandbox.Engine;
