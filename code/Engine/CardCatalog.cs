@@ -117,11 +117,11 @@ public sealed class CardCatalog
 	}
 
 	/// <summary>Common UI convenience: get the first card with an exact name.</summary>
-	public bool TryGetFirstByExactName( string name, out ScryfallCard card )
+	public bool TryGetFirstByExactName( string name, out ScryfallCard? card )
 	{
 		card = null!;
 
-		if ( !TryGetIdsByExactName( name, out var ids ) || ids.Count == 0 )
+		if ( !TryGetIdsByExactName( name, out var ids ) || ids!.Count == 0 )
 			return false;
 
 		return TryGetById( ids[0], out card );

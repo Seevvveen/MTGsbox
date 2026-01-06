@@ -26,7 +26,7 @@ public sealed class CardEntity : Component, Component.ExecuteInEditor
 	protected override void OnAwake()
 	{
 		PlaneCollider.Normal = Vector3.Forward;
-		PlaneCollider.Scale = CardSize * Sandbox.UI.WorldPanel.ScreenToWorldScale;
+		PlaneCollider.Scale = CardSize * UI.WorldPanel.ScreenToWorldScale;
 		CardRenderer.WorldPanel.PanelSize = CardSize;
 	}
 
@@ -49,10 +49,10 @@ public sealed class CardEntity : Component, Component.ExecuteInEditor
 		await Startup.StartupTask; // If startup failed, this will throw (good for debugging).
 	}
 
-	private void OnIdChanged( string oldValue, string newValue )
+	private void OnIdChanged( string _, string newValue )
 	{
 		// Change callbacks can fire in editor/early init; don't do anything unless startup finished.
-		if ( Startup.StartupTask == null || !Startup.StartupTask.IsCompletedSuccessfully )
+		if ( Startup.StartupTask is not { IsCompletedSuccessfully: true } )
 			return;
 
 		if ( string.IsNullOrWhiteSpace( newValue ) )
@@ -63,17 +63,17 @@ public sealed class CardEntity : Component, Component.ExecuteInEditor
 
 	private void SetById( string id )
 	{
-		var card = Startup.Catalog.TryGetById( Guid.Parse(id), out ScryfallCard scryfallCard ); // throws if invalid (same as old)
+		var _ = Startup.Catalog.TryGetById( Guid.Parse(id), out ScryfallCard scryfallCard ); // throws if invalid (same as old)
 
 		CardRenderer.Card = scryfallCard;
 
-		Log.Info( $"[CardEntity] Set card to {scryfallCard.Name} ({id})" );
+		Log.Info( $"[CardEntity] Set card to {scryfallCard!.Name} ({id})" );
 	}
 
 	[Button( "Random Card" )]
 	public void SetRandomCard()
 	{
-		if ( Startup.StartupTask == null || !Startup.StartupTask.IsCompletedSuccessfully )
+		if ( Startup.StartupTask is not { IsCompletedSuccessfully: true } )
 			return;
 
 		var card = Startup.Catalog.GetRandomCard();

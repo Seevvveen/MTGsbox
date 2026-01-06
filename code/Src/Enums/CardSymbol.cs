@@ -1,4 +1,5 @@
-﻿namespace Sandbox.Enums;
+﻿#nullable enable
+namespace Sandbox.Enums;
 
 public sealed class CardSymbol
 {
