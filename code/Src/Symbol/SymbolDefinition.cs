@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-namespace Sandbox.Types.Symbols;
+namespace Sandbox.Symbol;
 
 /// <summary>
 /// Gameplay Ready version of ScryfallCardSymbol.cs

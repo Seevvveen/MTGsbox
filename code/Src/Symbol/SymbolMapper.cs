@@ -1,5 +1,5 @@
 ﻿#nullable enable
-namespace Sandbox.Types.Symbols;
+namespace Sandbox.Symbol;
 
 /// <summary>
 /// Maps ScryfallCardSymbol.cs into CardSymbolDefinition.cs

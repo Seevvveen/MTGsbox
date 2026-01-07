@@ -1,4 +1,4 @@
-﻿namespace Sandbox.Types.Symbols;
+﻿namespace Sandbox.Symbol;
 
 /// <summary>
 /// Global
