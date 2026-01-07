@@ -1,21 +1,32 @@
 ﻿#nullable enable
+using System;
 using System.Threading.Tasks;
 using Sandbox.Diagnostics;
 
 namespace Sandbox.Engine.Bootstrapper;
 
-public sealed class ApplicationStartupSystem : GameObjectSystem<ApplicationStartupSystem>, ISceneStartup
+public sealed class ApplicationStartupSystem( Scene scene )
+	: GameObjectSystem<ApplicationStartupSystem>( scene ), ISceneStartup
 {
 	private readonly Logger _logger = new( "ApplicationStartupSystem" );
 
-	public ApplicationStartupSystem( Scene scene ) : base( scene ) { }
-
 	void ISceneStartup.OnHostPreInitialize( SceneFile scene )
 	{
-		_logger.Info( $"OnHostPreInitialize Called" );
+		_logger.Info( "OnHostPreInitialize Called" );
+		_ = TryStartAsync();
+	}
 
-		// Safe to call every scene; only runs once per runtime instance.
-		_ = ApplicationBootstrap.EnsureStartedAsync();
+	private async Task TryStartAsync()
+	{
+		try
+		{
+			await ApplicationBootstrap.EnsureStartedAsync();
+			_logger.Info( "Startup: ready" );
+		}
+		catch ( Exception e )
+		{
+			_logger.Error( $"Startup: failed (will retry next time EnsureStartedAsync is called): {e}" );
+		}
 	}
 
 	/// Optional: other scene code can await readiness via this system.

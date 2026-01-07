@@ -1,6 +1,11 @@
 ﻿namespace Sandbox.Catalog;
 
 #nullable enable
+
+/// <summary>
+/// unit of publications
+/// </summary>
+#nullable enable
 public sealed class Catalog<TKey, TValue>
 	where TKey : notnull
 {
@@ -12,6 +17,11 @@ public sealed class Catalog<TKey, TValue>
 	public void Set( IReadOnlyDictionary<TKey, TValue> byKey )
 	{
 		_byKey = byKey ?? throw new ArgumentNullException( nameof(byKey) );
+	}
+
+	public void Clear()
+	{
+		_byKey = null;
 	}
 
 	public bool TryGet( TKey key, out TValue value )
@@ -31,4 +41,5 @@ public sealed class Catalog<TKey, TValue>
 		return _byKey[key];
 	}
 }
+
 

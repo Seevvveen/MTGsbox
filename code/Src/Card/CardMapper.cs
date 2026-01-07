@@ -1,10 +1,10 @@
-﻿using Sandbox.Symbol;
+﻿#nullable enable
+using Sandbox.Symbol;
 
 namespace Sandbox.Card;
 
 public class CardMapper
 {
-	
 	public static CardDefinition Map( ScryfallCard dto )
 	{
 		if ( dto is null )
@@ -12,15 +12,21 @@ public class CardMapper
 
 		var id = Require( dto.Id, nameof(dto.Id) );
 
-		return new CardDefinition()
+		// Prefer top-level image_uris; fallback to first face that has image_uris
+		var imageDto =
+			dto.ImageUris
+			?? dto.CardFaces?.FirstOrDefault( f => f?.ImageUris is not null )?.ImageUris;
+
+		return new CardDefinition
 		{
-			Id = id, 
-			Name = dto.Name, 
-			ImageUris = ParseImageUris(dto.ImageUris)
+			Id = id,
+			Name = dto.Name,
+			OracleId = dto.OracleId ?? Guid.Empty,
+
+			// Never null
+			ImageUris = ParseImageUris( imageDto )
 		};
-
 	}
-
 
 	private static Guid Require( Guid? value, string name )
 	{
@@ -30,22 +36,20 @@ public class CardMapper
 		return value.Value;
 	}
 
-
-	
 	private static Uri? TryParseUri( string? value )
 	{
 		if ( string.IsNullOrWhiteSpace( value ) )
 			return null;
 
-		return Uri.TryCreate( value, UriKind.Absolute, out var uri )
-			? uri
-			: null;
+		return Uri.TryCreate( value, UriKind.Absolute, out var uri ) ? uri : null;
 	}
 
-	
-	private static CardImageUris ParseImageUris( ScryfallImageUris dto )
+	private static CardImageUris ParseImageUris( ScryfallImageUris? dto )
 	{
-		var images = new CardImageUris
+		if ( dto is null )
+			return CardImageUris.Empty;
+
+		return new CardImageUris
 		{
 			Small      = TryParseUri( dto.Small ),
 			Normal     = TryParseUri( dto.Normal ),
@@ -54,10 +58,5 @@ public class CardMapper
 			ArtCrop    = TryParseUri( dto.ArtCrop ),
 			BorderCrop = TryParseUri( dto.BorderCrop ),
 		};
-		
-		return images;
 	}
-
-
-
 }
