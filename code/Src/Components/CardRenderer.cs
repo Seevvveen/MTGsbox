@@ -1,20 +1,19 @@
-﻿using Sandbox.Card;
+﻿using Editor;
+using Sandbox.Card;
 using Sandbox.UI;
 
 namespace Sandbox.Components;
+
 
 /// <summary>
 /// Renders a CardImage within the scene
 /// </summary>
 public sealed class CardRenderer : PanelComponent
 {
-	private readonly Card _card = null;
-	private Image _image = null;
-	
-	public CardRenderer(Card card)
-	{
-		_card = card;
-	}
+	[RequireComponent] private WorldPanel WorldPanel { get; set; }
+
+	private Uri _uri;
+	private Image _image;
 	
 	protected override void OnTreeFirstBuilt()
 	{
@@ -24,31 +23,30 @@ public sealed class CardRenderer : PanelComponent
 		{
 			Parent = Panel
 		};
-
-		_image.SetTexture( _card.Test.Large.ToString() );
+		
+		if ( _uri is not null)
+			SetImage( _uri );
 	}
 	
-	public void SetImage( string src )
+	public void SetImage( Uri src )
 	{
 		if ( _image is null || !_image.IsValid )
 			return;
 
-		_image.SetTexture( src );
+		if ( src is null )
+			return;
+		
+		var path = src.OriginalString;
+		if ( string.IsNullOrWhiteSpace( path ) )
+			return;
+
+		_image.SetTexture( path );
+		_uri = src;
+	}
+	
+	protected override void OnDestroy()
+	{
+		WorldPanel?.Destroy();
 	}
 
-	
-	
-	/*
-	protected override void BuildRenderTree( RenderTreeBuilder builder )
-	{
-		builder.OpenElement( 0, "image" );
-		builder.AddAttribute( 1, "src", Card?.ImageUris.Normal.ToString() );
-		builder.CloseElement();
-	}
-
-	protected override int BuildHash()
-	{
-		return HashCode.Combine( Card?.Id, Card?.ImageUris.Normal );
-	}
-	*/
 }
