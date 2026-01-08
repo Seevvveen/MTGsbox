@@ -1,5 +1,7 @@
-﻿using Editor;
+﻿using System.Runtime.CompilerServices;
+using Editor;
 using Sandbox.Card;
+using Sandbox.Rendering;
 using Sandbox.UI;
 
 namespace Sandbox.Components;
@@ -8,41 +10,60 @@ namespace Sandbox.Components;
 /// <summary>
 /// Renders a CardImage within the scene
 /// </summary>
-public sealed class CardRenderer : PanelComponent
+public sealed class CardRenderer() : PanelComponent, Component.ExecuteInEditor
 {
 	[RequireComponent] private WorldPanel WorldPanel { get; set; }
 
 	private Uri _uri;
 	private Image _image;
+
+
+	protected override void OnAwake()
+	{
+		WorldPanel.PanelSize = StaticCardInformation.Size;
+	}
 	
+
 	protected override void OnTreeFirstBuilt()
 	{
 		base.OnTreeFirstBuilt();
-		
+
 		_image = new Image
 		{
 			Parent = Panel
 		};
+
 		
-		if ( _uri is not null)
-			SetImage( _uri );
+		
+		if ( _uri is not null )
+			ApplyImage();
 	}
 	
 	public void SetImage( Uri src )
 	{
-		if ( _image is null || !_image.IsValid )
-			return;
-
 		if ( src is null )
+		{
+			Log.Error( "Card: SetImage: src is null" );
 			return;
-		
-		var path = src.OriginalString;
+		}
+
+		_uri = src;
+
+		if ( _image is null || !_image.IsValid )
+			return; // not built yet, will apply in OnTreeFirstBuilt
+
+		ApplyImage();
+	}
+	
+	private void ApplyImage()
+	{
+		var path = _uri.OriginalString;
 		if ( string.IsNullOrWhiteSpace( path ) )
 			return;
 
 		_image.SetTexture( path );
-		_uri = src;
 	}
+	
 	
 	protected override void OnDestroy()
 	{

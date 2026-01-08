@@ -2,30 +2,24 @@
 using Sandbox.Card;
 using Sandbox.Catalog;
 using Sandbox.Engine.Bootstrapper;
+using Sandbox.UI;
 
 namespace Sandbox.Components;
 
 
 public class Card : Component
 {
-	private readonly GameCatalogs _catalogs = ApplicationBootstrap.Catalogs;
+	private static readonly GameCatalogs Catalogs = ApplicationBootstrap.Catalogs;
 	
 	[Property, Change]
-	public string CardId {get; set;} = string.Empty;
+	public string CardId {get; set;} = Catalogs.Cards.ById.GetRandomOrThrow().Id.ToString();
 	
 	private CardDefinition _definition;
-	[RequireComponent] private CardRenderer CardRenderer { get; set; }
 
-
-	//Sizing Code - unimplemented
-	private const float CardHeight = 512f;
-	private const float CardAspectRatio = 63f  / 88f;
-	private const float CardWidth = CardHeight * CardAspectRatio;
-	private static readonly Vector2 CardSize = new( CardWidth, CardHeight );
+	[RequireComponent, Hide] private CardRenderer CardRenderer { get; set; }
+	
 	//Add Plane Collider Back
 	//Add a CardInstance Class for Runtime Mutablility
-	
-	
 	
 
 	protected override async Task OnLoad()
@@ -33,9 +27,8 @@ public class Card : Component
 		try
 		{
 			await ApplicationBootstrap.EnsureStartedAsync();
-
-			if ( Guid.TryParse( CardId, out var id ) )
-				SetCard( id );
+			
+			SetCard( Guid.Parse( CardId ) );
 		}
 		catch ( Exception e )
 		{
@@ -43,13 +36,12 @@ public class Card : Component
 		}
 	}
 	
-	
 	public void SetCard( Guid id )
 	{
-		if ( !_catalogs.Cards.IsReady )
+		if ( !Catalogs.Cards.IsReady )
 			return;
 
-		if ( !_catalogs.Cards.ById.TryGet( id, out var def ) )
+		if ( !Catalogs.Cards.ById.TryGet( id, out var def ) )
 		{
 			Log.Error( $"Card: not found in catalog ById: {id}" );
 			return;
@@ -65,7 +57,7 @@ public class Card : Component
 	
 	private void OnCardIdChanged(string oldId, string newId)
 	{
-		if ( !_catalogs.Cards.IsReady )
+		if ( !Catalogs.Cards.IsReady )
 			return;
 		
 		if ( Guid.TryParse( newId, out var id ) )
