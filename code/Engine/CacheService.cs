@@ -18,7 +18,14 @@ public sealed class CacheService( ScryfallClient api )
 	public bool Exists( string filename )
 	{
 		ValidateFileName( filename );
-		return FileSystem.Data.FileExists( filename );
+
+		var fs = FileSystem.Data;
+		if ( fs is null )
+			throw new InvalidOperationException(
+				"CacheService: FileSystem.Data is not initialized yet (startup called too early)."
+			);
+
+		return fs.FileExists( filename );
 	}
 
 	public long Size( string filename )
