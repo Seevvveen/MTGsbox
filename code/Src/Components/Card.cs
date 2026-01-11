@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Sandbox.Card;
 using Sandbox.Catalog;
 using Sandbox.Engine.Bootstrapper;
@@ -6,37 +7,45 @@ using Sandbox.UI;
 
 namespace Sandbox.Components;
 
-
+[SelectionBase]
 public class Card : Component
 {
 	private static readonly GameCatalogs Catalogs = ApplicationBootstrap.Catalogs;
 	
-	[Property, Change]
-	public string CardId {get; set;} = Catalogs.Cards.ById.GetRandomOrThrow().Id.ToString();
+	public CardInstance CardInstance;
 	
-	private CardDefinition _definition;
+	[Property, Change] private string CardId {get; set;}
+	private CardDefinition _def;
 
-	[RequireComponent, Hide] private CardRenderer CardRenderer { get; set; }
-	
-	//Add Plane Collider Back
-	//Add a CardInstance Class for Runtime Mutablility
-	
+	private CardRenderer CardRenderer { get; set; }
+
 
 	protected override async Task OnLoad()
 	{
 		try
 		{
 			await ApplicationBootstrap.EnsureStartedAsync();
+
+			CardRenderer = GetComponentInChildren<CardRenderer>();
 			
-			SetCard( Guid.Parse( CardId ) );
+			if ( CardId is not null )
+				SetCard( Guid.Parse( CardId ) );
 		}
 		catch ( Exception e )
 		{
 			Log.Error( e, "Card: OnLoad failed" );
 		}
 	}
-	
-	public void SetCard( Guid id )
+
+	[Button( "SetRandomCard" )]
+	private void SetRandomCard()
+	{
+		CardId = Catalogs.Cards.ById.GetRandomOrThrow().Id.ToString();
+		//SetCard( Guid.Parse( CardId ) );
+	}
+
+
+	private void SetCard( Guid id )
 	{
 		if ( !Catalogs.Cards.IsReady )
 			return;
@@ -46,10 +55,9 @@ public class Card : Component
 			Log.Error( $"Card: not found in catalog ById: {id}" );
 			return;
 		}
-
-
-		_definition = def;
-
+		
+		_def = def;
+		
 		var uri = def.ImageUris.Large;
 		if ( uri is not null )
 			CardRenderer.SetImage( uri );
@@ -57,6 +65,9 @@ public class Card : Component
 	
 	private void OnCardIdChanged(string oldId, string newId)
 	{
+		if ( newId == oldId )
+			return;
+		
 		if ( !Catalogs.Cards.IsReady )
 			return;
 		
@@ -64,16 +75,5 @@ public class Card : Component
 		{
 			SetCard(id);
 		}
-		else
-		{
-			Log.Error( "Not Valid Id" );
-		}
 	}
-
-	protected override void OnDestroy()
-	{
-		CardRenderer?.Destroy();
-	}
-	
-	
 }

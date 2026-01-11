@@ -21,6 +21,8 @@ public sealed class CardRenderer() : PanelComponent, Component.ExecuteInEditor
 	protected override void OnAwake()
 	{
 		WorldPanel.PanelSize = StaticCardInformation.Size;
+		_uri ??= new Uri( "https://cards.scryfall.io/large/front/8/6/8625b50d-474d-46dd-af84-0b267ed5fab3.jpg?1616041637" );
+		SetImage(  _uri );
 	}
 	
 
@@ -31,8 +33,8 @@ public sealed class CardRenderer() : PanelComponent, Component.ExecuteInEditor
 		_image = new Image
 		{
 			Parent = Panel
+			
 		};
-
 		
 		
 		if ( _uri is not null )
