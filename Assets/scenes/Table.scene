@@ -1,0 +1,263 @@
+{
+  "__guid": "0135bddf-dc6d-4897-b16f-90ca44322a0c",
+  "GameObjects": [
+    {
+      "__guid": "32f38bfd-1fcc-492d-b325-8059ff07ca88",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Plane",
+      "Position": "0,0,-9.502303",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "f78de2bf-de3d-42b0-abab-a0cf3649be39",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/dev/plane.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "c041e43a-2e78-4ddd-afb6-5ed22d514847",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Sun",
+      "Position": "116.9573,0,25.47794",
+      "Rotation": "-0.482963,0.482963,0.6294094,0.3705906",
+      "Scale": "1,1,1",
+      "Tags": "light_directional,light",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.DirectionalLight",
+          "__guid": "a34d5818-6c88-49d9-aa79-88f030f0ec7e",
+          "__enabled": true,
+          "Flags": 0,
+          "FogMode": "Disabled",
+          "FogStrength": 0,
+          "LightColor": "1,1,1,1",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Shadows": true,
+          "SkyColor": "1,1,1,0.3"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "3d65b760-52ae-4685-90a4-716a2101318b",
+      "__version": 2,
+      "__Prefab": "cardprefab.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+            },
+            "Property": "Name",
+            "Value": "CardPrefab"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+            },
+            "Property": "Position",
+            "Value": "0,0,4"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+            },
+            "Property": "Rotation",
+            "Value": "0,0.7071067,0,0.7071068"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "a8fc23e1-400a-4c29-b32f-ac979e70a034": "3d65b760-52ae-4685-90a4-716a2101318b",
+        "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "c96cb6f3-95df-4e37-9f06-9e25124498cc",
+        "2cb1536a-7f12-4daf-955a-29f19ef46467": "b91a9e68-6127-410a-9d31-8e41566290ab",
+        "71b6b7e4-14bb-474f-b369-1e65beb3df68": "f833b8c1-f532-46fd-bc4a-a505c8b0c8be",
+        "dfcb863f-90c3-4622-8584-55c0a1cb116a": "4843346e-78cd-4940-99ea-fff5cfeea820",
+        "26059c14-86b5-43d4-9cad-905c54fdb844": "032fd4b0-d8f5-40c6-97cb-e4fef47a3aec",
+        "7390d068-5652-4f0f-bd21-ca9b1c75e36d": "e7ab185e-5a5c-4dcd-a395-73170eca6b54"
+      }
+    },
+    {
+      "__guid": "675a2f92-0c5a-48d7-ac0b-f0d080e1805d",
+      "__version": 2,
+      "__Prefab": "playerboardprefab.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "b0234946-9417-4568-b21e-893a11dfca1e"
+            },
+            "Property": "Name",
+            "Value": "PlayerBoardPrefab"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "b0234946-9417-4568-b21e-893a11dfca1e": "675a2f92-0c5a-48d7-ac0b-f0d080e1805d",
+        "bb27502e-1ac3-419d-88d1-8847d0f92aa9": "65c8b14b-a4c3-4242-bac7-dd8b65c4d7aa",
+        "b7467d16-0f8a-415a-84ef-e142a9ef44da": "e24387d8-130f-4fc5-8639-d369b9698567"
+      }
+    },
+    {
+      "__guid": "f7ea6a3c-952c-445e-9b66-352c4494c06d",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "MatchManager",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Player.MatchManager",
+          "__guid": "861f0224-ea7f-47a1-996d-60bb78d0af4f",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "player.prefab"
+          }
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "be188f22-38fe-4301-86bf-db785c5b8640",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Camera",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "maincamera",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.CameraComponent",
+          "__guid": "c448a493-b3f2-483b-bf85-84b5f4f3cbd2",
+          "__enabled": true,
+          "Flags": 0,
+          "BackgroundColor": "0.33333,0.46275,0.52157,1",
+          "ClearFlags": "All",
+          "EnablePostProcessing": true,
+          "FieldOfView": 60,
+          "FovAxis": "Horizontal",
+          "IsMainCamera": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Orthographic": false,
+          "OrthographicHeight": 1204,
+          "PostProcessAnchor": null,
+          "Priority": 1,
+          "RenderExcludeTags": "",
+          "RenderTags": "",
+          "RenderTexture": null,
+          "TargetEye": "None",
+          "Viewport": "0,0,1,1",
+          "ZFar": 10000,
+          "ZNear": 10
+        }
+      ],
+      "Children": []
+    }
+  ],
+  "SceneProperties": {
+    "NetworkInterpolation": true,
+    "TimeScale": 1,
+    "WantsSystemScene": true,
+    "Metadata": {},
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    }
+  },
+  "ResourceVersion": 3,
+  "Title": null,
+  "Description": null,
+  "__references": [],
+  "__version": 3
+}
