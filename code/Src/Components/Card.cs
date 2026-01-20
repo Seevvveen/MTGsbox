@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Sandbox;
 using Sandbox.Card;
 using Sandbox._Startup;
-using Sandbox.Zone;
-
 namespace Sandbox.Components;
 
 [SelectionBase, Tag( "Card" )]
@@ -32,8 +30,6 @@ public sealed class Card : Component
 	private Guid _pendingDefinitionId;
 	private bool _hasPendingDefinition;
 	private bool _warnedCatalogNotReady;
-
-	public ZoneId ZoneId { get; set; } = ZoneId.None;
 	
 	protected override async Task OnLoad()
 	{
