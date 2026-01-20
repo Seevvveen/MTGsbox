@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Sandbox;
 using Sandbox.Card;
 using Sandbox._Startup;
+using Sandbox.Zone;
 
 namespace Sandbox.Components;
 
-[SelectionBase]
+[SelectionBase, Tag( "Card" )]
 public sealed class Card : Component
 {
 	/// <summary>
@@ -22,7 +23,7 @@ public sealed class Card : Component
 	/// Uses [Property, Change] so edits and prefab overrides trigger refresh.
 	/// </summary>
 	[Property, Change( nameof( OnCardIdChanged ) )]
-	private string? CardId { get; set; }
+	public required string CardId { get; set; }
 
 	private CardDefinition? _def;
 	private CardRenderer? _renderer;
@@ -32,6 +33,8 @@ public sealed class Card : Component
 	private bool _hasPendingDefinition;
 	private bool _warnedCatalogNotReady;
 
+	public ZoneId ZoneId { get; set; } = ZoneId.None;
+	
 	protected override async Task OnLoad()
 	{
 		_renderer = Components.GetInChildren<CardRenderer>( includeDisabled: true );
@@ -133,11 +136,8 @@ public sealed class Card : Component
 	{
 		var cards = GlobalCatalogs.Cards;
 
-		// If your current design guarantees catalogs are ready before any Card loads,
-		// this will always succeed on first attempt.
-		if ( cards is null || !cards.IsReady )
+		if ( !cards.IsReady )
 		{
-			// Warn once per pending id to avoid log spam.
 			if ( !_warnedCatalogNotReady )
 			{
 				_warnedCatalogNotReady = true;
@@ -146,6 +146,7 @@ public sealed class Card : Component
 
 			return;
 		}
+
 
 		if ( !cards.ById.TryGet( _pendingDefinitionId, out var def ) )
 		{
@@ -184,8 +185,9 @@ public sealed class Card : Component
 	private void SetRandomCard()
 	{
 		var cards = GlobalCatalogs.Cards;
-		if ( cards is null || !cards.IsReady || cards.Count <= 0 )
+		if ( !cards.IsReady || cards.Count <= 0 )
 			return;
+
 
 		var random = cards.ById.GetRandomOrThrow();
 		SetDefinitionId( random.Id );
