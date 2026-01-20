@@ -181,31 +181,6 @@
       }
     },
     {
-      "__guid": "675a2f92-0c5a-48d7-ac0b-f0d080e1805d",
-      "__version": 2,
-      "__Prefab": "playerboardprefab.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "b0234946-9417-4568-b21e-893a11dfca1e"
-            },
-            "Property": "Name",
-            "Value": "PlayerBoardPrefab"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "b0234946-9417-4568-b21e-893a11dfca1e": "675a2f92-0c5a-48d7-ac0b-f0d080e1805d",
-        "bb27502e-1ac3-419d-88d1-8847d0f92aa9": "65c8b14b-a4c3-4242-bac7-dd8b65c4d7aa",
-        "b7467d16-0f8a-415a-84ef-e142a9ef44da": "e24387d8-130f-4fc5-8639-d369b9698567"
-      }
-    },
-    {
       "__guid": "f7ea6a3c-952c-445e-9b66-352c4494c06d",
       "__version": 2,
       "Flags": 0,
@@ -220,7 +195,26 @@
       "NetworkOrphaned": 0,
       "NetworkTransmit": true,
       "OwnerTransfer": 1,
-      "Components": [],
+      "Components": [
+        {
+          "__type": "Sandbox.Match.MatchManager",
+          "__guid": "8fd7adde-bb44-432a-a6a8-9e38e55b7e78",
+          "__enabled": true,
+          "Flags": 0,
+          "AutoCreateLobby": true,
+          "MinPlayersToStart": 2,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PlayerStatePrefab": {
+            "_type": "gameobject",
+            "prefab": "playerprefab.prefab"
+          }
+        }
+      ],
       "Children": []
     },
     {
@@ -300,53 +294,6 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "TraceThrough": false
-        }
-      ],
-      "Children": []
-    },
-    {
-      "__guid": "96f5d091-9ca3-446f-9fc2-c2cca66c78ee",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Match",
-      "Position": "0,0,0",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.NetworkHelper",
-          "__guid": "f1945a36-8b34-43e5-9440-eceb49a16fd2",
-          "__enabled": true,
-          "Flags": 0,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PlayerPrefab": null,
-          "SpawnPoints": [],
-          "StartServer": true
-        },
-        {
-          "__type": "Sandbox.Match.MatchManager",
-          "__guid": "b0c51816-9fa4-4983-a72d-c68a22260997",
-          "__enabled": true,
-          "Flags": 0,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PlayerPrefab": null
         }
       ],
       "Children": []
