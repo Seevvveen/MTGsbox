@@ -200,6 +200,25 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "23d67a04-2a7d-4f10-9a23-ec4aa871bcfc",
+      "__version": 2,
+      "__Prefab": "prefabs/card.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "a8fc23e1-400a-4c29-b32f-ac979e70a034": "23d67a04-2a7d-4f10-9a23-ec4aa871bcfc",
+        "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "55302604-2fc8-4ff4-bd33-42e1c22589f1",
+        "038cf25f-d73d-40d8-bed4-1e61c0788612": "cbfeeeb6-34a0-4d2f-bf2b-765fe3b4e170",
+        "2cb1536a-7f12-4daf-955a-29f19ef46467": "d12c3fec-e210-42fa-99db-824ac354de1e",
+        "71b6b7e4-14bb-474f-b369-1e65beb3df68": "fd851a01-ddde-4812-befa-c0174cbf0b90",
+        "dfcb863f-90c3-4622-8584-55c0a1cb116a": "9f08b5c8-ff09-4d25-80b9-060cac1bb0d3"
+      }
     }
   ],
   "SceneProperties": {
