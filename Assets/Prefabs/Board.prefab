@@ -1,12 +1,12 @@
 {
   "RootObject": {
-    "__guid": "d87b6a76-4c6e-484b-ad98-e6e4e00f57b6",
+    "__guid": "b0234946-9417-4568-b21e-893a11dfca1e",
     "__version": 2,
     "Flags": 0,
-    "Name": "player",
+    "Name": "board",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
-    "Scale": "1,1,1",
+    "Scale": "1,2,1",
     "Tags": "",
     "Enabled": true,
     "NetworkMode": 2,
@@ -16,34 +16,62 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Sandbox.Match.PlayerState",
-        "__guid": "2e14b783-f87e-41e2-87bf-d93a6ff5d769",
+        "__type": "Sandbox.PlaneCollider",
+        "__guid": "bb27502e-1ac3-419d-88d1-8847d0f92aa9",
         "__enabled": true,
         "Flags": 0,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null
-      },
-      {
-        "__type": "Sandbox.ScreenPanel",
-        "__guid": "176abac2-5bce-432e-bef0-210a7c9f43af",
-        "__enabled": true,
-        "Flags": 0,
-        "AutoScreenScale": true,
+        "Center": "0,0,0",
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "Normal": "0,0,1",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "Opacity": 1,
-        "Scale": 1,
-        "ScaleStrategy": "ConsistentHeight",
-        "TargetCamera": null,
-        "ZIndex": 100
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Scale": "100,100",
+        "Static": true,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
+      },
+      {
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "b7467d16-0f8a-415a-84ef-e142a9ef44da",
+        "__enabled": true,
+        "Flags": 0,
+        "BodyGroups": 18446744073709551615,
+        "CreateAttachments": false,
+        "LodOverride": null,
+        "MaterialGroup": null,
+        "MaterialOverride": "materials/default.vmat",
+        "Materials": {
+          "indexed": {
+            "0": "materials/default.vmat"
+          }
+        },
+        "Model": "models/dev/plane.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "RenderType": "On",
+        "Tint": "1,1,1,1"
       }
     ],
     "Children": [],
