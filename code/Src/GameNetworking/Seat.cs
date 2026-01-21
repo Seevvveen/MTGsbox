@@ -1,5 +1,9 @@
 ﻿namespace Sandbox.GameNetworking;
 
+/// <summary>
+/// Represent a Seat Anchor in the scene
+/// MatchManagers will look for these components on objects to know where to place players ingame
+/// </summary>
 public class Seat : Component
 {
 	[Property] public int Order {get; set;}

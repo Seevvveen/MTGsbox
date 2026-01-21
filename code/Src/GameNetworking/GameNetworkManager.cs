@@ -3,9 +3,8 @@
 namespace Sandbox.GameNetworking;
 
 /// <summary>
-/// A Factory type of class that:
-/// Produces Network Objects
-/// ...
+/// Exists within the scene. Inert for Clients, Allows host to manage connections and spawn pawns
+/// 
 /// </summary>
 public class GameNetworkManager : Component, Component.INetworkListener
 {
@@ -83,7 +82,7 @@ public class GameNetworkManager : Component, Component.INetworkListener
 			return MatchManager.Instance;
 
 		if (!Networking.IsHost)
-			throw new Exception("MatchManager is not initialized on NonHost");
+			throw new Exception("MatchManager is not initialized on NonHost"); //TODO Stop Throwing
 		
 		var go = MatchPrefab.Clone();
 		go.NetworkSpawn();

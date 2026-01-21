@@ -2,12 +2,20 @@
 
 namespace Sandbox.GameNetworking;
 
+/// <summary>
+/// One Component Per Match in the Scene
+/// Exists on the Host then is replicated to clients
+/// - replicated gets [Sync] Properties
+/// </summary>
 public class MatchManager : Component
 {
 	
 	// Provide a Instance Variable
+	// Instance varible will exist on both clients and the host
+	// when a client runs MatchManager.Instance it will point to their replicated copy from the host
+	// When the host runs MatchManager.Instance it will point to the authoritative copy which we can change.
+	// Treat it as the local handle to whatever represents the match - for the host its their authortive copy - for clients its what they read from.
 	public static MatchManager? Instance { get; private set; }
-	
 	protected override void OnAwake()
 	{
 		Instance = this;
@@ -24,7 +32,7 @@ public class MatchManager : Component
 
 
 	/// <summary>
-	/// Communicate Who is in the game
+	/// Host writes this list, clients will observer this list
 	/// </summary>
 	[Sync] public NetList<PlayerInfo> PlayerList { get; private set; } = new();
 	
@@ -70,6 +78,9 @@ public class MatchManager : Component
 		_seats.Sort( (a,b) => a.Order.CompareTo(b.Order)  );
 	}
 
+	/// <summary>
+	/// For GameNetwork Manager to call into to know if we put them into a seat or make them spectator
+	/// </summary>
 	public Seat? HostTryClaimSeat(Connection channel)
 	{
 		if (!Networking.IsHost) return null;
@@ -86,7 +97,7 @@ public class MatchManager : Component
 }
 
 /// <summary>
-/// Match Information
+/// Smaller Player Identity 
 /// </summary>
 public struct PlayerInfo
 {
