@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Sandbox.Diagnostics;
+﻿using Sandbox.Diagnostics;
 
 namespace Sandbox.GameNetworking;
 
@@ -10,51 +9,85 @@ namespace Sandbox.GameNetworking;
 /// </summary>
 public class GameNetworkManager : Component, Component.INetworkListener
 {
-	[Sync] public NetList<Connection> PlayerList { get; private set; } = new();
-	[Property] public GameObject PlayerPrefab { get; set; }
 	//DEBUG
 	private readonly Logger _log = new Logger("MatchManager");
+	
+	
+	[Property] public GameObject PlayerPrefab { get; set; }
+	[Property] public GameObject SpectatorPrefab { get; set; }
+	[Property] public GameObject MatchPrefab {get; set;}
+
+	private MatchManager Match => EnsureMatch();
+	
 	
 	// When Someone is loaded
 	public void OnActive(Connection channel)
 	{
-		PlayerList.Add(channel);
-
-		var player = PlayerPrefab.Clone(Vector3.Random);
-		player.GetComponent<Player>().Name = channel.DisplayName;
-		MoveToSpawnPointTag(player);
+		if (!Networking.IsHost) return;
 		
-		player.NetworkSpawn(channel);
-	}
-
-	//TODO Add "Seat Full Spawn Spector Camera"
-	private void MoveToSpawnPointTag(GameObject player)
-	{
-		if (!Networking.IsHost)
-			return;
-
-		foreach (var obj in Scene.GetAllObjects(true))
+		_ = EnsureMatch();
+		
+		var seat = Match.HostTryClaimSeat(channel);
+		
+		_log.Info(seat);
+		
+		if (seat != null)
 		{
-			if ( !obj.Tags.Has("spawnpoint") )
-				continue;
+			// Register New Connection Into Match
+			Match.HostAddPlayer(new PlayerInfo
+			{
+				SteamId = channel.SteamId,
+				Name = channel.DisplayName,
+				Seat = seat.Order,
+				Ready = false
+			});
 			
-			if ( !obj.Enabled )
-				continue;
-			
-			player.WorldPosition = obj.WorldPosition;
-			player.WorldRotation = obj.WorldRotation;
-			obj.Enabled = false;
-			break;
+			// Give them their pawn
+			SpawnPlayerPawn(channel, seat);
+		}
+		else
+		{
+			SpawnSpectorPawn(channel);
 		}
 	}
-	
-	
-	
-	
+
+	// TODO - Tell Match Manager to UnRegister Them
 	public void OnDisconnected(Connection channel)
 	{
-		PlayerList.Remove(channel);
+		Match.HostRemovePlayerBySteamId(channel.SteamId);
 	}
 	
+	// Player is in Match Give them Player Pawn
+	public void SpawnPlayerPawn(Connection channel, Seat seat)
+	{
+		var go = PlayerPrefab.Clone();
+		go.WorldPosition = seat.WorldPosition;
+		go.WorldRotation = seat.WorldRotation;
+		go.NetworkSpawn( channel );
+	}
+	
+	// Player is NOT part of match, put them in spectator
+	public void SpawnSpectorPawn(Connection channel)
+	{
+		var go = SpectatorPrefab.Clone();
+		go.WorldPosition = Vector3.Up * 100;
+		go.WorldRotation = Rotation.LookAt(Vector3.Down);
+		go.NetworkSpawn( channel );
+		//throw new NotImplementedException();
+	}
+
+	// Make Sure that we have an instance of a MatchManager to work with
+	private MatchManager EnsureMatch()
+	{
+		if (MatchManager.Instance is not null)
+			return MatchManager.Instance;
+
+		if (!Networking.IsHost)
+			throw new Exception("MatchManager is not initialized on NonHost");
+		
+		var go = MatchPrefab.Clone();
+		go.NetworkSpawn();
+		return go.GetComponent<MatchManager>();
+	}
 	
 }

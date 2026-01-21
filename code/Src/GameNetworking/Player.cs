@@ -6,8 +6,7 @@ public class Player : Component
 {
 	[Property] public string Name { get; set; } = "unknown";
 	[Property] public int LifeTotal { get; set; } = 40;
-	
-	
+	[Property] public Seat Seat { get; set; } = null;
 	
 	
 	[Property] public GameObject CardPrefabTest { get; set; }
