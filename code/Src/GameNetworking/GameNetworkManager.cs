@@ -11,7 +11,6 @@ public class GameNetworkManager : Component, Component.INetworkListener
 	//DEBUG
 	private readonly Logger _log = new Logger("MatchManager");
 	
-	
 	[Property] public GameObject PlayerPrefab { get; set; }
 	[Property] public GameObject SpectatorPrefab { get; set; }
 	[Property] public GameObject MatchPrefab {get; set;}
@@ -25,23 +24,11 @@ public class GameNetworkManager : Component, Component.INetworkListener
 		if (!Networking.IsHost) return;
 		
 		_ = EnsureMatch();
+		var seat = Match.Seats.HostClaimSeat(channel);
 		
-		var seat = Match.HostTryClaimSeat(channel);
-		
-		_log.Info(seat);
-		
-		if (seat != null)
+		if (seat is not null)
 		{
-			// Register New Connection Into Match
-			Match.HostAddPlayer(new PlayerInfo
-			{
-				SteamId = channel.SteamId,
-				Name = channel.DisplayName,
-				Seat = seat.Order,
-				Ready = false
-			});
-			
-			// Give them their pawn
+			Match.Players.HostAddPlayer(channel);
 			SpawnPlayerPawn(channel, seat);
 		}
 		else
@@ -49,12 +36,14 @@ public class GameNetworkManager : Component, Component.INetworkListener
 			SpawnSpectorPawn(channel);
 		}
 	}
-
-	// TODO - Tell Match Manager to UnRegister Them
+	
 	public void OnDisconnected(Connection channel)
 	{
-		Match.HostRemovePlayerBySteamId(channel.SteamId);
+		if ( !Networking.IsHost ) return;
+		Match.Seats.HostReleaseSeat( channel.SteamId );
+		Match.Players.HostRemovePlayer(channel);
 	}
+	
 	
 	// Player is in Match Give them Player Pawn
 	public void SpawnPlayerPawn(Connection channel, Seat seat)
@@ -62,6 +51,7 @@ public class GameNetworkManager : Component, Component.INetworkListener
 		var go = PlayerPrefab.Clone();
 		go.WorldPosition = seat.WorldPosition;
 		go.WorldRotation = seat.WorldRotation;
+		go.GetComponent<Player>().HostSetIdentity(channel, seat);
 		go.NetworkSpawn( channel );
 	}
 	

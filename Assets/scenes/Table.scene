@@ -145,7 +145,7 @@
         {
           "__type": "Sandbox.CameraComponent",
           "__guid": "c448a493-b3f2-483b-bf85-84b5f4f3cbd2",
-          "__enabled": true,
+          "__enabled": false,
           "Flags": 0,
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
           "ClearFlags": "All",
@@ -170,39 +170,6 @@
           "Viewport": "0,0,1,1",
           "ZFar": 10000,
           "ZNear": 10
-        }
-      ],
-      "Children": []
-    },
-    {
-      "__guid": "a04f2106-77fa-40b7-a053-571886979611",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "DEBUG MOVER",
-      "Position": "0,0,0",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.SimpleMove",
-          "__guid": "f09a8e83-6182-4f42-aa35-4622bf87be0e",
-          "__enabled": true,
-          "Flags": 0,
-          "DrawDebug": true,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "TraceThrough": false
         }
       ],
       "Children": []

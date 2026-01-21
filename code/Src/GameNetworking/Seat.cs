@@ -4,24 +4,32 @@
 /// Represent a Seat Anchor in the scene
 /// MatchManagers will look for these components on objects to know where to place players ingame
 /// </summary>
-public class Seat : Component
+public sealed class Seat : Component
 {
-	[Property] public int Order {get; set;}
+	[Property] public int Order { get; set; }
+	[Sync] public SteamId OccupantSteamId { get; private set; } = default;
+	public bool IsFull => OccupantSteamId != default;
 
-	[Sync] public long OccupantSteamId { get; private set; } = 0;
-	
-	public bool IsFull => OccupantSteamId != 0;
+	public bool IsOccupiedBy( SteamId steamId )
+		=> IsFull && OccupantSteamId == steamId;
 
 	
-	public void HostAssign(Connection channel)
+	public bool HostTryAssign( Connection channel )
 	{
-		if (!Networking.IsHost) return;
+		if ( !Networking.IsHost ) return false;
+		if ( IsFull ) return false;
+
 		OccupantSteamId = channel.SteamId;
+		return true;
 	}
 
-	public void HostClear(Connection channel)
+	
+	public bool HostClearIfMatches( SteamId steamId )
 	{
-		if (!Networking.IsHost) return;
-		OccupantSteamId = 0;
+		if ( !Networking.IsHost ) return false;
+		if ( !IsOccupiedBy( steamId ) ) return false;
+
+		OccupantSteamId = default;
+		return true;
 	}
 }
