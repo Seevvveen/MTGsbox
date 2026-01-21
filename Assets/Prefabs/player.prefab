@@ -16,37 +16,483 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Sandbox.Match.PlayerState",
-        "__guid": "2e14b783-f87e-41e2-87bf-d93a6ff5d769",
+        "__type": "Sandbox.GameNetworking.Player",
+        "__guid": "bdfeff3c-2606-4fa4-8ffc-dd4245e70c13",
         "__enabled": true,
         "Flags": 0,
+        "CardPrefabTest": {
+          "_type": "gameobject",
+          "prefab": "prefabs/card.prefab"
+        },
+        "LifeTotal": 40,
+        "Name": "unknown",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null
-      },
-      {
-        "__type": "Sandbox.ScreenPanel",
-        "__guid": "176abac2-5bce-432e-bef0-210a7c9f43af",
-        "__enabled": true,
-        "Flags": 0,
-        "AutoScreenScale": true,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "Opacity": 1,
-        "Scale": 1,
-        "ScaleStrategy": "ConsistentHeight",
-        "TargetCamera": null,
-        "ZIndex": 100
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "9353101f-7b67-4f1a-855e-cdd58f0c0200",
+        "__version": 2,
+        "__Prefab": "prefabs/board.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "b0234946-9417-4568-b21e-893a11dfca1e"
+              },
+              "Property": "Position",
+              "Value": "0,0,1"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "b0234946-9417-4568-b21e-893a11dfca1e": "9353101f-7b67-4f1a-855e-cdd58f0c0200",
+          "bb27502e-1ac3-419d-88d1-8847d0f92aa9": "804b259c-af6f-4394-9cb7-c6b1f40d31e2",
+          "b7467d16-0f8a-415a-84ef-e142a9ef44da": "c75be268-c24d-4a2b-9768-cc80e6a4a9f0"
+        }
+      },
+      {
+        "__guid": "ca0ce59d-169a-470c-a623-43aa1e911963",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "-30.53637,-83.2735,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "ca0ce59d-169a-470c-a623-43aa1e911963",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "11b91e45-ac55-4302-bf77-7cbcbea743bc",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "b51dde0b-55db-40fd-a227-299b8d6220d5",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "bf1e33a5-7d9d-4768-a1bc-00ed0dae8261",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "d72dbaa9-5710-4e6e-9616-ef7955fa60fc",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "f210f475-e5d5-4686-9053-646a21cbefa7"
+        }
+      },
+      {
+        "__guid": "1462ffef-b72d-4e33-982e-a7f453404bcd",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (2)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "29.03698,-83.2735,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "1462ffef-b72d-4e33-982e-a7f453404bcd",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "a61532f0-1e5d-4158-b56d-9296e591bd56",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "b6821725-7b86-4df5-9e9f-dd7cf4c8aecc",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "0a913813-4ee7-4256-b3fe-8100fc57b20d",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "66fccc94-7f81-4036-b53e-502aa54d3a16",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "be9e1516-c08e-4756-8bae-8aec69c1bc52"
+        }
+      },
+      {
+        "__guid": "13c7995c-47b9-4fd5-8ae2-b990c4e4659c",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (3)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "-17.4121,-51.78866,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "13c7995c-47b9-4fd5-8ae2-b990c4e4659c",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "f095a12b-a825-4c6f-ac04-26b4b335556d",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "c319b64e-a267-4d12-86de-83eaa2287a62",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "7c1c31b6-d606-4b95-a73f-c1ddcecca6c7",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "4ac17589-43b2-4502-8a4d-a83ba166f7f2",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "300eeefe-148a-41d8-9716-87cd3d9852e4"
+        }
+      },
+      {
+        "__guid": "d4ee9832-2b5b-4eff-96c5-587ce1a99c10",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (4)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "-17.4121,-29.85943,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "d4ee9832-2b5b-4eff-96c5-587ce1a99c10",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "4e45a8c7-9ff9-4a16-ac6c-27983ef62b1b",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "002c1a45-a1bb-4c79-8dee-25834bd1ce28",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "88454327-f75e-474e-ba35-7caba0dbfb51",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "6321b2be-fe1b-483e-868b-018878de8c0e",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "1ff5ec3c-23f8-4000-a3c1-e98521744542"
+        }
+      },
+      {
+        "__guid": "dabb1c58-fa8c-40f8-ac25-90cd5c73e3e5",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (5)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "-17.4121,-6.857265,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "dabb1c58-fa8c-40f8-ac25-90cd5c73e3e5",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "c7119b78-ba63-4365-afe8-79e13d8dd13e",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "179657c6-83b7-4aee-80b9-9d44be90088e",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "74265759-6d29-4a62-95af-b79b7a82e3c9",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "57ddc415-2957-4d75-b544-3c67d619ad9e",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "06a5a198-cf70-41af-bb10-93c035e2387c"
+        }
+      },
+      {
+        "__guid": "f45580e4-0810-4a13-aef4-0afe522237b5",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (6)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "-17.4121,15.92667,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "f45580e4-0810-4a13-aef4-0afe522237b5",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "b3d8ff7c-70cc-4459-a001-19b67c9246dd",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "38216502-acb9-45bb-b77a-85a0dafae456",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "3f82cb53-46aa-4ca9-b456-9809f8c1d059",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "d16fb53a-7b22-40a4-a506-760c50e83eb9",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "f391644a-4229-4b6a-948e-92ba8676d862"
+        }
+      },
+      {
+        "__guid": "ffe25a8f-f686-46e3-af42-f34f87475e08",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (7)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "-17.4121,39.23921,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "ffe25a8f-f686-46e3-af42-f34f87475e08",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "894ab85f-6c00-4e9d-a4c2-18f933d0b191",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "7419f88c-caea-42d4-9bf3-a5d788a60251",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "521d16d1-99c9-47e1-bb3f-a6e4d2043484",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "fae92792-bbfa-4e2b-a2fc-6a031b1427a9",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "c7a8e936-816e-470e-adf8-945cfb478660"
+        }
+      },
+      {
+        "__guid": "255f5603-11e0-4a79-a942-97a7f97caef2",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (8)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "-17.4121,61.78662,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "255f5603-11e0-4a79-a942-97a7f97caef2",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "cc54a5dc-2a0b-4c69-a2ae-0697f3956482",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "01694c7c-ebcc-43c0-98e4-a1bd8d881ab9",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "801b3e43-3100-4efb-90dc-88195c8654e3",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "6605fbc0-8668-4e4d-a20a-6ccc615a5abe",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "b3628045-58a9-45ca-bb49-45e5eeeac564"
+        }
+      },
+      {
+        "__guid": "e2463d5b-0e20-4167-ac99-84df9a4bab60",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (9)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "-17.4121,84.11375,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "e2463d5b-0e20-4167-ac99-84df9a4bab60",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "761a6b4b-1a16-4296-9ef8-994c070247da",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "c4781f83-6807-4f57-8b90-3eaba5625f1a",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "836adbc0-33f5-4b9f-b2be-f3168982e573",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "c4468ffb-efd1-4b59-bbff-a535fb005083",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "9c9a105f-37b4-46bb-acef-edbf1c075877"
+        }
+      },
+      {
+        "__guid": "28885714-15c5-4657-9e43-1ebc9f574a54",
+        "__version": 2,
+        "__Prefab": "prefabs/card.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Name",
+              "Value": "card (1)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Position",
+              "Value": "0,-83.25326,2"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+              },
+              "Property": "Rotation",
+              "Value": "0,0.7071069,0,-0.7071066"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "a8fc23e1-400a-4c29-b32f-ac979e70a034": "28885714-15c5-4657-9e43-1ebc9f574a54",
+          "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "8191bdcf-d235-4ef0-80c8-55a17cf861e9",
+          "038cf25f-d73d-40d8-bed4-1e61c0788612": "bcbb5fe5-1b0b-413b-902e-05072c0a7541",
+          "2cb1536a-7f12-4daf-955a-29f19ef46467": "6aeb1399-eca5-4d55-8401-59c85704c85d",
+          "71b6b7e4-14bb-474f-b369-1e65beb3df68": "99ee2332-2bba-4c11-8a58-a29b3fa28b71",
+          "dfcb863f-90c3-4622-8584-55c0a1cb116a": "01570cd8-e9f6-4406-baaa-197e834cb041"
+        }
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,

@@ -222,8 +222,8 @@
           "ZIndex": 100
         },
         {
-          "__type": "Sandbox.MainMenuMTG",
-          "__guid": "218c77cf-d1f3-464e-a7a6-00edd72d1d1e",
+          "__type": "Sandbox.StartupSceneUI",
+          "__guid": "3e66962e-37ea-40d2-ac91-0280a42c9928",
           "__enabled": true,
           "Flags": 0,
           "OnComponentDestroy": null,

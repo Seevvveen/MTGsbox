@@ -18,7 +18,7 @@ public class SimpleMove : Component
 	protected override void OnUpdate()
 	{
 		var ray = Camera.ScreenPixelToRay( Mouse.Position );
-		var traceCard = Scene.Trace.Ray( ray, 300 ).WithTag( "card" );
+		var traceCard = Scene.Trace.Ray( ray, 500 ).WithTag( "card" );
 		var traceThroughCard = Scene.Trace.Ray( ray, 300 ).WithoutTags( "card" );
 		
 		if ( Input.Down( "attack1" ) )

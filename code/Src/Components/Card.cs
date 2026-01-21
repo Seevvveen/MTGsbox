@@ -178,7 +178,7 @@ public sealed class Card : Component
 	}
 
 	[Button( "Set Random Card" )]
-	private void SetRandomCard()
+	public void SetRandomCard()
 	{
 		var cards = GlobalCatalogs.Cards;
 		if ( !cards.IsReady || cards.Count <= 0 )
