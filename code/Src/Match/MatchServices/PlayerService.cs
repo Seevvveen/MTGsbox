@@ -1,4 +1,6 @@
-﻿namespace Sandbox.GameNetworking.MatchServices;
+﻿using Sandbox.GameNetworking;
+
+namespace Sandbox.Match.MatchServices;
 
 /// <summary>
 /// Simple Service that handles players for the match
@@ -19,15 +21,12 @@ public sealed class PlayerService
 		return false;
 	}
 	
-	public void HostAddPlayer( Connection channel )
+	public void HostAddPlayer( PlayerData newPlayer )
 	{
 		if ( !Networking.IsHost ) return;
-		if ( DoesPlayerExist( channel.SteamId ) ) return;
+		if ( DoesPlayerExist( newPlayer.SteamId ) ) return;
 
-		_match.MatchParticipants.Add( new PlayerData
-		{
-			SteamId = channel.SteamId
-		} );
+		_match.MatchParticipants.Add( newPlayer );
 	}
 
 	public void HostRemovePlayer( Connection channel )
@@ -43,6 +42,19 @@ public sealed class PlayerService
 	}
 
 	
+	/// <summary>
+	/// Creates PlayerData Struct
+	/// </summary>
+	public PlayerData HostCreatePlayerData(Connection channel, Seat seat)
+	{
+		return new PlayerData()
+		{
+			SteamId = channel.SteamId,
+			DisplayName = channel.DisplayName,
+			seat = seat,
+			IsReady = false,
+		};
+	}
 	
 
 }
@@ -53,4 +65,7 @@ public sealed class PlayerService
 public struct PlayerData
 {
 	public SteamId SteamId;
+	public string DisplayName;
+	public Seat seat;
+	public bool IsReady;
 }

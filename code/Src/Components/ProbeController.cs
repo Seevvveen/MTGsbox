@@ -5,13 +5,10 @@ namespace Sandbox.Components;
 [Title( "Probe Controller" )]
 public sealed class ProbeController : Component
 {
-	// Physics body to push around
 	[Property] public Rigidbody? RigidBody { get; set; }
 
 	// The object we rotate for facing (often the player root, or a camera pivot)
 	[Property] public GameObject? MovementObject { get; set; }
-
-	// Optional: actual camera component (if you want to drive its local rotation too)
 	[Property] public CameraComponent? Camera { get; set; }
 
 	[Property] private float Speed { get; set; } = 400f;
@@ -32,8 +29,6 @@ public sealed class ProbeController : Component
 			Camera?.Enabled = false;
 			return;
 		}
-			
-			
 		
 		_angles = WorldRotation.Angles();
 		_pitch = _angles.pitch;

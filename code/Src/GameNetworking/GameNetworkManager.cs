@@ -1,4 +1,6 @@
-﻿using Sandbox.Diagnostics;
+﻿using Sandbox.Components;
+using Sandbox.Diagnostics;
+using Sandbox.GameNetworking.MatchServices;
 
 namespace Sandbox.GameNetworking;
 
@@ -18,7 +20,7 @@ public class GameNetworkManager : Component, Component.INetworkListener
 	private MatchManager Match => EnsureMatch();
 	
 	
-	// When Someone is loaded
+	// On Host: Ensure Match Exists: Claim a Seat: If Seat Valid: Put Player: else Create Spectator;
 	public void OnActive(Connection channel)
 	{
 		if (!Networking.IsHost) return;
@@ -28,11 +30,11 @@ public class GameNetworkManager : Component, Component.INetworkListener
 		
 		if (seat is not null)
 		{
-			Match.Players.HostAddPlayer(channel);
 			SpawnPlayerPawn(channel, seat);
 		}
 		else
 		{
+			//TODO More explicit spectator creation
 			SpawnSpectorPawn(channel);
 		}
 	}
@@ -48,10 +50,13 @@ public class GameNetworkManager : Component, Component.INetworkListener
 	// Player is in Match Give them Player Pawn
 	public void SpawnPlayerPawn(Connection channel, Seat seat)
 	{
+		var newPlayer = Match.Players.HostCreatePlayerData(channel, seat);
+		
+		Match.Players.HostAddPlayer(newPlayer);
 		var go = PlayerPrefab.Clone();
 		go.WorldPosition = seat.WorldPosition;
 		go.WorldRotation = seat.WorldRotation;
-		go.GetComponent<Player>().HostSetIdentity(channel, seat);
+		go.GetComponent<Player>().HostSetIdentity(newPlayer);
 		go.NetworkSpawn( channel );
 	}
 	

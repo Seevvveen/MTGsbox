@@ -16,14 +16,12 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Sandbox.GameNetworking.Player",
-        "__guid": "bdfeff3c-2606-4fa4-8ffc-dd4245e70c13",
+        "__type": "Sandbox.Components.Player",
+        "__guid": "a595e678-ae1e-4423-8bed-cfa639400e51",
         "__enabled": true,
         "Flags": 0,
-        "CardPrefabTest": {
-          "_type": "gameobject",
-          "prefab": "prefabs/card.prefab"
-        },
+        "CardPrefabTest": null,
+        "IsReady": false,
         "LifeTotal": 40,
         "Name": "unknown",
         "OnComponentDestroy": null,
@@ -34,6 +32,20 @@
         "OnComponentUpdate": null,
         "Seat": null,
         "SteamId": 0
+      },
+      {
+        "__type": "Sandbox.SimpleMove",
+        "__guid": "03e51fb8-cd7c-4fe1-843e-ea617d42aafc",
+        "__enabled": true,
+        "Flags": 0,
+        "DrawDebug": true,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "TraceThrough": false
       }
     ],
     "Children": [
@@ -99,49 +111,52 @@
         }
       },
       {
-        "__guid": "ff46b7a2-93f1-4a43-b6ee-f4183109981e",
+        "__guid": "c95a63fa-5bf5-44d1-b54e-cbe7dc3628a8",
         "__version": 2,
-        "__Prefab": "prefabs/playerprobe.prefab",
-        "__PrefabInstancePatch": {
-          "AddedObjects": [],
-          "RemovedObjects": [],
-          "PropertyOverrides": [
-            {
-              "Target": {
-                "Type": "GameObject",
-                "IdValue": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
-              },
-              "Property": "Position",
-              "Value": "200,0,50"
-            },
-            {
-              "Target": {
-                "Type": "GameObject",
-                "IdValue": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
-              },
-              "Property": "Rotation",
-              "Value": "0,0,-1,-0.00000004371139"
-            },
-            {
-              "Target": {
-                "Type": "GameObject",
-                "IdValue": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
-              },
-              "Property": "NetworkMode",
-              "Value": 1
-            }
-          ],
-          "MovedObjects": []
-        },
-        "__PrefabIdToInstanceId": {
-          "f9c1c923-eb93-4b3e-a58f-1bd20091610c": "ff46b7a2-93f1-4a43-b6ee-f4183109981e",
-          "eba70cbc-666b-486e-9fe9-d4231ebe91e4": "6a0db7f3-087e-4783-9e6c-70f530e143df",
-          "1e8571c1-f693-4e6c-b3b5-7a720cd9e5b7": "108b9477-4974-40a7-a481-c1b3961c4058",
-          "207d74f6-8210-48e3-aa46-c9c33e233b6d": "0ace3a74-cd47-4fe7-99f7-49a0cdea6bd3",
-          "0659cd4f-58f7-42fc-8cc9-90c410443bef": "791a7bc3-0b2a-4975-8f23-89b226c75670",
-          "36f1ffbd-e32f-45cb-807d-e0dd0d2bb668": "7bdbd53a-43cd-4367-98ae-2b90fc762f83",
-          "2de837d6-399f-4f11-a791-ac91471da65a": "b1254a1b-95b5-4329-97fe-76ee691c13f4"
-        }
+        "Flags": 0,
+        "Name": "Camera",
+        "Position": "0,0,180",
+        "Rotation": "-0.7071068,-0.00000003090862,0.7071068,-0.00000003090862",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.CameraComponent",
+            "__guid": "21644513-2a6c-410d-9721-966f6822ae42",
+            "__enabled": true,
+            "Flags": 0,
+            "BackgroundColor": "0.33333,0.46275,0.52157,1",
+            "ClearFlags": "All",
+            "EnablePostProcessing": true,
+            "FieldOfView": 60,
+            "FovAxis": "Horizontal",
+            "IsMainCamera": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Orthographic": false,
+            "OrthographicHeight": 1204,
+            "PostProcessAnchor": null,
+            "Priority": 1,
+            "RenderExcludeTags": "",
+            "RenderTags": "",
+            "RenderTexture": null,
+            "TargetEye": "None",
+            "Viewport": "0,0,1,1",
+            "ZFar": 10000,
+            "ZNear": 10
+          }
+        ],
+        "Children": []
       }
     ],
     "__properties": {

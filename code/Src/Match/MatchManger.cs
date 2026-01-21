@@ -1,6 +1,7 @@
 ﻿#nullable enable
 
 using Sandbox.GameNetworking.MatchServices;
+using Sandbox.Match.MatchServices;
 
 namespace Sandbox.GameNetworking;
 
@@ -30,7 +31,7 @@ public class MatchManager : Component
 	/// </summary>
 	public PlayerService Players { get; private set; }
 	public SeatService Seats {get; private set;}
-	
+
 	
 	protected override void OnAwake()
 	{
