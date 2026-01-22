@@ -21,6 +21,7 @@
         "__enabled": true,
         "Flags": 0,
         "CardPrefabTest": null,
+        "HasBeenGivenIdentity": false,
         "IsReady": false,
         "LifeTotal": 40,
         "Name": "unknown",
@@ -55,7 +56,14 @@
         "__Prefab": "prefabs/board.prefab",
         "__PrefabInstancePatch": {
           "AddedObjects": [],
-          "RemovedObjects": [],
+          "RemovedObjects": [
+            {
+              "Id": {
+                "Type": "Component",
+                "IdValue": "2dbc0c26-09c9-4163-8ab7-09d6a461d9c7"
+              }
+            }
+          ],
           "PropertyOverrides": [
             {
               "Target": {
@@ -70,8 +78,10 @@
         },
         "__PrefabIdToInstanceId": {
           "b0234946-9417-4568-b21e-893a11dfca1e": "9353101f-7b67-4f1a-855e-cdd58f0c0200",
-          "bb27502e-1ac3-419d-88d1-8847d0f92aa9": "804b259c-af6f-4394-9cb7-c6b1f40d31e2",
-          "b7467d16-0f8a-415a-84ef-e142a9ef44da": "c75be268-c24d-4a2b-9768-cc80e6a4a9f0"
+          "0f126e3c-6a5c-4461-ab36-125634cb71ab": "b19b8ae4-a83d-4b93-ab7a-36597c7d6386",
+          "a13ec40b-7f07-4009-a40b-85629ad98c71": "e694284c-e62b-4a3e-869f-c0d091338e78",
+          "4c4a872b-549c-4f72-bca9-95ec22e10e7b": "f27d2c84-73f4-4b69-a106-5d56120dab1b",
+          "3f2b5bdf-5c3b-4e1f-ac2d-d76083f21ca9": "48042c6a-b5a4-4d2d-9c0c-3bfbc5325606"
         }
       },
       {

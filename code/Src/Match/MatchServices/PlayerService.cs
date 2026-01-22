@@ -1,10 +1,10 @@
-﻿using Sandbox.GameNetworking;
+﻿using Sandbox.Components;
+using Sandbox.GameNetworking;
 
 namespace Sandbox.Match.MatchServices;
 
 /// <summary>
-/// Simple Service that handles players for the match
-/// WIP
+/// What the match uses to understand players
 /// </summary>
 public sealed class PlayerService
 {
@@ -12,60 +12,37 @@ public sealed class PlayerService
 	private readonly MatchManager _match;
 	internal PlayerService(MatchManager match) => _match = match;
 
-	
-	public bool DoesPlayerExist( SteamId steamId )
+	private GameObject CreatePlayerPawn(Connection channel)
 	{
-		for ( var i = 0; i < _match.MatchParticipants.Count; i++ )
-			if ( _match.MatchParticipants[i].SteamId == steamId )
-				return true;
-		return false;
-	}
-	
-	public void HostAddPlayer( PlayerData newPlayer )
-	{
-		if ( !Networking.IsHost ) return;
-		if ( DoesPlayerExist( newPlayer.SteamId ) ) return;
-
-		_match.MatchParticipants.Add( newPlayer );
-	}
-
-	public void HostRemovePlayer( Connection channel )
-	{
-		if ( !Networking.IsHost ) return;
-
-		for ( var i = 0; i < _match.MatchParticipants.Count; i++ )
+		var seat = _match.Seats.GetNextAvailable();
+		
+		var plyObj = _match.PlayerPawnPrefab.Clone(cloneConfig: new CloneConfig()
 		{
-			if (_match.MatchParticipants[i].SteamId != channel.SteamId) continue;
-			_match.MatchParticipants.RemoveAt( i );
-			return;
+			Name =  channel.DisplayName,
+			Parent = null,
+			StartEnabled = true,
+			Transform = seat.WorldTransform,
+		});
+		plyObj.GetComponent<Player>().SetPlayer(channel);
+		seat.SetOccupent(channel.Id);
+		plyObj.NetworkSpawn(channel);
+		return plyObj;
+	}
+	
+	public void Add(Connection channel)
+	{
+		CreatePlayerPawn( channel );
+		_match.MatchPlayers.Add( channel.Id );
+	}
+
+	public void Remove(Connection channel)
+	{
+		foreach (var id in _match.MatchPlayers.ToList())
+		{
+			if (id != channel.Id) continue;
+			_match.Seats.FreeSeat(id);
+			_match.MatchPlayers.Remove(id);
 		}
 	}
-
 	
-	/// <summary>
-	/// Creates PlayerData Struct
-	/// </summary>
-	public PlayerData HostCreatePlayerData(Connection channel, Seat seat)
-	{
-		return new PlayerData()
-		{
-			SteamId = channel.SteamId,
-			DisplayName = channel.DisplayName,
-			seat = seat,
-			IsReady = false,
-		};
-	}
-	
-
-}
-
-/// <summary>
-/// What we store and Sync between Clients
-/// </summary>
-public struct PlayerData
-{
-	public SteamId SteamId;
-	public string DisplayName;
-	public Seat seat;
-	public bool IsReady;
 }

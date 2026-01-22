@@ -84,49 +84,6 @@
       "Children": []
     },
     {
-      "__guid": "f7ea6a3c-952c-445e-9b66-352c4494c06d",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "NetworkManager",
-      "Position": "0,0,0",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.GameNetworking.GameNetworkManager",
-          "__guid": "a9306001-06ee-4e5d-9cc0-202cd8c917a4",
-          "__enabled": true,
-          "Flags": 0,
-          "MatchPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/match.prefab"
-          },
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PlayerPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/player.prefab"
-          },
-          "SpectatorPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/spectator.prefab"
-          }
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "be188f22-38fe-4301-86bf-db785c5b8640",
       "__version": 2,
       "Flags": 0,
@@ -145,7 +102,7 @@
         {
           "__type": "Sandbox.CameraComponent",
           "__guid": "c448a493-b3f2-483b-bf85-84b5f4f3cbd2",
-          "__enabled": true,
+          "__enabled": false,
           "Flags": 0,
           "BackgroundColor": "0.33333,0.46275,0.52157,1",
           "ClearFlags": "All",
@@ -195,6 +152,7 @@
           "__guid": "a7e6ea0d-4ac6-43eb-bc6b-feb1d6180f88",
           "__enabled": true,
           "Flags": 0,
+          "Occupent": null,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -227,6 +185,7 @@
           "__guid": "1db5e25e-eaa5-40c5-86d7-a5128c291537",
           "__enabled": true,
           "Flags": 0,
+          "Occupent": null,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -234,6 +193,43 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "Order": 2
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "1cd6f57c-0fc3-480d-8355-d5376ad581a2",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "MatchManager",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.GameNetworking.MatchManager",
+          "__guid": "d8d603b3-4197-41e3-91ac-ee883142d833",
+          "__enabled": true,
+          "Flags": 0,
+          "MatchPlayers": [],
+          "MatchSeats": [],
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PlayerPawnPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/player.prefab"
+          }
         }
       ],
       "Children": []

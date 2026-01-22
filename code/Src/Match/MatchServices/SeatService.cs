@@ -1,67 +1,46 @@
-﻿namespace Sandbox.GameNetworking.MatchServices;
+﻿using Sandbox.Components;
+using Sandbox.GameNetworking;
+
+namespace Sandbox.Match.MatchServices;
 
 /// <summary>
 /// Manages Seats in the match
 /// </summary>
 public sealed class SeatService
 {
+	// Match Owns us
 	private readonly MatchManager _match;
-	private List<Seat> _seats = new();
-	
 	internal SeatService(MatchManager match) => _match = match;
-
-	public int SeatCount => _seats.Count;
 	
+	public List<Seat> All { get; private set; } = null;
 	
-	public void HostCacheSeats()
-	{
-		if ( !Networking.IsHost ) return;
-
-		_seats = _match.Scene.GetAllComponents<Seat>().ToList();
-		_seats.Sort( (a, b) => a.Order.CompareTo( b.Order ) );
-	}
-
-	
-	public Seat? HostClaimSeat(Connection channel)
+	public List<Seat>? GetAll()
 	{
 		if ( !Networking.IsHost ) return null;
 
-		// Ensure cached
-		if ( _seats.Count == 0 )
-			HostCacheSeats();
-
-		return _seats.FirstOrDefault(seat => seat.HostTryAssign(channel));
+		All = _match.Scene.GetAllComponents<Seat>().ToList();
+		All.Sort( (a, b) => a.Order.CompareTo( b.Order ) );
+		return All;
 	}
 
-	
-	public void HostReleaseSeat( SteamId steamId )
+	public Seat GetNextAvailable()
 	{
-		if ( !Networking.IsHost ) return;
-
-		if (_seats.Any(t => t.HostClearIfMatches( steamId )))
+		foreach (var seat in All)
 		{
-			return;
+			if (seat.IsOccupied) continue;
+			return seat;
+		}
+		return null;
+	}
+
+	public void FreeSeat(Guid id)
+	{
+		foreach (var seat in All)
+		{
+			if (seat.Occupent != id) continue;
+			seat.ClearOccupent();
 		}
 	}
 	
-	
-	public int HostGetSeatIndexFor( SteamId steamId )
-	{
-		if ( !Networking.IsHost ) return -1;
-
-		for ( var i = 0; i < _seats.Count; i++ )
-			if ( _seats[i].IsOccupiedBy( steamId ) )
-				return i;
-
-		return -1;
-	}
-	
-	
-	public Seat? HostGetSeatByIndex( int index )
-	{
-		if ( !Networking.IsHost ) return null;
-		if ( index < 0 || index >= _seats.Count ) return null;
-		return _seats[index];
-	}
 	
 }

@@ -7,29 +7,18 @@
 public sealed class Seat : Component
 {
 	[Property] public int Order { get; set; }
-	[Sync] public SteamId OccupantSteamId { get; private set; } = default;
-	public bool IsFull => OccupantSteamId != default;
-
-	public bool IsOccupiedBy( SteamId steamId )
-		=> IsFull && OccupantSteamId == steamId;
-
+	[Property, ReadOnly] public Guid? Occupent { get; private set; } = null;
 	
-	public bool HostTryAssign( Connection channel )
-	{
-		if ( !Networking.IsHost ) return false;
-		if ( IsFull ) return false;
+	public bool IsOccupied
+		=> Occupent is not null;
 
-		OccupantSteamId = channel.SteamId;
-		return true;
+	public void SetOccupent(Guid id)
+	{
+		Occupent = id;
 	}
 
-	
-	public bool HostClearIfMatches( SteamId steamId )
+	public void ClearOccupent()
 	{
-		if ( !Networking.IsHost ) return false;
-		if ( !IsOccupiedBy( steamId ) ) return false;
-
-		OccupantSteamId = default;
-		return true;
+		Occupent = null;
 	}
 }

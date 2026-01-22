@@ -1,5 +1,4 @@
 ﻿using Sandbox.GameNetworking;
-using Sandbox.GameNetworking.MatchServices;
 using Sandbox.Match.MatchServices;
 
 namespace Sandbox.Components;
@@ -9,34 +8,29 @@ public class Player : Component
 	[ReadOnly] public MatchManager? Match = MatchManager.Instance;
 	
 	// Global Identifier
-	[Property, ReadOnly] public SteamId SteamId { get; private set; }
+	[Property, ReadOnly] public SteamId? SteamId { get; private set; }
+	[Property, ReadOnly] public bool HasBeenGivenIdentity { get; private set; } = false;
 	
 	[Property] public string Name { get; set; } = "unknown";
 	[Property] public int LifeTotal { get; set; } = 40;
 	[Property] public Seat Seat { get; set; } = null;
 	[Property] public bool IsReady { get; set; } = false;
 	
-	/// <summary>
-	/// Called into by the network manager to configure Identity
-	/// </summary>
-	public void HostSetIdentity(PlayerData data)
+	public void SetPlayer(Connection channel)
 	{
-		if (!Networking.IsHost) return;
+		if (HasBeenGivenIdentity) return;
 		
-		SteamId = data.SteamId;
-		Name = data.DisplayName ?? "Player";
-		Seat = data.seat;
-		IsReady = false;
+		SteamId = channel.SteamId;
+		
+		
+		HasBeenGivenIdentity =  true;
 	}
-
-	// Todo Kinda Jank
+	
 	protected override void OnStart()
 	{
-		if (IsProxy)
-		{
-			GetComponentInChildren<CameraComponent>().Enabled = false;
-			GetComponentInChildren<SimpleMove>().Enabled = false;
-		}
+		if (!IsProxy) return;
+		GetComponentInChildren<CameraComponent>().Enabled = false;
+		GetComponentInChildren<SimpleMove>().Enabled = false;
 	}
 
 
