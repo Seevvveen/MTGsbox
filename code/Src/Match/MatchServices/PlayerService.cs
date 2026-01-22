@@ -19,7 +19,7 @@ public sealed class PlayerService
 		var plyObj = _match.PlayerPawnPrefab.Clone(cloneConfig: new CloneConfig()
 		{
 			Name =  channel.DisplayName,
-			Parent = null,
+			Parent = _match.GameObject,
 			StartEnabled = true,
 			Transform = seat.WorldTransform,
 		});

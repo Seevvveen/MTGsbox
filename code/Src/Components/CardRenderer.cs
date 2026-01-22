@@ -10,62 +10,32 @@ namespace Sandbox.Components;
 /// <summary>
 /// Renders a CardImage within the scene
 /// </summary>
-public sealed class CardRenderer() : PanelComponent, Component.ExecuteInEditor
+public sealed class CardRenderer : PanelComponent
 {
-	[RequireComponent] private WorldPanel WorldPanel { get; set; }
-
-	private Uri _uri;
-	private Image _image;
-
-
-	protected override void OnAwake()
+	[RequireComponent]
+	private WorldPanel WorldPanel { get; set; } = new()
 	{
-		WorldPanel.PanelSize = StaticCardInformation.Size;
-		_uri ??= new Uri( "https://cards.scryfall.io/large/front/8/6/8625b50d-474d-46dd-af84-0b267ed5fab3.jpg?1616041637" );
-		SetImage(  _uri );
-	}
-	
+		PanelSize = StaticCardInformation.Size,
+	};
 
+	[Change("UriChanged")]
+	public Uri Uri { get; set; } =
+		new("https://cards.scryfall.io/large/front/8/6/8625b50d-474d-46dd-af84-0b267ed5fab3.jpg?1616041637");
+	private Image _image;
+	
 	protected override void OnTreeFirstBuilt()
 	{
 		base.OnTreeFirstBuilt();
 
-		_image = new Image
-		{
-			Parent = Panel
-			
-		};
+		_image = new Image { Parent = Panel };
 		
-		
-		if ( _uri is not null )
-			ApplyImage();
+		_image.SetTexture( Uri.ToString() );
 	}
 	
-	public void SetImage( Uri src )
+	void UriChanged(Uri old, Uri @new)
 	{
-		if ( src is null )
-		{
-			Log.Error( "Card: SetImage: src is null" );
-			return;
-		}
-
-		_uri = src;
-
-		if ( _image is null || !_image.IsValid )
-			return; // not built yet, will apply in OnTreeFirstBuilt
-
-		ApplyImage();
+		_image.SetTexture(@new.OriginalString.IsWhiteSpace() ? old.OriginalString : @new.OriginalString);
 	}
-	
-	private void ApplyImage()
-	{
-		var path = _uri.OriginalString;
-		if ( string.IsNullOrWhiteSpace( path ) )
-			return;
-
-		_image.SetTexture( path );
-	}
-	
 	
 	protected override void OnDestroy()
 	{

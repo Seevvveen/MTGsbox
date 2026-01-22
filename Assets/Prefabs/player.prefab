@@ -56,14 +56,7 @@
         "__Prefab": "prefabs/board.prefab",
         "__PrefabInstancePatch": {
           "AddedObjects": [],
-          "RemovedObjects": [
-            {
-              "Id": {
-                "Type": "Component",
-                "IdValue": "2dbc0c26-09c9-4163-8ab7-09d6a461d9c7"
-              }
-            }
-          ],
+          "RemovedObjects": [],
           "PropertyOverrides": [
             {
               "Target": {
