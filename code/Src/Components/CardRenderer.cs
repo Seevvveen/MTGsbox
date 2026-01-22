@@ -13,16 +13,18 @@ namespace Sandbox.Components;
 public sealed class CardRenderer : PanelComponent
 {
 	[RequireComponent]
-	private WorldPanel WorldPanel { get; set; } = new()
-	{
-		PanelSize = StaticCardInformation.Size,
-	};
+	private WorldPanel WorldPanel { get; set; }
 
 	[Change("UriChanged")]
 	public Uri Uri { get; set; } =
 		new("https://cards.scryfall.io/large/front/8/6/8625b50d-474d-46dd-af84-0b267ed5fab3.jpg?1616041637");
 	private Image _image;
-	
+
+	protected override void OnAwake()
+	{
+		WorldPanel.PanelSize = StaticCardInformation.Size;
+	}
+
 	protected override void OnTreeFirstBuilt()
 	{
 		base.OnTreeFirstBuilt();
