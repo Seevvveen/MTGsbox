@@ -132,77 +132,54 @@
       "Children": []
     },
     {
-      "__guid": "f72cf02e-ae71-4e64-9872-1a72ae14d9af",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Seat1",
-      "Position": "60,110,0",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "spawnpoint",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.GameNetworking.Seat",
-          "__guid": "a7e6ea0d-4ac6-43eb-bc6b-feb1d6180f88",
-          "__enabled": true,
-          "Flags": 0,
-          "Occupent": null,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Order": 1
-        }
-      ],
-      "Children": []
-    },
-    {
-      "__guid": "217bf588-94e8-4871-9d40-be6a75d1bf2d",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Seat2",
-      "Position": "-50,110,0",
-      "Rotation": "0,0,1,-0.00000004371139",
-      "Scale": "1,1,1",
-      "Tags": "spawnpoint",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.GameNetworking.Seat",
-          "__guid": "1db5e25e-eaa5-40c5-86d7-a5128c291537",
-          "__enabled": true,
-          "Flags": 0,
-          "Occupent": null,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Order": 2
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "1cd6f57c-0fc3-480d-8355-d5376ad581a2",
       "__version": 2,
       "Flags": 0,
       "Name": "MatchManager",
       "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 15,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Match.MatchManager",
+          "__guid": "11a70bfc-a996-4390-8111-27e20f9ff605",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.Match.ConnectionHandler",
+          "__guid": "19a1a53f-af19-4770-9af9-4b89768640a0",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "6321a854-5df2-4175-a1f2-689764ffcc3e",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Object",
+      "Position": "88,148,0",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
@@ -214,22 +191,55 @@
       "OwnerTransfer": 1,
       "Components": [
         {
-          "__type": "Sandbox.GameNetworking.MatchManager",
-          "__guid": "d8d603b3-4197-41e3-91ac-ee883142d833",
+          "__type": "Sandbox.Seating.SeatAnchor",
+          "__guid": "d622b380-e3a7-4e82-98c4-a11e5262d70d",
           "__enabled": true,
           "Flags": 0,
-          "MatchPlayers": [],
-          "MatchSeats": [],
+          "IsOccupied": false,
+          "Occupent": "00000000-0000-0000-0000-000000000000",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "PlayerPawnPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/player.prefab"
-          }
+          "Order": 0,
+          "Team": 0
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "3c6f3f24-4d82-4344-9859-6be6226482c4",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Object",
+      "Position": "-64,148,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Seating.SeatAnchor",
+          "__guid": "fe863129-e987-4a2a-8cb5-d44295894cf2",
+          "__enabled": true,
+          "Flags": 0,
+          "IsOccupied": false,
+          "Occupent": "00000000-0000-0000-0000-000000000000",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Order": 0,
+          "Team": 0
         }
       ],
       "Children": []

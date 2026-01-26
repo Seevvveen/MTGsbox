@@ -9,7 +9,7 @@
     "Scale": "1,1,1",
     "Tags": "",
     "Enabled": true,
-    "NetworkMode": 2,
+    "NetworkMode": 1,
     "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
@@ -181,6 +181,42 @@
             },
             "RenderType": "On",
             "Tint": "1,1,1,1"
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "27e3bf03-ee68-447e-bada-e5a3ad876f7a",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "ProbeSelection",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.Probe.ProbeSelection",
+            "__guid": "1aad7110-0927-48aa-8e00-1efe3413b184",
+            "__enabled": true,
+            "Flags": 0,
+            "MaxDistance": 5000,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Probe": {
+              "_type": "gameobject",
+              "go": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
+            }
           }
         ],
         "Children": []
