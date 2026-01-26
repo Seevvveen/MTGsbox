@@ -1,0 +1,439 @@
+{
+  "__guid": "da587fe2-de87-435b-8337-2590eb81a78e",
+  "GameObjects": [
+    {
+      "__guid": "f7738910-141d-48d6-9b88-a08494d31837",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Object",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [],
+      "Children": []
+    },
+    {
+      "__guid": "b71723b2-4ba7-4038-be24-e26bcfd47414",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Plane",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "d1379275-d662-4c28-a6a0-d800ec949cc9",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/dev/plane.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.PlaneCollider",
+          "__guid": "45706172-dae7-4b0d-9986-3034cf4c5005",
+          "__enabled": true,
+          "Flags": 0,
+          "Center": "0,0,0",
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Normal": "0,0,1",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Scale": "100,100",
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "31d8c38b-fadd-4c93-8e33-1658afe58b3c",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Sun",
+      "Position": "-0.000007629395,0,156",
+      "Rotation": "0,0.7071067,0,0.7071068",
+      "Scale": "1,1,1",
+      "Tags": "light_directional,light",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.DirectionalLight",
+          "__guid": "db109f1b-cfd9-4dde-9b81-ba7cf0670598",
+          "__enabled": true,
+          "Flags": 0,
+          "FogMode": "Enabled",
+          "FogStrength": 1,
+          "LightColor": "0.91373,0.98039,1,1",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Shadows": true,
+          "SkyColor": "0,0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "4207d318-4d4a-46c3-b30e-26a526e957b6",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Camera",
+      "Position": "-0.000007629395,0,156",
+      "Rotation": "-0.7071068,0.0000001376788,0.7071066,0.0000001376788",
+      "Scale": "1,1,1",
+      "Tags": "maincamera",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.CameraComponent",
+          "__guid": "dc0a6210-6460-45c5-8810-8b149b0ee9ed",
+          "__enabled": true,
+          "Flags": 0,
+          "BackgroundColor": "0.33333,0.46275,0.52157,1",
+          "ClearFlags": "All",
+          "EnablePostProcessing": true,
+          "FieldOfView": 60,
+          "FovAxis": "Horizontal",
+          "IsMainCamera": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Orthographic": false,
+          "OrthographicHeight": 1204,
+          "PostProcessAnchor": null,
+          "Priority": 1,
+          "RenderExcludeTags": "",
+          "RenderTags": "",
+          "RenderTexture": null,
+          "TargetEye": "None",
+          "Viewport": "0,0,1,1",
+          "ZFar": 10000,
+          "ZNear": 10
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "b20130db-fe4f-405f-97b7-f7e3cf2eea27",
+      "__version": 2,
+      "__Prefab": "prefabs/card.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+            },
+            "Property": "Position",
+            "Value": "-4,0,12"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
+            },
+            "Property": "SourceCardId",
+            "Value": "7a615209-1762-4630-bec6-f089ec4d8f5a"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
+            },
+            "Property": "SourceCardName",
+            "Value": "Zariel, Archduke of Avernus"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "a8fc23e1-400a-4c29-b32f-ac979e70a034": "b20130db-fe4f-405f-97b7-f7e3cf2eea27",
+        "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "a1646fa6-6aba-4efd-90fa-90ffcd9694c6",
+        "038cf25f-d73d-40d8-bed4-1e61c0788612": "2487364f-df5d-436b-a404-21f1bb7b90ab",
+        "377e78cc-9d48-4d81-8a0a-e9cd58329d19": "4b8d5e11-46a0-4e23-a482-db083eb9ec1d",
+        "8a9c5409-6150-4e87-b820-23d214aeb0bd": "90f69df9-42d4-4356-8733-4d2bc455069e"
+      }
+    },
+    {
+      "__guid": "10cea681-caac-445a-8953-ff5164667693",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Hand",
+      "Position": "0,-36,8",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "placeable",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.SphereCollider",
+          "__guid": "c3555b58-b64e-4081-83d3-4067fb0c82d4",
+          "__enabled": true,
+          "Flags": 0,
+          "Center": "0,0,0",
+          "ColliderFlags": "IgnoreMass",
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "Radius": 8,
+          "RollingResistance": null,
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "1256c5d5-641a-4f07-ba44-3dff95d8dea5",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Field",
+      "Position": "0,32,8",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "placeable",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.SphereCollider",
+          "__guid": "129b2b82-b3f8-4f5f-b2a3-bbf07ffdf040",
+          "__enabled": true,
+          "Flags": 0,
+          "Center": "0,0,0",
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "Radius": 8,
+          "RollingResistance": null,
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "21a3cade-7f4e-4513-bd44-95a689ec9cf9",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Mover",
+      "Position": "-36,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "CardMover",
+          "__guid": "dbc88f71-97cf-4c24-a13b-2ceb8a87dd1e",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Spot1": {
+            "_type": "gameobject",
+            "go": "10cea681-caac-445a-8953-ff5164667693"
+          },
+          "Spot2": {
+            "_type": "gameobject",
+            "go": "1256c5d5-641a-4f07-ba44-3dff95d8dea5"
+          }
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "8079c468-13c0-4357-ae98-940b67cb8b55",
+      "__version": 2,
+      "__Prefab": "prefabs/playerprobe.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
+            },
+            "Property": "Position",
+            "Value": "196,-95.99998,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0.9914448,0.1305264"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
+            },
+            "Property": "NetworkFlags",
+            "Value": 8
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "1aad7110-0927-48aa-8e00-1efe3413b184"
+            },
+            "Property": "Held",
+            "Value": null
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "1aad7110-0927-48aa-8e00-1efe3413b184"
+            },
+            "Property": "Hovered",
+            "Value": null
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "f9c1c923-eb93-4b3e-a58f-1bd20091610c": "8079c468-13c0-4357-ae98-940b67cb8b55",
+        "eba70cbc-666b-486e-9fe9-d4231ebe91e4": "49a291fb-2a65-4ae3-9173-61cce2645a43",
+        "1e8571c1-f693-4e6c-b3b5-7a720cd9e5b7": "e9a6056a-273a-4d5d-8562-f5b331c0ca8c",
+        "207d74f6-8210-48e3-aa46-c9c33e233b6d": "43361cc1-3dd4-4766-8a53-8d636ed51b29",
+        "0659cd4f-58f7-42fc-8cc9-90c410443bef": "23bebb17-63f6-44e2-9919-cf07fe419efa",
+        "36f1ffbd-e32f-45cb-807d-e0dd0d2bb668": "d3cdadfe-8165-4edf-b340-70645d2a505c",
+        "2de837d6-399f-4f11-a791-ac91471da65a": "827b59ed-d075-499d-9490-c90cba9f892d",
+        "27e3bf03-ee68-447e-bada-e5a3ad876f7a": "1219ba6e-7276-459c-9fa4-7463a20ff9e5",
+        "1aad7110-0927-48aa-8e00-1efe3413b184": "57b98ea6-b223-44f9-854c-1cba1f887da2"
+      }
+    }
+  ],
+  "SceneProperties": {
+    "NetworkInterpolation": true,
+    "TimeScale": 1,
+    "WantsSystemScene": true,
+    "Metadata": {},
+    "NavMesh": {
+      "Enabled": false,
+      "IncludeStaticBodies": true,
+      "IncludeKeyframedBodies": true,
+      "EditorAutoUpdate": true,
+      "AgentHeight": 64,
+      "AgentRadius": 16,
+      "AgentStepSize": 18,
+      "AgentMaxSlope": 40,
+      "ExcludedBodies": "",
+      "IncludedBodies": ""
+    },
+    "GameObjectSystems": []
+  },
+  "ResourceVersion": 3,
+  "Title": null,
+  "Description": null,
+  "__references": [],
+  "__version": 3
+}
