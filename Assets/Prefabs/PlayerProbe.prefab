@@ -16,51 +16,14 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Sandbox.CameraComponent",
-        "__guid": "eba70cbc-666b-486e-9fe9-d4231ebe91e4",
-        "__enabled": true,
-        "Flags": 0,
-        "BackgroundColor": "0.33333,0.46275,0.52157,1",
-        "ClearFlags": "All",
-        "EnablePostProcessing": true,
-        "FieldOfView": 60,
-        "FovAxis": "Horizontal",
-        "IsMainCamera": true,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "Orthographic": false,
-        "OrthographicHeight": 1204,
-        "PostProcessAnchor": null,
-        "Priority": 1,
-        "RenderExcludeTags": "",
-        "RenderTags": "",
-        "RenderTexture": null,
-        "TargetEye": "None",
-        "Viewport": "0,0,1,1",
-        "ZFar": 10000,
-        "ZNear": 30
-      },
-      {
-        "__type": "Sandbox.Components.ProbeController",
-        "__guid": "1e8571c1-f693-4e6c-b3b5-7a720cd9e5b7",
+        "__type": "Sandbox.Players.Probe.ProbeMovement",
+        "__guid": "f6dd5993-1ade-49b3-b4b7-12d08ac0482f",
         "__enabled": true,
         "Flags": 0,
         "AccelerationRate": 15,
-        "Camera": {
-          "_type": "component",
-          "component_id": "eba70cbc-666b-486e-9fe9-d4231ebe91e4",
-          "go": "f9c1c923-eb93-4b3e-a58f-1bd20091610c",
-          "component_type": "CameraComponent"
-        },
+        "Camera": null,
+        "HasCamera": false,
         "MaxVelocity": 1000,
-        "MovementObject": {
-          "_type": "gameobject",
-          "go": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
-        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -69,17 +32,15 @@
         "OnComponentUpdate": null,
         "RigidBody": {
           "_type": "component",
-          "component_id": "207d74f6-8210-48e3-aa46-c9c33e233b6d",
+          "component_id": "a53fdbc5-8a68-4d96-b612-f0a09d7bc9f3",
           "go": "f9c1c923-eb93-4b3e-a58f-1bd20091610c",
           "component_type": "Rigidbody"
         },
-        "SensX": 100,
-        "SensY": 100,
         "Speed": 400
       },
       {
         "__type": "Sandbox.Rigidbody",
-        "__guid": "207d74f6-8210-48e3-aa46-c9c33e233b6d",
+        "__guid": "a53fdbc5-8a68-4d96-b612-f0a09d7bc9f3",
         "__enabled": true,
         "Flags": 0,
         "AngularDamping": 0,
@@ -113,7 +74,7 @@
       },
       {
         "__type": "Sandbox.SphereCollider",
-        "__guid": "0659cd4f-58f7-42fc-8cc9-90c410443bef",
+        "__guid": "d50a5964-8c22-4bd1-9726-84157b4e09ef",
         "__enabled": true,
         "Flags": 0,
         "Center": "0,0,0",
@@ -136,6 +97,23 @@
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
+      },
+      {
+        "__type": "Sandbox.Players.Probe.ProbeSelection",
+        "__guid": "0664cf24-053d-4a7f-b864-36c73d080174",
+        "__enabled": true,
+        "Flags": 0,
+        "AimFromObject": null,
+        "DragHeightOffset": 1,
+        "Held": null,
+        "Hovered": null,
+        "MaxDistance": 1000,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
       }
     ],
     "Children": [
@@ -143,7 +121,7 @@
         "__guid": "36f1ffbd-e32f-45cb-807d-e0dd0d2bb668",
         "__version": 2,
         "Flags": 0,
-        "Name": "Sphere",
+        "Name": "Rendering",
         "Position": "0,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
@@ -184,42 +162,6 @@
           }
         ],
         "Children": []
-      },
-      {
-        "__guid": "27e3bf03-ee68-447e-bada-e5a3ad876f7a",
-        "__version": 2,
-        "Flags": 0,
-        "Name": "ProbeSelection",
-        "Position": "0,0,0",
-        "Rotation": "0,0,0,1",
-        "Scale": "1,1,1",
-        "Tags": "",
-        "Enabled": true,
-        "NetworkMode": 2,
-        "NetworkFlags": 0,
-        "NetworkOrphaned": 0,
-        "NetworkTransmit": true,
-        "OwnerTransfer": 1,
-        "Components": [
-          {
-            "__type": "Sandbox.Probe.ProbeSelection",
-            "__guid": "1aad7110-0927-48aa-8e00-1efe3413b184",
-            "__enabled": true,
-            "Flags": 0,
-            "MaxDistance": 5000,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Probe": {
-              "_type": "gameobject",
-              "go": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
-            }
-          }
-        ],
-        "Children": []
       }
     ],
     "__properties": {
@@ -238,8 +180,7 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": ""
-      },
-      "GameObjectSystems": []
+      }
     },
     "__variables": []
   },
