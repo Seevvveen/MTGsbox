@@ -9,7 +9,7 @@ public sealed class SeatAnchor : Component
 {
 	[Property, Range(0, 255)] public byte Order { get; private set; } = 0;
 	[Property, Range(0, 255)] public byte Team { get; private set; } = 0;
-	[Property, ReadOnly] public Guid Occupent { get; set; } = Guid.Empty;
+	[Property, ReadOnly] public Guid? Occupent { get; set; } = Guid.Empty;
 	[Property, ReadOnly] public bool IsOccupied => Occupent != Guid.Empty;
 	
 	

@@ -55,45 +55,66 @@
         "Static": true,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
-      },
-      {
-        "__type": "Sandbox.Components.CardRenderer",
-        "__guid": "377e78cc-9d48-4d81-8a0a-e9cd58329d19",
-        "__enabled": true,
-        "Flags": 0,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null
-      },
-      {
-        "__type": "Sandbox.WorldPanel",
-        "__guid": "8a9c5409-6150-4e87-b820-23d214aeb0bd",
-        "__enabled": true,
-        "Flags": 0,
-        "HorizontalAlign": "Center",
-        "InteractionRange": 1000,
-        "LookAtCamera": false,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "PanelSize": "368.96,512",
-        "RenderOptions": {
-          "GameLayer": true,
-          "OverlayLayer": false,
-          "BloomLayer": false,
-          "AfterUILayer": false
-        },
-        "RenderScale": 1,
-        "VerticalAlign": "Center"
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "fac98780-b753-471b-b4ac-cec7dd3b3c84",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Renderer",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.Components.CardRenderer",
+            "__guid": "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Uri": "https://cards.scryfall.io/large/front/8/6/8625b50d-474d-46dd-af84-0b267ed5fab3.jpg?1616041637"
+          },
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "22a738fa-2a27-4f3b-8287-45ad89bb342d",
+            "__enabled": true,
+            "Flags": 0,
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": false,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PanelSize": "472.4599,512",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderScale": 1,
+            "VerticalAlign": "Center"
+          }
+        ],
+        "Children": []
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,
@@ -110,8 +131,7 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": ""
-      },
-      "GameObjectSystems": []
+      }
     },
     "__variables": []
   },

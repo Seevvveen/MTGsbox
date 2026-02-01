@@ -1,96 +1,57 @@
 #nullable enable
-
-using Sandbox.Components;
+using Sandbox._Startup;
+using Sandbox.Diagnostics;
 using CardComp = Sandbox.Components.Card;
-
-
-
 
 namespace Sandbox.Zones;
 
-public abstract class Zone : Component, IZone
+[Tag("Zone")]
+public class Zone : Component
 {
-	[Property] public Guid Owner { get; set; }
+	[Property, ReadOnly] public Connection Owner { get; set; } = Connection.Host;
+	
+	[Property] private GameObject CardPrefab { get; set; } = null;
+	
+	[Property,ReadOnly]
+	public List<Guid> Cards { get; protected set; } = new();
 
-	// Keep track of cards in this zone
-	public List<GameObject> Cards { get; protected set; } = new();
-
-	// Optional: if this gets hot, keep a HashSet for O(1) membership checks.
-	// private readonly HashSet<GameObject> _cardSet = new();
-
-	//
-	// IZone Implementation
-	//
-
-	public virtual bool CanAdd( GameObject card )
+	
+	public void AddCard(GameObject card)
 	{
-		if ( !card.IsValid() ) return false;
-
-		// Prevent duplicates
-		if ( Cards.Contains( card ) ) return false;
-
-		return true;
+		var cardComp = card.GetComponent<CardComp>();
+		Cards.Add( cardComp.Definition.Id );
+		card.Destroy();
 	}
 
-	public virtual bool TryAdd( GameObject card )
+	public GameObject GetCard()
 	{
-		if ( !CanAdd( card ) ) return false;
-
-		// Use ONE Card type consistently
-		var cardComp = card.GetComponent<CardComp>();
-		if ( cardComp is null ) return false;
-
-		// If card is in another zone, remove it first (transactional transfer)
-		var from = cardComp.CurrentZone;
-		if ( from is not null && from != this )
+		if (Cards.Count < 1)
+			throw new Exception("Zone has no Cards");
+		var id = Cards.Last();
+		var obj = GenerateCardObject(id);
+		Cards.Remove(id);
+		return obj;
+	}
+	
+	
+	private GameObject GenerateCardObject(Guid id)
+	{
+		var def = GlobalCatalogs.Cards.ById.GetOrThrow(id);
+		
+		var card = CardPrefab.Clone(new CloneConfig()
 		{
-			// If removal fails, do not partially add here
-			if ( !from.TryRemove( card ) )
-				return false;
-		}
-
-		// Now add locally
-		Cards.Add( card );
-		// _cardSet.Add(card);
-
-		cardComp.CurrentZone = this;
-
-		// Parent for organization and (if you lay out in local-space) correctness
-		card.SetParent( GameObject );
-
-		OnCardAdded( card );
-		return true;
+			Name =  $"Card: {def.Name}",
+			StartEnabled =  true,
+		});
+		card.NetworkSpawn(new NetworkSpawnOptions()
+		{
+			Owner = Owner,
+			StartEnabled =  true,
+		});
+		card.GetComponent<CardComp>().TrySetDefinition(def);
+		card.Network.ClearInterpolation();
+		
+		return card;
 	}
-
-	public virtual bool CanRemove( GameObject card )
-	{
-		if ( !card.IsValid() ) return false;
-		return Cards.Contains( card );
-	}
-
-	public virtual bool TryRemove( GameObject card )
-	{
-		if ( !CanRemove( card ) ) return false;
-
-		// Remove locally first
-		Cards.Remove( card );
-		// _cardSet.Remove(card);
-
-		var cardComp = card.GetComponent<CardComp>();
-		if ( cardComp is not null && cardComp.CurrentZone == this )
-			cardComp.CurrentZone = null;
-
-		// Optional: detach so it doesn't keep inheriting zone transforms.
-		// If you have a known "table root", parent there instead.
-		card.SetParent( null );
-
-		OnCardRemoved( card );
-		return true;
-	}
-
-	//
-	// Virtual Hooks for subclasses (Layout, Effects, etc.)
-	//
-	protected virtual void OnCardAdded( GameObject card ) { }
-	protected virtual void OnCardRemoved( GameObject card ) { }
+	
 }

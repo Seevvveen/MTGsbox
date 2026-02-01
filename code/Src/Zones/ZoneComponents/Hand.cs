@@ -38,6 +38,7 @@ public class Hand : Zone
 		var totalWidth = (Cards.Count - 1) * CardSpacing;
 		var startX = -totalWidth           / 2f;
 
+		/*
 		for ( int i = 0; i < Cards.Count; i++ )
 		{
 			var card = Cards[i];
@@ -64,16 +65,7 @@ public class Hand : Zone
 			card.LocalPosition = Vector3.Lerp( card.LocalPosition, targetLocalPos, Time.Delta   * 10f );
 			card.LocalRotation = Rotation.Slerp( card.LocalRotation, targetLocalRot, Time.Delta * 10f );
 		}
+		*/
 
-	}
-
-	protected override void OnCardAdded( GameObject card )
-	{
-		// Optional: Trigger sound or effect
-	}
-
-	protected override void OnCardRemoved( GameObject card )
-	{
-		// Optional: Trigger sound or effect
 	}
 }

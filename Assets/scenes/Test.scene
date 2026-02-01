@@ -177,55 +177,12 @@
       "Children": []
     },
     {
-      "__guid": "b20130db-fe4f-405f-97b7-f7e3cf2eea27",
-      "__version": 2,
-      "__Prefab": "prefabs/card.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
-            },
-            "Property": "Position",
-            "Value": "-4,0,12"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
-            },
-            "Property": "SourceCardId",
-            "Value": "7a615209-1762-4630-bec6-f089ec4d8f5a"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
-            },
-            "Property": "SourceCardName",
-            "Value": "Zariel, Archduke of Avernus"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "a8fc23e1-400a-4c29-b32f-ac979e70a034": "b20130db-fe4f-405f-97b7-f7e3cf2eea27",
-        "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "a1646fa6-6aba-4efd-90fa-90ffcd9694c6",
-        "038cf25f-d73d-40d8-bed4-1e61c0788612": "2487364f-df5d-436b-a404-21f1bb7b90ab",
-        "377e78cc-9d48-4d81-8a0a-e9cd58329d19": "4b8d5e11-46a0-4e23-a482-db083eb9ec1d",
-        "8a9c5409-6150-4e87-b820-23d214aeb0bd": "90f69df9-42d4-4356-8733-4d2bc455069e"
-      }
-    },
-    {
       "__guid": "10cea681-caac-445a-8953-ff5164667693",
       "__version": 2,
       "Flags": 0,
       "Name": "Hand",
-      "Position": "0,-36,8",
-      "Rotation": "0,0,0,1",
+      "Position": "40,0,8",
+      "Rotation": "0,0,-0.7071067,0.7071068",
       "Scale": "1,1,1",
       "Tags": "placeable",
       "Enabled": true,
@@ -235,6 +192,25 @@
       "NetworkTransmit": true,
       "OwnerTransfer": 1,
       "Components": [
+        {
+          "__type": "Sandbox.Zones.ZoneComponents.Hand",
+          "__guid": "06ec7b23-2b8d-4944-a111-9e4e27ea68ae",
+          "__enabled": true,
+          "Flags": 0,
+          "CardSpacing": 10,
+          "Collider": null,
+          "CurveAmount": 10,
+          "Depth": 1,
+          "FanDegrees": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Owner": "00000000-0000-0000-0000-000000000000",
+          "Radius": 10
+        },
         {
           "__type": "Sandbox.SphereCollider",
           "__guid": "c3555b58-b64e-4081-83d3-4067fb0c82d4",
@@ -324,28 +300,7 @@
       "NetworkOrphaned": 0,
       "NetworkTransmit": true,
       "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "CardMover",
-          "__guid": "dbc88f71-97cf-4c24-a13b-2ceb8a87dd1e",
-          "__enabled": true,
-          "Flags": 0,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Spot1": {
-            "_type": "gameobject",
-            "go": "10cea681-caac-445a-8953-ff5164667693"
-          },
-          "Spot2": {
-            "_type": "gameobject",
-            "go": "1256c5d5-641a-4f07-ba44-3dff95d8dea5"
-          }
-        }
-      ],
+      "Components": [],
       "Children": []
     },
     {
@@ -379,36 +334,21 @@
             },
             "Property": "NetworkFlags",
             "Value": 8
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "1aad7110-0927-48aa-8e00-1efe3413b184"
-            },
-            "Property": "Held",
-            "Value": null
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "1aad7110-0927-48aa-8e00-1efe3413b184"
-            },
-            "Property": "Hovered",
-            "Value": null
           }
         ],
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {
         "f9c1c923-eb93-4b3e-a58f-1bd20091610c": "8079c468-13c0-4357-ae98-940b67cb8b55",
-        "eba70cbc-666b-486e-9fe9-d4231ebe91e4": "49a291fb-2a65-4ae3-9173-61cce2645a43",
-        "1e8571c1-f693-4e6c-b3b5-7a720cd9e5b7": "e9a6056a-273a-4d5d-8562-f5b331c0ca8c",
-        "207d74f6-8210-48e3-aa46-c9c33e233b6d": "43361cc1-3dd4-4766-8a53-8d636ed51b29",
-        "0659cd4f-58f7-42fc-8cc9-90c410443bef": "23bebb17-63f6-44e2-9919-cf07fe419efa",
+        "060e860a-337d-4471-929b-f9df70e240ab": "8d35355d-43cd-4028-90d1-2f3c1117fe6c",
         "36f1ffbd-e32f-45cb-807d-e0dd0d2bb668": "d3cdadfe-8165-4edf-b340-70645d2a505c",
         "2de837d6-399f-4f11-a791-ac91471da65a": "827b59ed-d075-499d-9490-c90cba9f892d",
         "27e3bf03-ee68-447e-bada-e5a3ad876f7a": "1219ba6e-7276-459c-9fa4-7463a20ff9e5",
-        "1aad7110-0927-48aa-8e00-1efe3413b184": "57b98ea6-b223-44f9-854c-1cba1f887da2"
+        "1aad7110-0927-48aa-8e00-1efe3413b184": "57b98ea6-b223-44f9-854c-1cba1f887da2",
+        "5a301306-1120-4169-b6da-12dcc12b514c": "56d77d80-83d8-469e-b68b-46bab61a3ed1",
+        "a53fdbc5-8a68-4d96-b612-f0a09d7bc9f3": "4bec3c90-1284-485a-a189-87bd58b7591d",
+        "15b65c4e-d9c1-4321-b884-d9fec9d324c8": "988e592b-3922-4ac6-9f73-0f3176d3a934",
+        "4dc2befd-f525-4213-ae58-7a17755be6bf": "e8fc3db0-1311-4cf2-a221-4c1de7bfedfd"
       }
     }
   ],

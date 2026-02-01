@@ -8,70 +8,69 @@ namespace Sandbox.Components;
 [SelectionBase, Tag( "Card" )]
 public sealed class Card : Component
 {
-	// Backing field that the [Change] hook observes.
-	// Do NOT assign to the property inside CardChange; assign to the backing field only.
-	[Change(nameof(OnDefinitionChanged))] private CardDefinition? _definition { get; set; }
+	// Networked stable key (host-authoritative)
+	[Sync( SyncFlags.FromHost ), Change( nameof( OnCardIdChanged ) )]
+	public required Guid CardId { get; set; } = Guid.Empty;
 
-	/// <summary>
-	/// Immutable source of truth for what this card "is".
-	/// Exposed read-only; use TrySetDefinition to change.
-	/// </summary>
+	
+	// Local-only resolved definition (do not Sync this)
+	private CardDefinition? _definition;
 	public CardDefinition? Definition => _definition;
 
 	[Property, ReadOnly] private string SourceCardName => _definition?.Name ?? "Null Card";
 	[Property, ReadOnly] private string SourceCardId => _definition?.Id.ToString() ?? "Null Card";
-
-	// Mutable gameplay state (counters, damage, etc.) derived from Definition
-	private CardInstance? _instance;
-	public CardInstance? Instance => _instance;
-
-	public Sandbox.Zones.IZone? CurrentZone { get; set; }
 
 	private CardRenderer? _renderer;
 
 	protected override Task OnLoad( LoadingContext context )
 	{
 		context.Title = "Loading Cards";
-		_renderer = GetOrAddComponent<CardRenderer>();
+		_renderer = GetComponentInChildren<CardRenderer>(true);
 		return Task.CompletedTask;
 	}
 
-	/// <summary>
-	/// Prefer calling this over assigning definition directly.
-	/// Returns false if the definition is rejected.
-	/// </summary>
 	public bool TrySetDefinition( CardDefinition? def )
 	{
 		if ( def is null ) return false;
 		if ( def.ImageUris.Large is null ) return false;
 
-		_definition = def; // triggers OnDefinitionChanged
+		// FromHost => only host can write the synced value
+		if ( !Networking.IsHost ) return false;
+
+		CardId = def.Id; // <-- the synced assignment
 		return true;
 	}
 
-	private void OnDefinitionChanged( CardDefinition? oldValue, CardDefinition? newValue )
+	private void OnCardIdChanged( Guid oldValue, Guid newValue )
 	{
-		// If invalid, revert without re-triggering through the property.
-		// Assigning the backing field is still "safe", but it will trigger again; guard by early-out.
-		if ( newValue is null || newValue.ImageUris.Large is null )
+		_renderer ??= GetComponentInChildren<CardRenderer>(true);
+
+		if ( newValue == Guid.Empty )
 		{
-			Log.Error( "Card definition rejected (missing image uri)." );
-			_definition = oldValue;
+			_definition = null;
+			_renderer.Uri = null;
 			return;
 		}
 
-		// Ensure renderer exists even if OnLoad didn't run yet for some reason
-		_renderer ??= GetOrAddComponent<CardRenderer>();
-		_renderer.Uri = newValue.ImageUris.Large;
+		// Resolve locally from your catalog (keyed by Guid)
+		if ( GlobalCatalogs.Cards.ById.TryGet( newValue, out var def )
+		     && def.ImageUris.Large is { } uri )
+		{
+			_definition = def;
+			_renderer.Uri = uri;
+			return;
+		}
 
-		// (Optional) create/reset instance whenever definition changes
-		// If your CardInstance constructor differs, adjust this line accordingly.
-		//_instance = new CardInstance( newValue );
+		// Catalog not ready / missing entry: blank (or set a card-back uri if you want)
+		_definition = null;
+		_renderer.Uri = null;
 	}
 
 	[Button( "Set Random Card" )]
 	public void SetRandomCard()
 	{
+		if ( !Networking.IsHost ) return;
+
 		var cards = GlobalCatalogs.Cards;
 		var def = cards.ById.GetRandomOrThrow();
 

@@ -7,61 +7,117 @@ namespace Sandbox.Players.Probe;
 public sealed class ProbeSelection : Component
 {
 	[Property, ReadOnly] public ProbeCamera? Camera { get; set; }
-	[Property, ReadOnly] private bool HasCamera {get; set;} = false;
-	
-	
+
 	[Property, ReadOnly, Group("Debug")] private GameObject? Hovered { get; set; }
 	[Property, ReadOnly, Group("Debug")] private GameObject? Held { get; set; }
-	
-	[Property] private bool DrawTraces = true; 
+
+	[Property] private bool DrawTraces = true;
 	[Property] private float Distance = 1000f;
-	private Ray Ray => new Ray(WorldPosition,Camera.WorldRotation.Forward);
-	private SceneTrace TraceBase => Scene.Trace.Ray( Ray, Distance ).IgnoreGameObjectHierarchy(Camera?.Network.RootGameObject);
+
+	// Updated each frame from traces; applied in FixedUpdate for physics-friendly motion.
+	private Vector3 _holdTargetPos;
+	private Rotation _holdTargetRot;
+	private bool _hasHoldTarget;
 
 
 
 	protected override void OnUpdate()
 	{
 		if ( IsProxy ) return;
-		if (!HasCamera)
-		{
-			if ( Camera is not { IsValid: true } )
-				Camera = ProbeCamera.Local;
-			if ( Camera == null ) return;
-			HasCamera = true;
-		}
 
-		var BaseResult = TraceBase.Run();
+		Camera ??= ProbeCamera.Local;
+		if ( Camera is not { IsValid: true } ) return;
+
+		_hasHoldTarget = false;
+
+		// Trace from the actual camera position for correct selection.
+		var ray = new Ray( Camera.WorldPosition, Camera.WorldRotation.Forward );
+		var trace = Scene.Trace.Ray( ray, Distance );
+
+		// Ignore our own pawn hierarchy (prefer the player's root, not the camera node).
+		if ( Camera.Network?.RootGameObject is { IsValid: true } root )
+		{
+			trace = trace.IgnoreGameObjectHierarchy( root );
+		}
+		var baseResult = trace.Run();
+
+		if ( DrawTraces )
+		{
+			DebugOverlay.Trace( baseResult, Time.Delta, false );
+		}
 		
-		//DEBUG
-		if (DrawTraces)
-		{
-			DebugOverlay.Trace(BaseResult,Time.Delta,false);
-		}
+		Hovered = baseResult.GameObject;
 
-		Hovered = BaseResult.GameObject;
-
-		if (Hovered is not null && Input.Pressed("attack1"))
+		if ( Hovered is not null && Input.Pressed( "attack1" ) )
 		{
+			if (Hovered.Tags.Contains("donttouchme")) return;
+			if (Held is null)
+			{
+				var z = Hovered.GetComponent<Zone>();
+				if (z is not null)
+				{
+					var c = z.GetCard();
+					Held = c;
+					return;
+				}
+			}
 			Held = Hovered;
 		}
 
-		if (Held is not null && Input.Down("attack1"))
+		if ( Held is not null && Input.Down( "attack1" ) )
 		{
-			var ThroughResult = TraceBase.IgnoreGameObject(Held).Run();
-			if (!ThroughResult.Hit) return;
-			Held.WorldRotation = ThroughResult.Normal.EulerAngles.ToRotation();
-			Held.WorldPosition = ThroughResult.HitPosition + Vector3.Up;
+			// While holding, trace "through" the held object so we can position it on surfaces behind it.
+			var heldTrace = trace.IgnoreGameObject( Held );
+			var throughResult = heldTrace.Run();
+			if ( throughResult.Hit )
+			{
+				_holdTargetRot = throughResult.Normal.EulerAngles.ToRotation();
+				_holdTargetPos = throughResult.HitPosition + Vector3.Up;
+				_hasHoldTarget = true;
+			}
 		}
 
-		if (Held is not null && Input.Released("attack1"))
+		if ( Held is not null && Input.Released( "attack1" ) )
 		{
+			var zoneTrace = trace.IgnoreGameObject( Held );
+			var zoneResult = zoneTrace.Run();
+			if (zoneResult.Hit && zoneResult.GameObject.Tags.Has("zone"))
+			{
+				var zone = zoneResult.GameObject.GetComponent<Zone>();
+				zone.AddCard(Held);
+			}
+			
+			
 			Held = null;
+			_hasHoldTarget = false;
 		}
-		
-		
-
 	}
-	
+
+	protected override void OnFixedUpdate()
+	{
+		if ( IsProxy ) return;
+		if ( Held is not { IsValid: true } ) return;
+		if ( !_hasHoldTarget ) return;
+
+		// If it has a Rigidbody, move it in physics time. Otherwise, fall back to transform move.
+		var body = Held.GetComponent<Rigidbody>();
+		if ( body is { IsValid: true } )
+		{
+			// Critically damped-ish "pull" by setting velocity toward target.
+			var toTarget = _holdTargetPos - body.WorldPosition;
+			var dt = Time.Delta;
+			if ( dt > 0f )
+			{
+				body.AngularVelocity = Vector3.Zero;
+				body.Velocity = toTarget / dt;
+				body.WorldRotation = _holdTargetRot;
+			}
+		}
+		else
+		{
+			Held.WorldRotation = _holdTargetRot;
+			Held.WorldPosition = _holdTargetPos;
+		}
+	}	
 	
 }

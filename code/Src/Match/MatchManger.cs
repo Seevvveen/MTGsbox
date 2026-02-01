@@ -10,7 +10,18 @@ namespace Sandbox.Match;
 public sealed class MatchManager : Component
 {
 	public static MatchManager Instance { get; private set; }
+
+	//Players
+	[Property] public byte MaxPlayers { get; private set; } = 4;
+	[Property, ReadOnly] public bool IsFull => Players.Count >= MaxPlayers;
 	[Sync(SyncFlags.FromHost)] public NetList<Guid> Players {get; private set;} = new NetList<Guid>();
+	
+	[Property, ReadOnly] public Dictionary<Guid,bool> PlayerReady {get; private set;} = new Dictionary<Guid, bool>();
+	
+	//Game
+	[Property] private byte TurnNumber { get; set; } = 0;
+	[Property] private bool HasStarted {get; set;}
+	
 	
 	
 	protected override Task OnLoad( LoadingContext context )
@@ -29,8 +40,28 @@ public sealed class MatchManager : Component
 		
 		return Task.CompletedTask;
 	}
-	
 
+	
+	[Button("CheckReady")]
+	public void CheckReady()
+	{
+		foreach (var ply in PlayerReady)
+		{
+			if (!ply.Value)
+			{
+				Log.Info("Someone Not Ready");
+				break;
+			}
+				
+			StartGame();
+		}
+	}
+	
+	public void StartGame()
+	{
+		throw new  NotImplementedException();
+	}
+	
 	
 	[Rpc.Host]
 	public void RequestJoin(Guid id)
@@ -45,6 +76,7 @@ public sealed class MatchManager : Component
 		}
 		
 		Players.Add(id);
+		PlayerReady.Add(id, false);
 	}
 
 	[Rpc.Host]
@@ -58,6 +90,7 @@ public sealed class MatchManager : Component
 			}
 		}
 		Players.RemoveAt(Players.IndexOf(id));
+		PlayerReady.Remove(id);
 	}
 	
 

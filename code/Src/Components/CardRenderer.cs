@@ -15,7 +15,7 @@ public sealed class CardRenderer : PanelComponent
 	[RequireComponent]
 	private WorldPanel WorldPanel { get; set; }
 
-	[Change("UriChanged")]
+	[Change("UriChanged"), Property, ReadOnly]
 	public Uri Uri { get; set; } =
 		new("https://cards.scryfall.io/large/front/8/6/8625b50d-474d-46dd-af84-0b267ed5fab3.jpg?1616041637");
 	private Image _image;
@@ -36,12 +36,11 @@ public sealed class CardRenderer : PanelComponent
 	
 	void UriChanged(Uri old, Uri @new)
 	{
-		_image.SetTexture(@new.OriginalString.IsWhiteSpace() ? old.OriginalString : @new.OriginalString);
+		_image?.SetTexture(@new.OriginalString.IsWhiteSpace() ? old.OriginalString : @new.OriginalString);
 	}
 	
 	protected override void OnDestroy()
 	{
 		WorldPanel?.Destroy();
 	}
-
 }
