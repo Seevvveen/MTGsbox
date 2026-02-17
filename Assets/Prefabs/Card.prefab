@@ -9,7 +9,7 @@
     "Scale": "1,1,1",
     "Tags": "card,selectable",
     "Enabled": true,
-    "NetworkMode": 2,
+    "NetworkMode": 1,
     "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
@@ -20,14 +20,13 @@
         "__guid": "cb7c2c43-84a2-40ec-8547-114c89e1aa51",
         "__enabled": true,
         "Flags": 0,
+        "Definition": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "SourceCardId": "Null Card",
-        "SourceCardName": "Null Card"
+        "OnComponentUpdate": null
       },
       {
         "__type": "Sandbox.PlaneCollider",
@@ -63,7 +62,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "Renderer",
-        "Position": "0,0,0",
+        "Position": "0.125,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
         "Tags": "",
@@ -101,7 +100,7 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "PanelSize": "472.4599,512",
+            "PanelSize": "355.76,512",
             "RenderOptions": {
               "GameLayer": true,
               "OverlayLayer": false,
@@ -110,6 +109,52 @@
             },
             "RenderScale": 1,
             "VerticalAlign": "Center"
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "58ef1d55-28d2-4219-8f06-d82710fb8575",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Backface",
+        "Position": "0,0,0",
+        "Rotation": "-0.7071068,-0.00000003090862,0.7071068,-0.00000003090862",
+        "Scale": "0.2900006,0.1900004,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.ModelRenderer",
+            "__guid": "4ba57157-7ae1-4d91-8a44-de0164efe72a",
+            "__enabled": true,
+            "Flags": 0,
+            "BodyGroups": 18446744073709551615,
+            "CreateAttachments": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": "cardback.vmat",
+            "Materials": null,
+            "Model": "models/dev/plane.vmdl",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Tint": "1,1,1,1"
           }
         ],
         "Children": []
@@ -124,7 +169,7 @@
         "Enabled": false,
         "IncludeStaticBodies": true,
         "IncludeKeyframedBodies": true,
-        "EditorAutoUpdate": true,
+        "EditorAutoUpdate": false,
         "AgentHeight": 64,
         "AgentRadius": 16,
         "AgentStepSize": 18,

@@ -80,6 +80,7 @@ public sealed class ProbeMovement : Component
 		if ( IsProxy ) return;
 		if ( RigidBody is not { IsValid: true } ) return;
 		
+		//Lazy Load
 		if ( Camera is not { IsValid: true } )
 		{
 			Camera = GetComponentInChildren<ProbeCamera>( true );
@@ -87,7 +88,18 @@ public sealed class ProbeMovement : Component
 				return;
 		}
 		
-		_wishDir = ProbeMove.GetWishDirection( Camera.WorldRotation, Input.AnalogMove );
+		
+
+		if (Input.Down("attack2"))
+		{
+			Mouse.Visibility = MouseVisibility.Hidden;
+			_wishDir = ProbeMove.GetWishDirection( Camera.WorldRotation, Input.AnalogMove );
+		}
+		else
+		{
+			Mouse.Visibility = MouseVisibility.Visible;
+			_wishDir = ProbeMove.GetWishDirection( Camera.WorldRotation, Vector3.Zero );
+		}
 		RigidBody.ApplyMovement( _wishDir, Time.Delta, MoveCfg );
 	}
 

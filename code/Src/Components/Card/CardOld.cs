@@ -6,19 +6,13 @@ using Sandbox._Startup;
 namespace Sandbox.Components;
 
 [SelectionBase, Tag( "Card" )]
-public sealed class Card : Component
+public sealed class CardOLD : Component
 {
 	// Networked stable key (host-authoritative)
 	[Sync( SyncFlags.FromHost ), Change( nameof( OnCardIdChanged ) )]
-	public required Guid CardId { get; set; } = Guid.Empty;
-
+	public required Guid CardId { get; set; }
 	
-	// Local-only resolved definition (do not Sync this)
-	private CardDefinition? _definition;
-	public CardDefinition? Definition => _definition;
-
-	[Property, ReadOnly] private string SourceCardName => _definition?.Name ?? "Null Card";
-	[Property, ReadOnly] private string SourceCardId => _definition?.Id.ToString() ?? "Null Card";
+	[Property,InlineEditor] public CardDefinition? Definition { get; set; }
 
 	private CardRenderer? _renderer;
 
@@ -33,11 +27,10 @@ public sealed class Card : Component
 	{
 		if ( def is null ) return false;
 		if ( def.ImageUris.Large is null ) return false;
-
-		// FromHost => only host can write the synced value
 		if ( !Networking.IsHost ) return false;
 
-		CardId = def.Id; // <-- the synced assignment
+		Definition = def;
+		CardId = def.Id;
 		return true;
 	}
 
@@ -47,7 +40,7 @@ public sealed class Card : Component
 
 		if ( newValue == Guid.Empty )
 		{
-			_definition = null;
+			Definition = null;
 			_renderer.Uri = null;
 			return;
 		}
@@ -56,13 +49,12 @@ public sealed class Card : Component
 		if ( GlobalCatalogs.Cards.ById.TryGet( newValue, out var def )
 		     && def.ImageUris.Large is { } uri )
 		{
-			_definition = def;
+			Definition = def;
 			_renderer.Uri = uri;
 			return;
 		}
 
-		// Catalog not ready / missing entry: blank (or set a card-back uri if you want)
-		_definition = null;
+		Definition = null;
 		_renderer.Uri = null;
 	}
 

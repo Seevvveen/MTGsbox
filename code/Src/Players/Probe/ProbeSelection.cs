@@ -7,7 +7,8 @@ namespace Sandbox.Players.Probe;
 public sealed class ProbeSelection : Component
 {
 	[Property, ReadOnly] public ProbeCamera? Camera { get; set; }
-
+	private CameraComponent _cameraComponent => Camera.GetComponent<CameraComponent>();
+	
 	[Property, ReadOnly, Group("Debug")] private GameObject? Hovered { get; set; }
 	[Property, ReadOnly, Group("Debug")] private GameObject? Held { get; set; }
 
@@ -27,12 +28,17 @@ public sealed class ProbeSelection : Component
 
 		Camera ??= ProbeCamera.Local;
 		if ( Camera is not { IsValid: true } ) return;
-
+		
 		_hasHoldTarget = false;
 
-		// Trace from the actual camera position for correct selection.
-		var ray = new Ray( Camera.WorldPosition, Camera.WorldRotation.Forward );
-		var trace = Scene.Trace.Ray( ray, Distance );
+		if (Input.Down("attack2"))
+		{
+			Held = null;
+			return;
+		}
+		var mRay = _cameraComponent.ScreenPixelToRay(Mouse.Position);
+		
+		var trace = Scene.Trace.Ray( mRay, Distance );
 
 		// Ignore our own pawn hierarchy (prefer the player's root, not the camera node).
 		if ( Camera.Network?.RootGameObject is { IsValid: true } root )
@@ -63,28 +69,30 @@ public sealed class ProbeSelection : Component
 			}
 			Held = Hovered;
 		}
-
+		
+		// While holding, trace "through" the held object so we can position it on surfaces behind it.
+		var throughResult = trace.IgnoreGameObject( Held ).Run();
+		
 		if ( Held is not null && Input.Down( "attack1" ) )
 		{
-			// While holding, trace "through" the held object so we can position it on surfaces behind it.
-			var heldTrace = trace.IgnoreGameObject( Held );
-			var throughResult = heldTrace.Run();
 			if ( throughResult.Hit )
 			{
 				_holdTargetRot = throughResult.Normal.EulerAngles.ToRotation();
-				_holdTargetPos = throughResult.HitPosition + Vector3.Up;
+				_holdTargetPos = throughResult.HitPosition + throughResult.Normal;
 				_hasHoldTarget = true;
 			}
 		}
 
 		if ( Held is not null && Input.Released( "attack1" ) )
 		{
-			var zoneTrace = trace.IgnoreGameObject( Held );
-			var zoneResult = zoneTrace.Run();
-			if (zoneResult.Hit && zoneResult.GameObject.Tags.Has("zone"))
+			if (throughResult.Hit && throughResult.GameObject.Tags.Has("zone"))
 			{
-				var zone = zoneResult.GameObject.GetComponent<Zone>();
+				var zone = throughResult.GameObject.GetComponent<Zone>();
 				zone.AddCard(Held);
+			}
+			else
+			{
+				Held.WorldPosition = throughResult.HitPosition+throughResult.Normal.SnapToGrid(10,true,true,false);
 			}
 			
 			

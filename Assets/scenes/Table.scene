@@ -9,7 +9,7 @@
       "Position": "0,0,0",
       "Rotation": "0,0,0,1",
       "Scale": "10,10,1",
-      "Tags": "table",
+      "Tags": "donttouchme",
       "Enabled": true,
       "NetworkMode": 2,
       "NetworkFlags": 0,
@@ -108,76 +108,6 @@
             }
           ],
           "Children": []
-        },
-        {
-          "__guid": "6321a854-5df2-4175-a1f2-689764ffcc3e",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "SeatAnchor",
-          "Position": "12.4,12.8,0",
-          "Rotation": "0,0,0,1",
-          "Scale": "0.1,0.1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.Seating.SeatAnchor",
-              "__guid": "d622b380-e3a7-4e82-98c4-a11e5262d70d",
-              "__enabled": true,
-              "Flags": 0,
-              "IsOccupied": false,
-              "Occupent": "00000000-0000-0000-0000-000000000000",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "Order": 0,
-              "Team": 0
-            }
-          ],
-          "Children": []
-        },
-        {
-          "__guid": "3c6f3f24-4d82-4344-9859-6be6226482c4",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "SeatAnchor",
-          "Position": "-12.4,12.4,0",
-          "Rotation": "0,0,-1,0.0000001947072",
-          "Scale": "0.1,0.1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.Seating.SeatAnchor",
-              "__guid": "fe863129-e987-4a2a-8cb5-d44295894cf2",
-              "__enabled": true,
-              "Flags": 0,
-              "IsOccupied": false,
-              "Occupent": "00000000-0000-0000-0000-000000000000",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "Order": 0,
-              "Team": 0
-            }
-          ],
-          "Children": []
         }
       ]
     },
@@ -218,40 +148,11 @@
       "Children": []
     },
     {
-      "__guid": "a3951e2c-0fdd-4aa6-bb01-10cb29a76123",
-      "__version": 2,
-      "__Prefab": "prefabs/playerprobe.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "f9c1c923-eb93-4b3e-a58f-1bd20091610c"
-            },
-            "Property": "Enabled",
-            "Value": false
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "f9c1c923-eb93-4b3e-a58f-1bd20091610c": "a3951e2c-0fdd-4aa6-bb01-10cb29a76123",
-        "f6dd5993-1ade-49b3-b4b7-12d08ac0482f": "6ed66e59-62f3-4d3d-97a1-3b944997ba5f",
-        "a53fdbc5-8a68-4d96-b612-f0a09d7bc9f3": "e26effab-aa9b-453e-aa12-066250dd7f60",
-        "d50a5964-8c22-4bd1-9726-84157b4e09ef": "8baf1aa6-926c-44ed-873a-b3de9a624e5e",
-        "36f1ffbd-e32f-45cb-807d-e0dd0d2bb668": "4cbc251e-f3a0-48c0-b30b-2d9c7d2ae5c7",
-        "2de837d6-399f-4f11-a791-ac91471da65a": "78dcdb7d-1f9d-4b3b-b4f3-a318acc6a6eb",
-        "0664cf24-053d-4a7f-b864-36c73d080174": "745c36a6-d052-4345-b373-75582a0341cc"
-      }
-    },
-    {
       "__guid": "68038770-f7c4-4850-bde0-c0eebddfc6ec",
       "__version": 2,
       "Flags": 0,
       "Name": "Zone",
-      "Position": "-120,-128,8",
+      "Position": "148,56.375,30.75",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,0.25",
       "Tags": "zone",
@@ -330,7 +231,36 @@
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
-          "OnComponentUpdate": null
+          "OnComponentUpdate": null,
+          "Owner": {
+            "Id": "67990fb7-aa4b-44ca-99bb-5eb771ecb785",
+            "CanSpawnObjects": true,
+            "CanRefreshObjects": true,
+            "CanDestroyObjects": true,
+            "Latency": 0,
+            "Name": "local",
+            "Time": 0,
+            "Address": "local",
+            "IsHost": true,
+            "IsConnecting": true,
+            "IsActive": false,
+            "MessagesSent": 0,
+            "MessagesRecieved": 0,
+            "Stats": {
+              "Ping": 0,
+              "OutPacketsPerSecond": 0,
+              "OutBytesPerSecond": 0,
+              "InPacketsPerSecond": 0,
+              "InBytesPerSecond": 0,
+              "SendRateBytesPerSecond": 0,
+              "ConnectionQuality": 0
+            },
+            "Ping": 0,
+            "DisplayName": "Seven",
+            "SteamId": 76561198104066519,
+            "PartyId": 0,
+            "ConnectionTime": "2026-02-16T01:49:56.9390986+00:00"
+          }
         }
       ],
       "Children": []
@@ -349,23 +279,35 @@
               "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
             },
             "Property": "Position",
-            "Value": "0,-164,0"
+            "Value": "0,-168,0"
           },
           {
             "Target": {
               "Type": "Component",
               "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
             },
-            "Property": "SourceCardId",
-            "Value": "d8649a58-1e7d-4c52-83ee-c2671ca52302"
+            "Property": "Definition",
+            "Value": {
+              "Id": "953cf3be-b975-4a10-8c92-c783c727dcfa",
+              "OracleId": "e740ce2f-2134-473c-afa1-1b6d2d1e38ef",
+              "Name": "Giant Spider",
+              "ImageUris": {
+                "Small": "https://cards.scryfall.io/small/front/9/5/953cf3be-b975-4a10-8c92-c783c727dcfa.jpg?1562592780",
+                "Normal": "https://cards.scryfall.io/normal/front/9/5/953cf3be-b975-4a10-8c92-c783c727dcfa.jpg?1562592780",
+                "Large": "https://cards.scryfall.io/large/front/9/5/953cf3be-b975-4a10-8c92-c783c727dcfa.jpg?1562592780",
+                "Png": "https://cards.scryfall.io/png/front/9/5/953cf3be-b975-4a10-8c92-c783c727dcfa.png?1562592780",
+                "ArtCrop": "https://cards.scryfall.io/art_crop/front/9/5/953cf3be-b975-4a10-8c92-c783c727dcfa.jpg?1562592780",
+                "BorderCrop": "https://cards.scryfall.io/border_crop/front/9/5/953cf3be-b975-4a10-8c92-c783c727dcfa.jpg?1562592780"
+              }
+            }
           },
           {
             "Target": {
               "Type": "Component",
-              "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
+              "IdValue": "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74"
             },
-            "Property": "SourceCardName",
-            "Value": "Cavern Harpy"
+            "Property": "Uri",
+            "Value": "https://cards.scryfall.io/large/front/9/5/953cf3be-b975-4a10-8c92-c783c727dcfa.jpg?1562592780"
           }
         ],
         "MovedObjects": []
@@ -374,8 +316,11 @@
         "a8fc23e1-400a-4c29-b32f-ac979e70a034": "dc3a6714-0a2e-4788-8d79-2df50c30fb55",
         "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "ad41957d-014f-4020-8e58-75056fc1dd33",
         "038cf25f-d73d-40d8-bed4-1e61c0788612": "3f23ddf8-dacf-4bd3-a5b3-d8f5ead3481b",
-        "377e78cc-9d48-4d81-8a0a-e9cd58329d19": "0952f2ff-0d27-4d2c-920a-dc1b02dac274",
-        "8a9c5409-6150-4e87-b820-23d214aeb0bd": "506d7130-38e6-41c9-b53f-7d4505d3fbdf"
+        "22a738fa-2a27-4f3b-8287-45ad89bb342d": "a769fbe8-a563-4515-903b-1e044d541265",
+        "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74": "76d1bb02-9f0b-4afa-96da-a52131f517c0",
+        "fac98780-b753-471b-b4ac-cec7dd3b3c84": "f8102986-fb78-40f2-b593-063bad4f3951",
+        "58ef1d55-28d2-4219-8f06-d82710fb8575": "e4fc1eb1-bbc1-49ea-a0e9-b6a38417e517",
+        "4ba57157-7ae1-4d91-8a44-de0164efe72a": "efdc5b2e-73db-469e-b4a2-4ada96356b94"
       }
     },
     {
@@ -400,23 +345,35 @@
               "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
             },
             "Property": "Position",
-            "Value": "0,-136,0"
+            "Value": "0,-140,0"
           },
           {
             "Target": {
               "Type": "Component",
               "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
             },
-            "Property": "SourceCardId",
-            "Value": "0c06b920-231c-477e-aea2-ea082a209a4a"
+            "Property": "Definition",
+            "Value": {
+              "Id": "f0313c44-d4ca-4021-866a-3d5cf58b0e76",
+              "OracleId": "39412e6d-2837-4729-abf9-e64a5ba87e40",
+              "Name": "Power Sink",
+              "ImageUris": {
+                "Small": "https://cards.scryfall.io/small/front/f/0/f0313c44-d4ca-4021-866a-3d5cf58b0e76.jpg?1559592214",
+                "Normal": "https://cards.scryfall.io/normal/front/f/0/f0313c44-d4ca-4021-866a-3d5cf58b0e76.jpg?1559592214",
+                "Large": "https://cards.scryfall.io/large/front/f/0/f0313c44-d4ca-4021-866a-3d5cf58b0e76.jpg?1559592214",
+                "Png": "https://cards.scryfall.io/png/front/f/0/f0313c44-d4ca-4021-866a-3d5cf58b0e76.png?1559592214",
+                "ArtCrop": "https://cards.scryfall.io/art_crop/front/f/0/f0313c44-d4ca-4021-866a-3d5cf58b0e76.jpg?1559592214",
+                "BorderCrop": "https://cards.scryfall.io/border_crop/front/f/0/f0313c44-d4ca-4021-866a-3d5cf58b0e76.jpg?1559592214"
+              }
+            }
           },
           {
             "Target": {
               "Type": "Component",
-              "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
+              "IdValue": "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74"
             },
-            "Property": "SourceCardName",
-            "Value": "Sylvan Library"
+            "Property": "Uri",
+            "Value": "https://cards.scryfall.io/large/front/f/0/f0313c44-d4ca-4021-866a-3d5cf58b0e76.jpg?1559592214"
           }
         ],
         "MovedObjects": []
@@ -425,8 +382,11 @@
         "a8fc23e1-400a-4c29-b32f-ac979e70a034": "d75f190b-19d8-46b9-ae7f-3ceb28424fa3",
         "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "06bcda0c-5e28-473f-a8f6-6f8aae08b3c6",
         "038cf25f-d73d-40d8-bed4-1e61c0788612": "00c2caa9-f941-4354-af70-48700629cce1",
-        "377e78cc-9d48-4d81-8a0a-e9cd58329d19": "7d307a5e-f6c0-49ed-a187-811cffe84a80",
-        "8a9c5409-6150-4e87-b820-23d214aeb0bd": "9cf60e33-4c43-4bbb-852b-5d7fd751da56"
+        "22a738fa-2a27-4f3b-8287-45ad89bb342d": "fcb1057f-bda4-40aa-83c0-e46a0dcc0732",
+        "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74": "dc4b7722-b2fb-48ed-b1c3-c74d542e2a82",
+        "fac98780-b753-471b-b4ac-cec7dd3b3c84": "02b5655c-2820-4641-90ed-35078cdc25d5",
+        "58ef1d55-28d2-4219-8f06-d82710fb8575": "4803934a-9372-4a1d-8dcb-c81d64045fbb",
+        "4ba57157-7ae1-4d91-8a44-de0164efe72a": "f9bbe50f-5380-4e2d-984f-2f7ef72495be"
       }
     },
     {
@@ -458,16 +418,28 @@
               "Type": "Component",
               "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
             },
-            "Property": "SourceCardId",
-            "Value": "bc722bca-8503-4215-a7d1-7d973be08d04"
+            "Property": "Definition",
+            "Value": {
+              "Id": "2e4a0686-cb48-404c-a15a-2ad1c53aa144",
+              "OracleId": "c4f3a6c6-a123-43ad-9513-d65fbff10d02",
+              "Name": "Spoils of Adventure",
+              "ImageUris": {
+                "Small": "https://cards.scryfall.io/small/front/2/e/2e4a0686-cb48-404c-a15a-2ad1c53aa144.jpg?1654714654",
+                "Normal": "https://cards.scryfall.io/normal/front/2/e/2e4a0686-cb48-404c-a15a-2ad1c53aa144.jpg?1654714654",
+                "Large": "https://cards.scryfall.io/large/front/2/e/2e4a0686-cb48-404c-a15a-2ad1c53aa144.jpg?1654714654",
+                "Png": "https://cards.scryfall.io/png/front/2/e/2e4a0686-cb48-404c-a15a-2ad1c53aa144.png?1654714654",
+                "ArtCrop": "https://cards.scryfall.io/art_crop/front/2/e/2e4a0686-cb48-404c-a15a-2ad1c53aa144.jpg?1654714654",
+                "BorderCrop": "https://cards.scryfall.io/border_crop/front/2/e/2e4a0686-cb48-404c-a15a-2ad1c53aa144.jpg?1654714654"
+              }
+            }
           },
           {
             "Target": {
               "Type": "Component",
-              "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
+              "IdValue": "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74"
             },
-            "Property": "SourceCardName",
-            "Value": "Darksteel Citadel"
+            "Property": "Uri",
+            "Value": "https://cards.scryfall.io/large/front/2/e/2e4a0686-cb48-404c-a15a-2ad1c53aa144.jpg?1654714654"
           }
         ],
         "MovedObjects": []
@@ -476,8 +448,11 @@
         "a8fc23e1-400a-4c29-b32f-ac979e70a034": "cf35c676-4109-4fef-930a-546debfde6b1",
         "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "e7fe8dde-6deb-4948-a764-f5a1f336f65f",
         "038cf25f-d73d-40d8-bed4-1e61c0788612": "0c1d4eb8-b167-4daa-a0a3-7cda09af87df",
-        "377e78cc-9d48-4d81-8a0a-e9cd58329d19": "cb8ea68b-05a7-4ec1-be62-2d1b7fb3fa2f",
-        "8a9c5409-6150-4e87-b820-23d214aeb0bd": "1ddfb459-6f72-4477-ba83-0e3e4d609a04"
+        "22a738fa-2a27-4f3b-8287-45ad89bb342d": "b756cb20-57e9-42ad-b4f7-c170f4ae0848",
+        "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74": "148ddbbc-3409-4a3a-bdad-0d39d50754e5",
+        "fac98780-b753-471b-b4ac-cec7dd3b3c84": "8a35eb35-1920-443e-95cb-48c2deeda0df",
+        "58ef1d55-28d2-4219-8f06-d82710fb8575": "fa15434e-6135-440c-8c36-ab2e49d2a088",
+        "4ba57157-7ae1-4d91-8a44-de0164efe72a": "95cc6d55-12f1-4a15-b5a3-435ea97e1ea5"
       }
     },
     {
@@ -509,16 +484,28 @@
               "Type": "Component",
               "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
             },
-            "Property": "SourceCardId",
-            "Value": "d51b2367-9a19-4521-8b1f-277d4e5f8541"
+            "Property": "Definition",
+            "Value": {
+              "Id": "a39298ce-cb63-4372-b54e-2aa6ce660b1e",
+              "OracleId": "f8d82a00-c10e-4b9e-9642-d05706900a97",
+              "Name": "Wall of Brambles",
+              "ImageUris": {
+                "Small": "https://cards.scryfall.io/small/front/a/3/a39298ce-cb63-4372-b54e-2aa6ce660b1e.jpg?1559591934",
+                "Normal": "https://cards.scryfall.io/normal/front/a/3/a39298ce-cb63-4372-b54e-2aa6ce660b1e.jpg?1559591934",
+                "Large": "https://cards.scryfall.io/large/front/a/3/a39298ce-cb63-4372-b54e-2aa6ce660b1e.jpg?1559591934",
+                "Png": "https://cards.scryfall.io/png/front/a/3/a39298ce-cb63-4372-b54e-2aa6ce660b1e.png?1559591934",
+                "ArtCrop": "https://cards.scryfall.io/art_crop/front/a/3/a39298ce-cb63-4372-b54e-2aa6ce660b1e.jpg?1559591934",
+                "BorderCrop": "https://cards.scryfall.io/border_crop/front/a/3/a39298ce-cb63-4372-b54e-2aa6ce660b1e.jpg?1559591934"
+              }
+            }
           },
           {
             "Target": {
               "Type": "Component",
-              "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
+              "IdValue": "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74"
             },
-            "Property": "SourceCardName",
-            "Value": "Sweatworks Brawler"
+            "Property": "Uri",
+            "Value": "https://cards.scryfall.io/large/front/a/3/a39298ce-cb63-4372-b54e-2aa6ce660b1e.jpg?1559591934"
           }
         ],
         "MovedObjects": []
@@ -527,8 +514,11 @@
         "a8fc23e1-400a-4c29-b32f-ac979e70a034": "3fda7aa2-b98e-483e-808b-97d644090356",
         "cb7c2c43-84a2-40ec-8547-114c89e1aa51": "babd9f46-cfb6-4027-92d5-607b09da71ba",
         "038cf25f-d73d-40d8-bed4-1e61c0788612": "c5b6563a-2ebf-4113-91f5-a087bc2c8563",
-        "377e78cc-9d48-4d81-8a0a-e9cd58329d19": "42945a3d-1472-45b5-88d2-c92861593f85",
-        "8a9c5409-6150-4e87-b820-23d214aeb0bd": "feac997e-f95a-4410-b366-834346075b9c"
+        "22a738fa-2a27-4f3b-8287-45ad89bb342d": "775ebc7b-50ee-4144-a760-590a7ac01ba7",
+        "88d53f47-91b0-4ae0-a1e0-e3ec97c85d74": "fac2429c-300e-4e69-b111-48e048d73971",
+        "fac98780-b753-471b-b4ac-cec7dd3b3c84": "99f5da55-b8e7-4964-bd40-12c652695bb1",
+        "58ef1d55-28d2-4219-8f06-d82710fb8575": "ef1ac87c-7d43-4a98-8212-a53ff6c0cf61",
+        "4ba57157-7ae1-4d91-8a44-de0164efe72a": "f5706a8d-ada6-4682-917d-c8eb81f2c61c"
       }
     },
     {
@@ -636,6 +626,52 @@
           },
           "SpawnPoints": [],
           "StartServer": true
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "954e841b-2e8a-4855-bff7-1f291deeac66",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Plane",
+      "Position": "206.5,216,33.5",
+      "Rotation": "0,0,0,1",
+      "Scale": "2,4,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "40038025-0c10-4eab-9393-b1167d9b4fbe",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/dev/plane.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
         }
       ],
       "Children": []
