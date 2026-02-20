@@ -10,7 +10,7 @@
       "Rotation": "0,0,0,1",
       "Scale": "10,10,1",
       "Tags": "donttouchme",
-      "Enabled": true,
+      "Enabled": false,
       "NetworkMode": 2,
       "NetworkFlags": 0,
       "NetworkOrphaned": 0,
@@ -120,7 +120,7 @@
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
-      "Enabled": true,
+      "Enabled": false,
       "NetworkMode": 1,
       "NetworkFlags": 15,
       "NetworkOrphaned": 0,
@@ -156,7 +156,7 @@
       "Rotation": "0,0,0,1",
       "Scale": "1,1,0.25",
       "Tags": "zone",
-      "Enabled": true,
+      "Enabled": false,
       "NetworkMode": 2,
       "NetworkFlags": 0,
       "NetworkOrphaned": 0,
@@ -283,6 +283,14 @@
           },
           {
             "Target": {
+              "Type": "GameObject",
+              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+            },
+            "Property": "Enabled",
+            "Value": false
+          },
+          {
+            "Target": {
               "Type": "Component",
               "IdValue": "cb7c2c43-84a2-40ec-8547-114c89e1aa51"
             },
@@ -314,10 +322,10 @@
       },
       "__PrefabIdToInstanceId": {
         "a8fc23e1-400a-4c29-b32f-ac979e70a034": "dc3a6714-0a2e-4788-8d79-2df50c30fb55",
-        "e3dd07df-f85e-4e51-8f20-91f7dc027b69": "1423b9da-2cd6-4955-bae5-06dccaa0d8f4",
+        "3d86a971-60bc-4c48-a8a8-6a6e34e1e7c9": "e2147a26-4f90-4afd-8278-9c96354fd7d7",
         "038cf25f-d73d-40d8-bed4-1e61c0788612": "3f23ddf8-dacf-4bd3-a5b3-d8f5ead3481b",
         "22a738fa-2a27-4f3b-8287-45ad89bb342d": "a769fbe8-a563-4515-903b-1e044d541265",
-        "75d1a594-738e-4fde-be2d-90b5b7d861b5": "941cba06-f8a7-4f18-a603-8cd0b12e0645",
+        "4cfdefe7-cf3f-4d2f-b1ea-3df3be146b6c": "2a7b040f-42f9-4b30-8780-7a28f69e9542",
         "fac98780-b753-471b-b4ac-cec7dd3b3c84": "f8102986-fb78-40f2-b593-063bad4f3951",
         "58ef1d55-28d2-4219-8f06-d82710fb8575": "e4fc1eb1-bbc1-49ea-a0e9-b6a38417e517",
         "4ba57157-7ae1-4d91-8a44-de0164efe72a": "efdc5b2e-73db-469e-b4a2-4ada96356b94"
@@ -346,6 +354,14 @@
             },
             "Property": "Position",
             "Value": "0,-140,0"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+            },
+            "Property": "Enabled",
+            "Value": false
           },
           {
             "Target": {
@@ -380,10 +396,10 @@
       },
       "__PrefabIdToInstanceId": {
         "a8fc23e1-400a-4c29-b32f-ac979e70a034": "d75f190b-19d8-46b9-ae7f-3ceb28424fa3",
-        "e3dd07df-f85e-4e51-8f20-91f7dc027b69": "75966e29-e185-4b6a-8ef8-0b3352b13413",
+        "3d86a971-60bc-4c48-a8a8-6a6e34e1e7c9": "296be73b-053d-4822-963d-288a9c860907",
         "038cf25f-d73d-40d8-bed4-1e61c0788612": "00c2caa9-f941-4354-af70-48700629cce1",
         "22a738fa-2a27-4f3b-8287-45ad89bb342d": "fcb1057f-bda4-40aa-83c0-e46a0dcc0732",
-        "75d1a594-738e-4fde-be2d-90b5b7d861b5": "2067ccc4-4b78-43d1-a337-313f9277e0b2",
+        "4cfdefe7-cf3f-4d2f-b1ea-3df3be146b6c": "5c1d1a95-0651-417b-a707-22178dd16636",
         "fac98780-b753-471b-b4ac-cec7dd3b3c84": "02b5655c-2820-4641-90ed-35078cdc25d5",
         "58ef1d55-28d2-4219-8f06-d82710fb8575": "4803934a-9372-4a1d-8dcb-c81d64045fbb",
         "4ba57157-7ae1-4d91-8a44-de0164efe72a": "f9bbe50f-5380-4e2d-984f-2f7ef72495be"
@@ -412,6 +428,14 @@
             },
             "Property": "Position",
             "Value": "0,-112,0"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+            },
+            "Property": "Enabled",
+            "Value": false
           },
           {
             "Target": {
@@ -446,10 +470,10 @@
       },
       "__PrefabIdToInstanceId": {
         "a8fc23e1-400a-4c29-b32f-ac979e70a034": "cf35c676-4109-4fef-930a-546debfde6b1",
-        "e3dd07df-f85e-4e51-8f20-91f7dc027b69": "3d90523b-a4e2-44a9-80e8-5c9e87505798",
+        "3d86a971-60bc-4c48-a8a8-6a6e34e1e7c9": "c69fad51-31ca-4eed-a65d-516999fafcc7",
         "038cf25f-d73d-40d8-bed4-1e61c0788612": "0c1d4eb8-b167-4daa-a0a3-7cda09af87df",
         "22a738fa-2a27-4f3b-8287-45ad89bb342d": "b756cb20-57e9-42ad-b4f7-c170f4ae0848",
-        "75d1a594-738e-4fde-be2d-90b5b7d861b5": "af0691f9-fa71-482e-99e9-505758a5e112",
+        "4cfdefe7-cf3f-4d2f-b1ea-3df3be146b6c": "cefdbd45-9f15-4285-9073-2846c6f851dc",
         "fac98780-b753-471b-b4ac-cec7dd3b3c84": "8a35eb35-1920-443e-95cb-48c2deeda0df",
         "58ef1d55-28d2-4219-8f06-d82710fb8575": "fa15434e-6135-440c-8c36-ab2e49d2a088",
         "4ba57157-7ae1-4d91-8a44-de0164efe72a": "95cc6d55-12f1-4a15-b5a3-435ea97e1ea5"
@@ -478,6 +502,14 @@
             },
             "Property": "Position",
             "Value": "0,-84,0"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "a8fc23e1-400a-4c29-b32f-ac979e70a034"
+            },
+            "Property": "Enabled",
+            "Value": false
           },
           {
             "Target": {
@@ -512,10 +544,10 @@
       },
       "__PrefabIdToInstanceId": {
         "a8fc23e1-400a-4c29-b32f-ac979e70a034": "3fda7aa2-b98e-483e-808b-97d644090356",
-        "e3dd07df-f85e-4e51-8f20-91f7dc027b69": "73033130-6129-44a0-90ef-cbe37430d257",
+        "3d86a971-60bc-4c48-a8a8-6a6e34e1e7c9": "5565d6cb-b452-436f-a2db-5a87a159f853",
         "038cf25f-d73d-40d8-bed4-1e61c0788612": "c5b6563a-2ebf-4113-91f5-a087bc2c8563",
         "22a738fa-2a27-4f3b-8287-45ad89bb342d": "775ebc7b-50ee-4144-a760-590a7ac01ba7",
-        "75d1a594-738e-4fde-be2d-90b5b7d861b5": "f59f7c64-94f6-4efd-bbbe-6d2bb6069a07",
+        "4cfdefe7-cf3f-4d2f-b1ea-3df3be146b6c": "b110e747-30e0-4663-91b1-ee7950d4be95",
         "fac98780-b753-471b-b4ac-cec7dd3b3c84": "99f5da55-b8e7-4964-bd40-12c652695bb1",
         "58ef1d55-28d2-4219-8f06-d82710fb8575": "ef1ac87c-7d43-4a98-8212-a53ff6c0cf61",
         "4ba57157-7ae1-4d91-8a44-de0164efe72a": "f5706a8d-ada6-4682-917d-c8eb81f2c61c"
@@ -530,7 +562,7 @@
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
-      "Enabled": true,
+      "Enabled": false,
       "NetworkMode": 2,
       "NetworkFlags": 0,
       "NetworkOrphaned": 0,
@@ -639,7 +671,7 @@
       "Rotation": "0,0,0,1",
       "Scale": "2,4,1",
       "Tags": "",
-      "Enabled": true,
+      "Enabled": false,
       "NetworkMode": 2,
       "NetworkFlags": 0,
       "NetworkOrphaned": 0,

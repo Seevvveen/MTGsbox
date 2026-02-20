@@ -1,41 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Sandbox.__Rewrite.Gameplay;
 
 /// <summary>
 /// A parsed mana cost such as {2}{G}{G} or {X}{B}{B}.
-/// Immutable value type — all parsing happens in <see cref="Parse"/>.
+/// Round-trips to/from JSON as the raw Scryfall string (or null / "").
+/// Parsing is allocation-free (no Substring/Split) and Span-safe (no yield over Span).
 /// </summary>
-[JsonConverter( typeof( ManaCostJsonConverter ) )]
-public readonly record struct ManaCost
+public readonly record struct ManaCost : IJsonConvert
 {
-    /// <summary>The original Scryfall cost string e.g. "{2}{G}{G}". Empty string means explicitly no cost.</summary>
+    /// <summary>
+    /// Original Scryfall cost string e.g. "{2}{G}{G}".
+    /// Null means "stored per-face" (multi-face cards).
+    /// Empty string means "explicitly no cost".
+    /// </summary>
     public string Source { get; init; }
 
-    /// <summary>Total mana value (CMC). Excludes X and half-mana.</summary>
-    public int Cmc { get; init; }
+    /// <summary>Total mana value. Excludes X and half-mana.</summary>
+    public ushort Cmc { get; init; }
 
-    /// <summary>Which colors appear as pips (excludes hybrid/generic).</summary>
+    /// <summary>Which colors appear as pips (excludes generic).</summary>
     public ManaColor Colors { get; init; }
 
-    /// <summary>Raw generic mana component {N}.</summary>
-    public int Generic { get; init; }
+    /// <summary>The generic mana component {N}.</summary>
+    public ushort Generic { get; init; }
 
-    /// <summary>True if the cost contains {X}.</summary>
-    public bool HasX { get; init; }
+    public ManaCostFlags Flags { get; init; }
 
-    /// <summary>True if the cost contains any hybrid symbols e.g. {W/U}.</summary>
-    public bool HasHybrid { get; init; }
+    public bool IsNull        => Source == null;
+    public bool IsNoCost      => Source == string.Empty;
+    public bool HasX          => (Flags & ManaCostFlags.HasX) != 0;
+    public bool HasHybrid     => (Flags & ManaCostFlags.HasHybrid) != 0;
+    public bool HasPhyrexian  => (Flags & ManaCostFlags.HasPhyrexian) != 0;
+    public bool HasSnow       => (Flags & ManaCostFlags.HasSnow) != 0;
 
-    /// <summary>True if the cost contains any Phyrexian mana symbols e.g. {W/P}.</summary>
-    public bool HasPhyrexian { get; init; }
+    /// <summary>{0} — zero cost, distinct from no cost.</summary>
+    public bool IsFree => !IsNull && !IsNoCost && Cmc == 0 && !HasX;
 
-    /// <summary>True if the cost contains {S} (snow mana).</summary>
-    public bool HasSnow { get; init; }
+    public bool IsColored => Colors != ManaColor.None;
+
+    public override string ToString() => Source ?? "(null)";
 
     /// <summary>
     /// Total colored pips of the given color, including hybrid symbols that contain it.
@@ -47,170 +52,210 @@ public readonly record struct ManaCost
             return 0;
 
         int devotion = 0;
-        foreach ( var sym in EnumerateSymbols( Source ) )
+
+        EnumerateSymbols( Source.AsSpan(), sym =>
+        {
             devotion += CountColorInSymbol( sym, color );
+        } );
 
         return devotion;
     }
 
-    /// <summary>Null represents a cost stored on faces (multi-face cards). Empty string is explicitly no cost.</summary>
-    public bool IsNull     => Source == null;
-    public bool IsNoCost   => Source == string.Empty;
-    public bool IsFree     => !IsNull && !IsNoCost && Cmc == 0 && !HasX;   // {0}
-    public bool IsColored  => Colors != ManaColor.None;
-
-    public override string ToString() => Source ?? "(null)";
-
-    // -------------------------
-    // Parsing
-    // -------------------------
-
     /// <summary>
     /// Parses a Scryfall mana cost string.
-    /// <para>Pass <c>null</c> for multi-face cards where cost is stored per-face.</para>
-    /// <para>Pass <c>""</c> for cards that explicitly have no mana cost (e.g. land).</para>
+    /// Pass null for multi-face cards where cost is stored per-face.
+    /// Pass "" for cards that explicitly have no mana cost.
     /// </summary>
     public static ManaCost Parse( string raw )
     {
-        // null → cost is on faces; preserve the distinction
-        if ( raw == null )
-            return new ManaCost { Source = null };
+        if ( raw == null ) return new ManaCost { Source = null };
+        if ( raw.Length == 0 ) return new ManaCost { Source = string.Empty };
 
-        // "" → explicitly no cost (e.g. some lands, Ancestral Vision)
-        if ( raw == string.Empty )
-            return new ManaCost { Source = string.Empty };
+        ushort generic = 0;
+        ushort cmc = 0;
+        ManaColor colors = ManaColor.None;
+        ManaCostFlags flags = 0;
 
-        int     generic     = 0;
-        int     cmc         = 0;
-        bool    hasX        = false;
-        bool    hasHybrid   = false;
-        bool    hasPhyrexian = false;
-        bool    hasSnow     = false;
-        var     colors      = ManaColor.None;
-
-        foreach ( var symbol in EnumerateSymbols( raw ) )
+        EnumerateSymbols( raw.AsSpan(), sym =>
         {
-            if ( symbol.Equals( "X", StringComparison.OrdinalIgnoreCase ) )
+            // X
+            if ( sym.Length == 1 && (sym[0] == 'X' || sym[0] == 'x') )
             {
-                hasX = true;
-                continue;
+                flags |= ManaCostFlags.HasX;
+                return;
             }
 
-            if ( symbol.Equals( "S", StringComparison.OrdinalIgnoreCase ) )
+            // Snow
+            if ( sym.Length == 1 && (sym[0] == 'S' || sym[0] == 's') )
             {
-                hasSnow = true;
-                cmc++;
-                continue;
+                flags |= ManaCostFlags.HasSnow;
+                cmc += 1;
+                return;
             }
 
-            // Hybrid: W/U, B/G, 2/W …
-            if ( symbol.Contains( '/' ) )
+            // Hybrid / phyrexian etc: contains '/'
+            if ( sym.IndexOf( '/' ) >= 0 )
             {
-                hasHybrid = true;
-                var parts = symbol.Split( '/' );
+                flags |= ManaCostFlags.HasHybrid;
 
-                // Phyrexian hybrid: W/P
-                if ( parts.Length == 2 && parts[1].Equals( "P", StringComparison.OrdinalIgnoreCase ) )
-                    hasPhyrexian = true;
+                int start = 0;
+                while ( start < sym.Length )
+                {
+                    int slash = sym.Slice( start ).IndexOf( '/' );
+                    ReadOnlySpan<char> part = slash >= 0 ? sym.Slice( start, slash ) : sym.Slice( start );
 
-                // Add all color components found in the hybrid symbol
-                foreach ( var part in parts )
-                    colors |= ManaColorExtensions.ParseSymbol( part );
+                    // phyrexian marker: {W/P} etc (part "P")
+                    if ( part.Length == 1 && (part[0] == 'P' || part[0] == 'p') )
+                    {
+                        flags |= ManaCostFlags.HasPhyrexian;
+                    }
+                    else
+                    {
+                        colors |= ParseSymbolSpan( part );
+                    }
 
-                cmc++;
-                continue;
+                    if ( slash < 0 ) break;
+                    start += slash + 1;
+                }
+
+                cmc += 1;
+                return;
             }
 
-            // Generic numeric: 2, 10, 15 …
-            if ( int.TryParse( symbol, out int n ) )
+            // Generic number
+            if ( ushort.TryParse( sym, out ushort n ) )
             {
                 generic += n;
-                cmc     += n;
-                continue;
+                cmc += n;
+                return;
             }
 
-            // Single color pip: W, U, B, R, G, C
-            var pip = ManaColorExtensions.ParseSymbol( symbol );
+            // Colored pip
+            var pip = ParseSymbolSpan( sym );
             if ( pip != ManaColor.None )
             {
                 colors |= pip;
-                cmc++;
-                continue;
+                cmc += 1;
             }
-        }
+        } );
 
         return new ManaCost
         {
-            Source       = raw,
-            Cmc          = cmc,
-            Colors       = colors,
-            Generic      = generic,
-            HasX         = hasX,
-            HasHybrid    = hasHybrid,
-            HasPhyrexian = hasPhyrexian,
-            HasSnow      = hasSnow,
+            Source = raw,
+            Cmc = cmc,
+            Colors = colors,
+            Generic = generic,
+            Flags = flags
         };
     }
 
     // -------------------------
-    // Helpers
+    // IJsonConvert — round-trips as the source string.
+    // -------------------------
+    public static object JsonRead( ref Utf8JsonReader reader, Type typeToConvert )
+    {
+        if ( reader.TokenType == JsonTokenType.Null )
+            return Parse( null );
+
+        return Parse( reader.GetString() );
+    }
+
+    public static void JsonWrite( object value, Utf8JsonWriter writer )
+    {
+        // Note: for non-nullable ManaCost, value will not be null here.
+        // For ManaCost?, the factory may pass null.
+        if ( value is null )
+        {
+            writer.WriteNullValue();
+            return;
+        }
+
+        var mc = (ManaCost)value;
+
+        if ( mc.IsNull )
+            writer.WriteNullValue();
+        else
+            writer.WriteStringValue( mc.Source );
+    }
+
+    // -------------------------
+    // Helpers (Span-safe, allocation-free)
     // -------------------------
 
-    /// <summary>Splits "{2}{G}{G}" into ["2", "G", "G"].</summary>
-    private static IEnumerable<string> EnumerateSymbols( string cost )
+    /// <summary>
+    /// Enumerates symbols in "{2}{G}{G}" as spans: "2", "G", "G".
+    /// Does not allocate and does not use iterators (ref-struct safe).
+    /// </summary>
+    private static void EnumerateSymbols( ReadOnlySpan<char> cost, Action<ReadOnlySpan<char>> visitor )
     {
         int i = 0;
+
         while ( i < cost.Length )
         {
             if ( cost[i] == '{' )
             {
-                int close = cost.IndexOf( '}', i + 1 );
-                if ( close > i )
+                int close = cost.Slice( i + 1 ).IndexOf( '}' );
+                if ( close >= 0 )
                 {
-                    yield return cost.Substring( i + 1, close - i - 1 );
-                    i = close + 1;
+                    visitor( cost.Slice( i + 1, close ) );
+                    i += close + 2; // skip past "}"
                     continue;
                 }
             }
+
             i++;
         }
     }
 
-    private static int CountColorInSymbol( string symbol, ManaColor color )
+    private static ManaColor ParseSymbolSpan( ReadOnlySpan<char> s )
     {
-        // Hybrid: each part of the symbol that matches counts once
-        if ( symbol.Contains( '/' ) )
+        if ( s.Length != 1 ) return ManaColor.None;
+
+        return s[0] switch
+        {
+            'W' or 'w' => ManaColor.White,
+            'U' or 'u' => ManaColor.Blue,
+            'B' or 'b' => ManaColor.Black,
+            'R' or 'r' => ManaColor.Red,
+            'G' or 'g' => ManaColor.Green,
+            'C' or 'c' => ManaColor.Colorless,
+            _ => ManaColor.None
+        };
+    }
+
+    private static int CountColorInSymbol( ReadOnlySpan<char> sym, ManaColor color )
+    {
+        // Hybrid: "{W/U}", "{2/R}", "{G/P}", etc.
+        if ( sym.IndexOf( '/' ) >= 0 )
         {
             int count = 0;
-            foreach ( var part in symbol.Split( '/' ) )
-                if ( ManaColorExtensions.ParseSymbol( part ) == color )
+            int start = 0;
+
+            while ( start < sym.Length )
+            {
+                int slash = sym.Slice( start ).IndexOf( '/' );
+                var part = slash >= 0 ? sym.Slice( start, slash ) : sym.Slice( start );
+
+                if ( ParseSymbolSpan( part ) == color )
                     count++;
+
+                if ( slash < 0 ) break;
+                start += slash + 1;
+            }
+
             return count;
         }
 
-        return ManaColorExtensions.ParseSymbol( symbol ) == color ? 1 : 0;
+        return ParseSymbolSpan( sym ) == color ? 1 : 0;
     }
 }
 
-// -------------------------
-// JSON serialization — round-trips as the source string
-// -------------------------
-
-public sealed class ManaCostJsonConverter : JsonConverter<ManaCost>
+[Flags]
+public enum ManaCostFlags : byte
 {
-    public override ManaCost Read( ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options )
-    {
-        if ( reader.TokenType == JsonTokenType.Null )
-            return ManaCost.Parse( null );
-
-        return ManaCost.Parse( reader.GetString() );
-    }
-
-    public override void Write( Utf8JsonWriter writer, ManaCost value, JsonSerializerOptions options )
-    {
-        if ( value.IsNull )
-            writer.WriteNullValue();
-        else
-            writer.WriteStringValue( value.Source );
-    }
+    None         = 0,
+    HasX         = 1 << 0,
+    HasHybrid    = 1 << 1,
+    HasPhyrexian = 1 << 2,
+    HasSnow      = 1 << 3,
 }

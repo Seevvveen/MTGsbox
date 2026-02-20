@@ -59,26 +59,33 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
             return;
         }
 
-        // 3) Skip download if local data is already current
-        if ( !ShouldDownloadOracle( oracle ) )
+        // 3) Download oracle if needed
+        if ( ShouldDownloadOracle( oracle ) )
+        {
+            Log.Info( $"Downloading oracle cards… updated_at={oracle.UpdatedAt}, size={oracle.Size} bytes" );
+
+            bool isGzip = string.Equals( oracle.ContentEncoding, "gzip", StringComparison.OrdinalIgnoreCase );
+            if ( !await DownloadBulkToFileAsync( oracle.DownloadUri, OracleJsonPath, decompressGzip: isGzip ) )
+                return;
+
+            await WriteOracleMetaAsync( oracle.UpdatedAt );
+
+            Log.Info( $"Oracle cards saved: {FileSystem.Data.GetFullPath( FileSystem.NormalizeFilename( OracleJsonPath ) )}" );
+            Log.Info( $"Size: {FileSystem.Data.FileSize( FileSystem.NormalizeFilename( OracleJsonPath ) )} bytes" );
+        }
+        else
         {
             Log.Info( $"Oracle cards are up-to-date (index updated_at={oracle.UpdatedAt})." );
-            return;
         }
 
-        // 4) Download and optionally decompress the oracle cards JSON
-        Log.Info( $"Downloading oracle cards… updated_at={oracle.UpdatedAt}, size={oracle.Size} bytes" );
+        // 4) Build/refresh gameplay blob (idempotent)
+        await CardDataProcessor.ProcessAsync( oracle.UpdatedAt );
 
-        bool isGzip = string.Equals( oracle.ContentEncoding, "gzip", StringComparison.OrdinalIgnoreCase );
-        if ( !await DownloadBulkToFileAsync( oracle.DownloadUri, OracleJsonPath, decompressGzip: isGzip ) )
-            return;
-
-        // 5) Record what we downloaded so the next boot can compare
-        await WriteOracleMetaAsync( oracle.UpdatedAt );
-
-        Log.Info( $"Oracle cards saved: {FileSystem.Data.GetFullPath( FileSystem.NormalizeFilename( OracleJsonPath ) )}" );
-        Log.Info( $"Size: {FileSystem.Data.FileSize( FileSystem.NormalizeFilename( OracleJsonPath ) )} bytes" );
+        // 5) Load blob into runtime lookup database
+        if ( !CardDatabase.TryLoadFromDisk() )
+            Log.Error( "CardDatabase failed to load gameplay blob." );
     }
+
 
     // -------------------------
     // Index download

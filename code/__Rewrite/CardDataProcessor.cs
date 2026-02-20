@@ -2,378 +2,339 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using Sandbox.__Rewrite.Gameplay;
 using Sandbox.__Rewrite.Scryfall;
 
 namespace Sandbox.__Rewrite;
 
-/// <summary>
-/// Reads the raw Scryfall oracle_cards.json from disk, strips all non-gameplay
-/// fields, and writes a compact gameplay_cards.json keyed by oracle_id.
-///
-/// Call <see cref="ProcessAsync"/> after DiskDataSystem has confirmed the
-/// oracle cards file is present and up-to-date.
-/// </summary>
 public static class CardDataProcessor
 {
-    // -------------------------
-    // Paths
-    // -------------------------
-    private const string OracleJsonPath    = "scryfall/oracle_cards.json";
-    private const string GameplayJsonPath  = "scryfall/gameplay_cards.json";
-    private const string GameplayMetaPath  = "scryfall/gameplay_cards.meta.json";
+	private const string OracleJsonPath   = "scryfall/oracle_cards.json";
+	private const string GameplayBlobPath = "scryfall/gameplay_cards.blob";
+	private const string GameplayMetaPath = "scryfall/gameplay_cards.meta.json";
 
-    private static readonly System.Threading.SemaphoreSlim WriteLock = new( 1, 1 );
+	private static readonly SemaphoreSlim ProcessLock = new( 1, 1 );
 
-    // -------------------------
-    // Public entry point
-    // -------------------------
+	public static async Task ProcessAsync( string oracleUpdatedAt, CancellationToken ct = default )
+	{
+		await ProcessLock.WaitAsync( ct );
+		try
+		{
+			var blobPath = FileSystem.NormalizeFilename( GameplayBlobPath );
+			var metaPath = FileSystem.NormalizeFilename( GameplayMetaPath );
 
-    /// <summary>
-    /// Processes oracle_cards.json into gameplay_cards.json.
-    /// Skips processing if gameplay data is already current.
-    /// </summary>
-    /// <param name="oracleUpdatedAt">
-    /// The updated_at timestamp from the Scryfall bulk index.
-    /// Used to decide whether reprocessing is needed.
-    /// </param>
-    public static async Task ProcessAsync( string oracleUpdatedAt )
-    {
-        if ( !ShouldProcess( oracleUpdatedAt ) )
-        {
-            Log.Info( "Gameplay cards are already current; skipping processing." );
-            return;
-        }
+			if ( !ShouldProcess( blobPath, metaPath, oracleUpdatedAt ) )
+			{
+				Log.Info( "Gameplay blob is already current; skipping processing." );
+				return;
+			}
 
-        Log.Info( "Processing oracle cards into gameplay format…" );
-        var sw = System.Diagnostics.Stopwatch.StartNew();
+			Log.Info( "Building gameplay blob from oracle_cards.json…" );
+			var sw = System.Diagnostics.Stopwatch.StartNew();
 
-        // 1) Deserialize the full oracle card list
-        List<ScryfallCard> scryfallCards = await ReadOracleCardsAsync();
-        if ( scryfallCards == null )
-            return;
+			GameplayCardsBlob blob;
+			try
+			{
+				blob = BuildGameplayBlob( ct );
+			}
+			catch ( Exception e )
+			{
+				Log.Error( $"Failed to build gameplay blob: {e}" );
+				return;
+			}
 
-        Log.Info( $"Deserialized {scryfallCards.Count} oracle cards in {sw.ElapsedMilliseconds} ms." );
+			blob.RebuildOracleIndex();
 
-        // 2) Map to gameplay cards, keyed by oracle_id
-        Dictionary<string, GameplayCard> gameplayCards = MapToGameplay( scryfallCards );
+			if ( !WriteBlob( blobPath, blob ) )
+				return;
 
-        Log.Info( $"Mapped {gameplayCards.Count} gameplay cards ({scryfallCards.Count - gameplayCards.Count} skipped, no oracle_id) in {sw.ElapsedMilliseconds} ms." );
+			WriteGameplayMeta( metaPath, oracleUpdatedAt );
 
-        // 3) Write to disk atomically
-        bool ok = await WriteGameplayCardsAsync( gameplayCards );
-        if ( !ok )
-            return;
+			sw.Stop();
+			Log.Info( $"Gameplay blob written ({blob.Cards.Count} cards) in {sw.ElapsedMilliseconds} ms." );
+		}
+		finally
+		{
+			ProcessLock.Release();
+		}
+	}
 
-        // 4) Record what we processed so future boots can compare
-        await WriteGameplayMetaAsync( oracleUpdatedAt );
+	private static bool ShouldProcess( string blobPath, string metaPath, string oracleUpdatedAt )
+	{
+		if ( !FileSystem.Data.FileExists( blobPath ) )
+			return true;
 
-        sw.Stop();
-        Log.Info( $"Gameplay cards written to {FileSystem.NormalizeFilename( GameplayJsonPath )} in {sw.ElapsedMilliseconds} ms." );
-        Log.Info( $"File size: {FileSystem.Data.FileSize( FileSystem.NormalizeFilename( GameplayJsonPath ) )} bytes" );
-    }
+		var meta = FileSystem.Data.ReadJsonOrDefault<GameplayMeta>( metaPath );
+		if ( meta == null || string.IsNullOrWhiteSpace( meta.ProcessedFromOracleUpdatedAt ) )
+			return true;
 
-    // -------------------------
-    // Should we reprocess?
-    // -------------------------
-    private static bool ShouldProcess( string oracleUpdatedAt )
-    {
-        // If output file doesn't exist yet, always process
-        if ( !FileSystem.Data.FileExists( FileSystem.NormalizeFilename( GameplayJsonPath ) ) )
-            return true;
+		return !string.Equals( meta.ProcessedFromOracleUpdatedAt, oracleUpdatedAt, StringComparison.Ordinal );
+	}
 
-        var meta = ReadGameplayMeta();
-        if ( meta == null || string.IsNullOrWhiteSpace( meta.ProcessedFromOracleUpdatedAt ) )
-            return true;
+	private static GameplayCardsBlob BuildGameplayBlob( CancellationToken ct )
+	{
+		ct.ThrowIfCancellationRequested();
 
-        // Only reprocess if the oracle data has changed
-        return !string.Equals( meta.ProcessedFromOracleUpdatedAt, oracleUpdatedAt, StringComparison.Ordinal );
-    }
+		string oraclePath = FileSystem.NormalizeFilename( OracleJsonPath );
 
-    // -------------------------
-    // Read
-    // -------------------------
-    private static async Task<List<ScryfallCard>> ReadOracleCardsAsync()
-    {
-        string path = FileSystem.NormalizeFilename( OracleJsonPath );
+		if ( !FileSystem.Data.FileExists( oraclePath ) )
+			throw new FileNotFoundException( $"oracle_cards.json not found at {oraclePath}." );
 
-        if ( !FileSystem.Data.FileExists( path ) )
-        {
-            Log.Error( $"oracle_cards.json not found at {path}." );
-            return null;
-        }
+		using var stream = FileSystem.Data.OpenRead( oraclePath );
 
-        try
-        {
-            using var stream = FileSystem.Data.OpenRead( path );
-            return await JsonSerializer.DeserializeAsync<List<ScryfallCard>>( stream );
-        }
-        catch ( Exception e )
-        {
-            Log.Error( $"Failed to deserialize oracle_cards.json: {e}" );
-            return null;
-        }
-    }
+		var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = false };
 
-    // -------------------------
-    // Map
-    // -------------------------
-    private static Dictionary<string, GameplayCard> MapToGameplay( List<ScryfallCard> source )
-    {
-        var result = new Dictionary<string, GameplayCard>( source.Count );
+		// Whitelist-safe: one-time parse when rebuilding blob.
+		var cards = JsonSerializer.Deserialize<List<ScryfallCard>>( stream, options );
+		if ( cards == null )
+			throw new Exception( "Failed to deserialize oracle_cards.json (null result)." );
 
-        foreach ( var card in source )
-        {
-            // Cards without an oracle_id (e.g. reversible_card layout) cannot
-            // be keyed by identity — skip them.
-            if ( string.IsNullOrWhiteSpace( card.OracleId ) )
-                continue;
+		var blob = new GameplayCardsBlob();
 
-            // Last write wins if somehow the same oracle_id appears twice.
-            result[card.OracleId] = MapCard( card );
-        }
+		// Fix #2: overwrite in-place
+		var oracleSidToIndex = new Dictionary<int, int>();
+		var oracleSidToLangSid = new Dictionary<int, int>();
 
-        return result;
-    }
+		int skipped = 0;
+		int replacedForEnglish = 0;
 
-    private static GameplayCard MapCard( ScryfallCard src ) => new()
-    {
-        // Identity
-        Id       = src.Id,
-        OracleId = src.OracleId,
-        Lang     = src.Lang,
-        Layout   = CardLayoutParser.Parse( src.Layout ),
+		for ( int i = 0; i < cards.Count; i++ )
+		{
+			ct.ThrowIfCancellationRequested();
 
-        // Core gameplay
-        Name       = src.Name,
-        ManaCost   = ManaCost.Parse( src.ManaCost ),
-        Cmc        = (int)src.Cmc,
-        TypeLine   = src.TypeLine,
-        OracleText = src.OracleText,
+			var card = cards[i];
+			if ( card == null ) continue;
 
-        // Colors
-        Colors         = ManaColorExtensions.ParseList( src.Colors ),
-        ColorIdentity  = ManaColorExtensions.ParseList( src.ColorIdentity ),
-        ColorIndicator = ManaColorExtensions.ParseList( src.ColorIndicator ),
-        ProducedMana   = ManaColorExtensions.ParseList( src.ProducedMana ),
+			var layout = CardLayoutParser.Parse( card.Layout );
 
-        // Combat stats
-        Power     = CombatValue.ParseOrNull( src.Power ),
-        Toughness = CombatValue.ParseOrNull( src.Toughness ),
+			if ( layout == CardLayout.ReversibleCard )
+			{
+				if ( card.CardFaces == null || card.CardFaces.Count == 0 )
+				{
+					skipped++;
+					continue;
+				}
 
-        // Loyalty / defense
-        Loyalty = StartingValue.ParseOrNull( src.Loyalty ),
-        Defense = StartingValue.ParseOrNull( src.Defense ),
+				foreach ( var face in card.CardFaces )
+				{
+					if ( face == null || string.IsNullOrWhiteSpace( face.OracleId ) )
+					{
+						skipped++;
+						continue;
+					}
 
-        // Flags
-        Reserved    = src.Reserved,
-        GameChanger = src.GameChanger,
+					var rec = BuildFaceRecord( blob, card, face, layout );
+					AddOrReplaceByLang_InPlace( blob, oracleSidToIndex, oracleSidToLangSid, rec, ref replacedForEnglish );
+				}
 
-        // Vanguard
-        HandModifier = src.HandModifier,
-        LifeModifier = src.LifeModifier,
+				continue;
+			}
 
-        // Keywords (read-only, already a list)
-        Keywords = src.Keywords?.AsReadOnly(),
+			if ( string.IsNullOrWhiteSpace( card.OracleId ) )
+			{
+				skipped++;
+				continue;
+			}
 
-        // Legalities
-        Legalities = Legalities.Parse( src.Legalities ),
+			var r = BuildCardRecord( blob, card, layout );
+			AddOrReplaceByLang_InPlace( blob, oracleSidToIndex, oracleSidToLangSid, r, ref replacedForEnglish );
+		}
 
-        // Multi-face
-        CardFaces = MapFaces( src.CardFaces ),
-        AllParts  = MapRelatedCards( src.AllParts ),
-    };
+		if ( replacedForEnglish > 0 )
+			Log.Info( $"Replaced {replacedForEnglish} entries to prefer English versions (lang=\"en\")." );
 
-    private static IReadOnlyList<GameplayCardFace> MapFaces( List<ScryfallCardFace> faces )
-    {
-        if ( faces == null || faces.Count == 0 )
-            return null;
+		if ( skipped > 0 )
+			Log.Info( $"Skipped {skipped} entries (missing oracle_id, malformed reversible_card, etc.)." );
+		
+		Log.Info($"BuildGameplayBlob: cards={blob.Cards.Count}");
+		return blob;
+	}
 
-        var result = new List<GameplayCardFace>( faces.Count );
-        foreach ( var face in faces )
-        {
-            result.Add( new GameplayCardFace
-            {
-                Name           = face.Name,
-                ManaCost       = ManaCost.Parse( face.ManaCost ),
-                Cmc            = face.Cmc.HasValue ? (int)face.Cmc.Value : null,
-                TypeLine       = face.TypeLine,
-                OracleText     = face.OracleText,
-                Colors         = ManaColorExtensions.ParseList( face.Colors ),
-                ColorIndicator = ManaColorExtensions.ParseList( face.ColorIndicator ),
-                Power          = CombatValue.ParseOrNull( face.Power ),
-                Toughness      = CombatValue.ParseOrNull( face.Toughness ),
-                Loyalty        = StartingValue.ParseOrNull( face.Loyalty ),
-                Defense        = StartingValue.ParseOrNull( face.Defense ),
-                OracleId       = face.OracleId,
-                Layout         = CardLayoutParser.Parse( face.Layout ),
-            } );
-        }
-        return result;
-    }
+	private static void AddOrReplaceByLang_InPlace(
+		GameplayCardsBlob blob,
+		Dictionary<int, int> oracleSidToIndex,
+		Dictionary<int, int> oracleSidToLangSid,
+		in GameplayCardsBlob.CardRecord rec,
+		ref int replacedForEnglish )
+	{
+		if ( rec.OracleSid < 0 )
+			return;
 
-    private static IReadOnlyList<GameplayRelatedCard> MapRelatedCards( List<ScryfallRelatedCard> parts )
-    {
-        if ( parts == null || parts.Count == 0 )
-            return null;
+		bool candidateEn = string.Equals( blob.GetString( rec.LangSid ), "en", StringComparison.OrdinalIgnoreCase );
 
-        var result = new List<GameplayRelatedCard>( parts.Count );
-        foreach ( var part in parts )
-        {
-            result.Add( new GameplayRelatedCard
-            {
-                Id        = part.Id,
-                Component = part.Component,
-                Name      = part.Name,
-                TypeLine  = part.TypeLine,
-            } );
-        }
-        return result;
-    }
+		if ( oracleSidToIndex.TryGetValue( rec.OracleSid, out var existingIndex ) )
+		{
+			var existingLangSid = oracleSidToLangSid[rec.OracleSid];
+			bool existingEn = string.Equals( blob.GetString( existingLangSid ), "en", StringComparison.OrdinalIgnoreCase );
 
-    // -------------------------
-    // Write
-    // -------------------------
-    private static async Task<bool> WriteGameplayCardsAsync( Dictionary<string, GameplayCard> cards )
-    {
-        await WriteLock.WaitAsync();
-        try
-        {
-            string destPath = FileSystem.NormalizeFilename( GameplayJsonPath );
-            string tmpPath  = destPath + ".tmp";
+			// Prefer en if candidate is en and existing isn't.
+			if ( candidateEn && !existingEn )
+			{
+				blob.Cards[existingIndex] = rec;
+				oracleSidToLangSid[rec.OracleSid] = rec.LangSid;
+				replacedForEnglish++;
+			}
 
-            // Serialize to tmp
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes( cards );
+			return;
+		}
 
-            Stream tmpWrite = null;
-            try
-            {
-                tmpWrite = FileSystem.Data.OpenWrite( tmpPath, FileMode.Create );
-                await tmpWrite.WriteAsync( bytes, 0, bytes.Length );
-                await tmpWrite.FlushAsync();
-            }
-            finally
-            {
-                TryDispose( tmpWrite );
-            }
+		int newIndex = blob.Cards.Count;
+		blob.Cards.Add( rec );
+		oracleSidToIndex[rec.OracleSid] = newIndex;
+		oracleSidToLangSid[rec.OracleSid] = rec.LangSid;
+	}
 
-            // Atomic promote: delete old, copy tmp -> dest, delete tmp
-            if ( FileSystem.Data.FileExists( destPath ) )
-                FileSystem.Data.DeleteFile( destPath );
+	private static GameplayCardsBlob.CardRecord BuildCardRecord( GameplayCardsBlob blob, ScryfallCard src, CardLayout layout )
+	{
+		blob.AppendKeywords( src.Keywords, out var kwStart, out var kwCount );
 
-            await StreamCopyFileAsync( FileSystem.Data, tmpPath, destPath );
-            FileSystem.Data.DeleteFile( tmpPath );
-            return true;
-        }
-        catch ( Exception e )
-        {
-            Log.Error( $"Failed to write gameplay_cards.json: {e}" );
-            return false;
-        }
-        finally
-        {
-            WriteLock.Release();
-        }
-    }
+		return new GameplayCardsBlob.CardRecord
+		{
+			Id = src.Id.ToGuid(),
 
-    // -------------------------
-    // Meta persistence
-    // -------------------------
-    private static GameplayMeta ReadGameplayMeta()
-    {
-        string metaPath = FileSystem.NormalizeFilename( GameplayMetaPath );
+			OracleSid = blob.Intern( src.OracleId ),
+			LangSid   = blob.Intern( src.Lang ),
 
-        if ( !FileSystem.Data.FileExists( metaPath ) )
-            return null;
+			Layout = (int)layout,
 
-        try
-        {
-            using var stream = FileSystem.Data.OpenRead( metaPath );
-            return JsonSerializer.Deserialize<GameplayMeta>( stream );
-        }
-        catch
-        {
-            return null;
-        }
-    }
+			NameSid       = blob.Intern( src.Name ),
+			ManaCostSid   = blob.Intern( src.ManaCost ),
+			TypeLineSid   = blob.Intern( src.TypeLine ),
+			OracleTextSid = blob.Intern( src.OracleText ),
 
-    private static async Task WriteGameplayMetaAsync( string oracleUpdatedAt )
-    {
-        try
-        {
-            var meta = new GameplayMeta
-            {
-                ProcessedFromOracleUpdatedAt = oracleUpdatedAt,
-                ProcessedAt                 = DateTimeOffset.UtcNow.ToString( "O" ),
-            };
+			Cmc = (int)MathF.Round( (float)src.Cmc ),
 
-            byte[] bytes    = JsonSerializer.SerializeToUtf8Bytes( meta );
-            string metaPath = FileSystem.NormalizeFilename( GameplayMetaPath );
-            string tmpPath  = metaPath + ".tmp";
+			Colors         = (int)ManaColorExtensions.ParseList( src.Colors ),
+			ColorIdentity  = (int)ManaColorExtensions.ParseList( src.ColorIdentity ),
+			ColorIndicator = (int)ManaColorExtensions.ParseList( src.ColorIndicator ),
+			ProducedMana   = (int)ManaColorExtensions.ParseList( src.ProducedMana ),
 
-            Stream tmpWrite = null;
-            try
-            {
-                tmpWrite = FileSystem.Data.OpenWrite( tmpPath, FileMode.Create );
-                await tmpWrite.WriteAsync( bytes, 0, bytes.Length );
-                await tmpWrite.FlushAsync();
-            }
-            finally
-            {
-                TryDispose( tmpWrite );
-            }
+			PowerSid     = blob.Intern( src.Power ),
+			ToughnessSid = blob.Intern( src.Toughness ),
+			LoyaltySid   = blob.Intern( src.Loyalty ),
+			DefenseSid   = blob.Intern( src.Defense ),
 
-            if ( FileSystem.Data.FileExists( metaPath ) )
-                FileSystem.Data.DeleteFile( metaPath );
+			KeywordsStart = kwStart,
+			KeywordsCount = kwCount
+		};
+	}
 
-            await StreamCopyFileAsync( FileSystem.Data, tmpPath, metaPath );
-            FileSystem.Data.DeleteFile( tmpPath );
-        }
-        catch ( Exception e )
-        {
-            // Non-fatal — worst case we reprocess on next boot
-            Log.Warning( $"Failed to write gameplay meta: {e.Message}" );
-        }
-    }
+	private static GameplayCardsBlob.CardRecord BuildFaceRecord( GameplayCardsBlob blob, ScryfallCard parent, ScryfallCardFace face, CardLayout parentLayout )
+	{
+		var faceColors = ManaColorExtensions.ParseList( face.Colors );
+		if ( faceColors == ManaColor.None )
+			faceColors = ManaColorExtensions.ParseList( parent.Colors );
 
-    // -------------------------
-    // Shared file utilities (mirrors DiskDataSystem helpers)
-    // -------------------------
-    private static async Task StreamCopyFileAsync( BaseFileSystem fs, string src, string dst )
-    {
-        Stream input  = null;
-        Stream output = null;
-        try
-        {
-            input  = fs.OpenRead( src );
-            output = fs.OpenWrite( dst, FileMode.Create );
-            await input.CopyToAsync( output, bufferSize: 1024 * 1024 );
-            await output.FlushAsync();
-        }
-        finally
-        {
-            TryDispose( output );
-            TryDispose( input );
-        }
-    }
+		blob.AppendKeywords( parent.Keywords, out var kwStart, out var kwCount );
 
-    private static void TryDispose( IDisposable disposable )
-    {
-        try { disposable?.Dispose(); }
-        catch ( Exception e ) { Log.Warning( $"Dispose failed: {e.Message}" ); }
-    }
+		var faceLayout = CardLayoutParser.Parse( face.Layout );
+		if ( faceLayout == CardLayout.Unknown )
+			faceLayout = parentLayout;
 
-    // -------------------------
-    // Meta DTO
-    // -------------------------
-    private sealed class GameplayMeta
-    {
-        [JsonPropertyName( "processed_from_oracle_updated_at" )]
-        public string ProcessedFromOracleUpdatedAt { get; set; }
+		return new GameplayCardsBlob.CardRecord
+		{
+			Id = parent.Id.ToGuid(),
 
-        [JsonPropertyName( "processed_at" )]
-        public string ProcessedAt { get; set; }
-    }
+			OracleSid = blob.Intern( face.OracleId ),
+			LangSid   = blob.Intern( parent.Lang ),
+
+			Layout = (int)faceLayout,
+
+			NameSid       = blob.Intern( face.Name ),
+			ManaCostSid   = blob.Intern( face.ManaCost ),
+			TypeLineSid   = blob.Intern( face.TypeLine ?? parent.TypeLine ),
+			OracleTextSid = blob.Intern( face.OracleText ),
+
+			Cmc = face.Cmc.HasValue ? (int)MathF.Round( (float)face.Cmc.Value ) : (int)MathF.Round( (float)parent.Cmc ),
+
+			Colors         = (int)faceColors,
+			ColorIdentity  = (int)ManaColorExtensions.ParseList( parent.ColorIdentity ),
+			ColorIndicator = (int)ManaColorExtensions.ParseList( face.ColorIndicator ),
+			ProducedMana   = (int)ManaColorExtensions.ParseList( parent.ProducedMana ),
+
+			PowerSid     = blob.Intern( face.Power ),
+			ToughnessSid = blob.Intern( face.Toughness ),
+			LoyaltySid   = blob.Intern( face.Loyalty ),
+			DefenseSid   = blob.Intern( face.Defense ),
+
+			KeywordsStart = kwStart,
+			KeywordsCount = kwCount
+		};
+	}
+
+	private static bool WriteBlob( string blobPath, GameplayCardsBlob blob )
+	{
+		string tmpPath = blobPath + ".tmp";
+
+		try
+		{
+			var bs = ByteStream.Create( 1024 * 1024 );
+			try
+			{
+				bs.Write<int>( blob.Version ); // header
+				var writer = new BlobData.Writer { Stream = bs };
+				blob.Serialize( ref writer );
+
+				var bytes = writer.Stream.ToArray();
+
+				if ( bytes.Length <= 4 )
+					throw new Exception( $"Gameplay blob serialized to {bytes.Length} bytes (expected > 4)." );
+
+				FileSystem.Data.WriteAllBytes( tmpPath, bytes );
+			}
+			finally
+			{
+				bs.Dispose();
+			}
+
+			// Promote tmp -> final
+			if ( FileSystem.Data.FileExists( blobPath ) )
+				FileSystem.Data.DeleteFile( blobPath );
+
+			// If you don’t want StreamCopyFileAsync, you can just ReadAllBytes+WriteAllBytes,
+			// but since you already have StreamCopyFileAsync in DiskDataSystem, reuse it.
+			using ( var input = FileSystem.Data.OpenRead( tmpPath ) )
+				using ( var output = FileSystem.Data.OpenWrite( blobPath, FileMode.Create ) )
+				{
+					input.CopyTo( output, 1024 * 1024 );
+					output.Flush();
+				}
+
+			FileSystem.Data.DeleteFile( tmpPath );
+			return true;
+		}
+		catch ( Exception e )
+		{
+			Log.Error( $"Failed to write gameplay blob: {e}" );
+			try { if ( FileSystem.Data.FileExists( tmpPath ) ) FileSystem.Data.DeleteFile( tmpPath ); } catch {}
+			return false;
+		}
+	}
+
+
+	private static void WriteGameplayMeta( string metaPath, string oracleUpdatedAt )
+	{
+		try
+		{
+			var meta = new GameplayMeta
+			{
+				ProcessedFromOracleUpdatedAt = oracleUpdatedAt,
+				ProcessedAt                  = DateTimeOffset.UtcNow.ToString( "O" ),
+			};
+
+			FileSystem.Data.WriteJson( metaPath, meta );
+		}
+		catch ( Exception e )
+		{
+			Log.Warning( $"Failed to write gameplay meta: {e.Message}" );
+		}
+	}
+
+	private sealed class GameplayMeta
+	{
+		public string ProcessedFromOracleUpdatedAt { get; init; }
+		public string ProcessedAt { get; init; }
+	}
 }
