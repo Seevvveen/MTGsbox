@@ -1,6 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 
-namespace Sandbox.__Rewrite;
+namespace Sandbox.ScryfallData.Types;
 
 public sealed class ScryfallCard
 {
@@ -132,4 +133,12 @@ public sealed class ScryfallPrices
     [JsonPropertyName( "eur_foil" )]   public string EurFoil   { get; set; }
     [JsonPropertyName( "eur_etched" )] public string EurEtched { get; set; }
     [JsonPropertyName( "tix" )]        public string Tix       { get; set; }
+}
+
+public sealed class RelatedCard
+{
+    public Guid                  ScryfallId  { get; init; }
+    public RelatedCardComponent  Component   { get; init; }
+    public string                Name        { get; init; }
+    public string                TypeLine    { get; init; }
 }

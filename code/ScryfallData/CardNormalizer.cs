@@ -1,7 +1,7 @@
 ﻿using System;
-using Sandbox.__Rewrite.Types;
+using Sandbox.ScryfallData.Types;
 
-namespace Sandbox.__Rewrite;
+namespace Sandbox.ScryfallData;
 
 // ═══════════════════════════════════════════════════════════════════
 //  SHARED PARSE HELPERS
@@ -9,7 +9,7 @@ namespace Sandbox.__Rewrite;
 
 internal static class ScryfallParsers
 {
-    internal static readonly HashSet<string> KnownSupertypes = new( StringComparer.OrdinalIgnoreCase )
+    private static readonly HashSet<string> KnownSupertypes = new( StringComparer.OrdinalIgnoreCase )
     {
         "Legendary", "Basic", "Snow", "World", "Ongoing", "Elite", "Host", "Token"
     };
@@ -79,13 +79,10 @@ internal static class ScryfallParsers
         if ( int.TryParse( clean, out int generic ) )
             return new ManaCostSymbol( $"{{{token}}}", null, null, generic, true, false, false, false );
 
-        if ( isVariable )
-            return new ManaCostSymbol( $"{{{token}}}", null, null, 0f, false, false, false, true );
-
-        return new ManaCostSymbol( $"{{{token}}}", ParseSingleColor( clean ), null, 1f, false, false, isPhyrexian, false );
+        return isVariable ? new ManaCostSymbol( $"{{{token}}}", null, null, 0f, false, false, false, true ) : new ManaCostSymbol( $"{{{token}}}", ParseSingleColor( clean ), null, 1f, false, false, isPhyrexian, false );
     }
 
-    internal static MtgColor? ParseSingleColor( string s ) => s switch
+    private static MtgColor? ParseSingleColor( string s ) => s switch
     {
         "W" => MtgColor.White,
         "U" => MtgColor.Blue,
@@ -222,11 +219,11 @@ public static class CardNormalizer
 {
     public static GameplayCard Normalize( ScryfallCard raw )
     {
-        bool isMultiFace = raw.CardFaces is { Count: > 1 };
+        var isMultiFace = raw.CardFaces is { Count: > 1 };
 
         var faces = isMultiFace
             ? raw.CardFaces.ConvertAll( NormalizeFace )
-            : new List<GameplayFace> { NormalizeSingleFace( raw ) };
+            : [NormalizeSingleFace(raw)];
 
         var (supers, types, subs) = ScryfallParsers.ParseTypeLine( raw.TypeLine );
 

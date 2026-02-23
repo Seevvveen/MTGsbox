@@ -1,20 +1,17 @@
 ﻿using System;
 
-namespace Sandbox.__Rewrite.Types;
+namespace Sandbox.ScryfallData.Types;
 
 // Packed legality across all formats — 2 bits per format
 // Stored as a ulong (supports up to 32 formats)
-public readonly struct LegalityMap
+public readonly struct LegalityMap(ulong packed)
 {
-    private readonly ulong _packed;
-    public ulong Packed => _packed;
-    
-    public LegalityMap( ulong packed ) => _packed = packed;
+    public ulong Packed => packed;
 
-    public MtgLegality Get( MtgFormat format )
+    private MtgLegality Get( MtgFormat format )
     {
         int shift = (int)format * 2;
-        return (MtgLegality)(( _packed >> shift ) & 0b11);
+        return (MtgLegality)(( packed >> shift ) & 0b11);
     }
 
     public bool IsLegal( MtgFormat format ) => Get( format ) == MtgLegality.Legal;

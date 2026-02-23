@@ -1,16 +1,15 @@
 ﻿using System;
-using Sandbox.__Rewrite.Data;
-using Sandbox.__Rewrite.Types;
+using Sandbox.ScryfallData.Types;
 
-namespace Sandbox.__Rewrite;
+namespace Sandbox.ScryfallData;
 
 public static class CardDatabase
 {
-    private static CardBlobReader     _cards;
-    private static PrintingBlobReader _printings;
+    [SkipHotload] private static CardBlobReader     _cards;
+    [SkipHotload] private static PrintingBlobReader _printings;
 
-    public static bool IsReady         => _cards != null;
-    public static bool PrintingsReady  => _printings != null;
+    public static bool IsReady        => _cards     != null;
+    public static bool PrintingsReady => _printings != null;
 
     public static void Initialize( CardBlobReader cards )
     {
@@ -24,8 +23,6 @@ public static class CardDatabase
         Log.Info( $"CardDatabase ready — {printings.PrintingCount} printings indexed." );
     }
 
-    // ── Oracle lookups ───────────────────────────────────────────
-
     public static GameplayCard Fetch( Guid oracleId )
         => _cards?.Fetch( oracleId );
 
@@ -37,8 +34,6 @@ public static class CardDatabase
 
     public static int CardCount
         => _cards?.CardCount ?? 0;
-
-    // ── Printing lookups ─────────────────────────────────────────
 
     public static GameplayPrinting FetchPrinting( Guid scryfallId )
         => _printings?.Fetch( scryfallId );
@@ -55,13 +50,9 @@ public static class CardDatabase
     public static int PrintingCount
         => _printings?.PrintingCount ?? 0;
 
-    // ── Combined lookups ─────────────────────────────────────────
-
-    /// Fetch oracle card and its preferred printing in one call.
     public static (GameplayCard Card, GameplayPrinting Printing) FetchWithPreferredPrinting( Guid oracleId )
         => (_cards?.Fetch( oracleId ), _printings?.FetchPreferred( oracleId ));
 
-    /// Fetch oracle card and all of its printings in one call.
     public static (GameplayCard Card, List<GameplayPrinting> Printings) FetchWithAllPrintings( Guid oracleId )
         => (_cards?.Fetch( oracleId ), _printings?.FetchAllForOracle( oracleId ) ?? new());
 }

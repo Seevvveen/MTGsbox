@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using Sandbox.__Rewrite.Types;
+using Sandbox.ScryfallData.Types;
 
-namespace Sandbox.__Rewrite.Data;
+namespace Sandbox.ScryfallData;
 
 // ═══════════════════════════════════════════════════════════════════
 //  CARD BLOB  (oracle data only)

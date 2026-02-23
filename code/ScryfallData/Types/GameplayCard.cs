@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sandbox.__Rewrite.Types;
+namespace Sandbox.ScryfallData.Types;
 
 public sealed class GameplayCard
 {

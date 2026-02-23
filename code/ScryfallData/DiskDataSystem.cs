@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Sandbox.__Rewrite.Data;
-using Sandbox.__Rewrite.Types;
+using Sandbox.ScryfallData.Types;
 
-namespace Sandbox.__Rewrite;
+namespace Sandbox.ScryfallData;
 
-public class DiskDataSystem : GameObjectSystem, ISceneStartup
+public class DiskDataSystem(Scene scene) : GameObjectSystem(scene), ISceneStartup
 {
     // -------------------------
     // Constants
@@ -46,12 +44,12 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
     };
 
     private static readonly TimeSpan MinRedownloadInterval = TimeSpan.FromHours( 24 );
+    [SkipHotload]
     private static readonly System.Threading.SemaphoreSlim MetaLock = new( 1, 1 );
 
     // -------------------------
     // Startup
     // -------------------------
-    public DiskDataSystem( Scene scene ) : base( scene ) {}
 
     void ISceneStartup.OnClientInitialize()
     {
@@ -212,7 +210,7 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
     // -------------------------
     // Printing blob build  (default_cards → GameplayPrinting)
     // -------------------------
-    private async Task<bool> BuildPrintingBlobAsync( string defaultUpdatedAt )
+    private static async Task<bool> BuildPrintingBlobAsync( string defaultUpdatedAt )
     {
         Log.Info( "Normalizing default cards and writing printing blob…" );
         try
@@ -311,9 +309,9 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
             try
             {
                 string url   = $"{ScryfallApiBase}/catalog/{catalog}";
-                var response = await Sandbox.Http.RequestAsync( url, "GET", null, headers );
+                var response = await Http.RequestAsync( url, "GET", null, headers );
 
-                if ( response == null || !response.IsSuccessStatusCode )
+                if ( response is not { IsSuccessStatusCode: true } )
                 {
                     Log.Warning( $"Catalog {catalog} returned HTTP {(int?)response?.StatusCode}" );
                     continue;
@@ -325,7 +323,7 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
                 try
                 {
                     netStream = await response.Content.ReadAsStreamAsync();
-                    outStream = FileSystem.Data.OpenWrite( destPath, FileMode.Create );
+                    outStream = FileSystem.Data.OpenWrite( destPath );
                     await netStream.CopyToAsync( outStream, bufferSize: 256 * 1024 );
                     await outStream.FlushAsync();
                     Log.Info( $"Catalog {catalog} saved." );
@@ -428,9 +426,9 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
 
         try
         {
-            response = await Sandbox.Http.RequestAsync( url, "GET", null, headers );
+            response = await Http.RequestAsync( url, "GET", null, headers );
 
-            if ( response == null || !response.IsSuccessStatusCode )
+            if ( response is not { IsSuccessStatusCode: true } )
                 throw new HttpRequestException( $"HTTP {(int?)response?.StatusCode} {response?.ReasonPhrase}" );
 
             netStream    = await response.Content.ReadAsStreamAsync();
@@ -438,7 +436,7 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
                 ? new GZipStream( netStream, CompressionMode.Decompress, leaveOpen: true )
                 : netStream;
 
-            outStream = FileSystem.Data.OpenWrite( tmpPath, FileMode.Create );
+            outStream = FileSystem.Data.OpenWrite( tmpPath );
             await decodeStream.CopyToAsync( outStream, bufferSize: 1024 * 1024 );
             await outStream.FlushAsync();
             return true;
@@ -486,7 +484,7 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
         try
         {
             input  = fs.OpenRead( src );
-            output = fs.OpenWrite( dst, FileMode.Create );
+            output = fs.OpenWrite( dst );
             await input.CopyToAsync( output, bufferSize: 1024 * 1024 );
             await output.FlushAsync();
         }
@@ -499,14 +497,17 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
 
     private static bool ResponseIsGzipped( HttpResponseMessage response, string urlFallback )
     {
-        var encodings = response?.Content?.Headers?.ContentEncoding;
-        if ( encodings != null )
-            foreach ( var enc in encodings )
-                if ( string.Equals( enc, "gzip", StringComparison.OrdinalIgnoreCase ) )
-                    return true;
+        var encodings = response?.Content.Headers.ContentEncoding;
+        if (encodings == null)
+            return !string.IsNullOrEmpty(urlFallback)
+                   && urlFallback.EndsWith(".gz", StringComparison.OrdinalIgnoreCase);
+        if (encodings.Any(enc => string.Equals( enc, "gzip", StringComparison.OrdinalIgnoreCase )))
+        {
+            return true;
+        }
 
         return !string.IsNullOrEmpty( urlFallback )
-            && urlFallback.EndsWith( ".gz", StringComparison.OrdinalIgnoreCase );
+               && urlFallback.EndsWith( ".gz", StringComparison.OrdinalIgnoreCase );
     }
 
 
@@ -575,7 +576,7 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
             Stream tmpWrite = null;
             try
             {
-                tmpWrite = FileSystem.Data.OpenWrite( tmpPath, FileMode.Create );
+                tmpWrite = FileSystem.Data.OpenWrite( tmpPath );
                 await tmpWrite.WriteAsync( bytes, 0, bytes.Length );
                 await tmpWrite.FlushAsync();
             }
@@ -644,7 +645,7 @@ public class DiskDataSystem : GameObjectSystem, ISceneStartup
 
     private sealed class OracleMeta
     {
-        [JsonPropertyName( "last_updated_at" )]    public string LastUpdatedAt    { get; set; }
-        [JsonPropertyName( "last_downloaded_at" )] public string LastDownloadedAt { get; set; }
+        [JsonPropertyName( "last_updated_at" )]    public string LastUpdatedAt    { get; init; }
+        [JsonPropertyName( "last_downloaded_at" )] public string LastDownloadedAt { get; init; }
     }
 }

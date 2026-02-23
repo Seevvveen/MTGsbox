@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sandbox.__Rewrite;
+namespace Sandbox.ScryfallData.Types;
 
 public enum MtgColor : byte
 {

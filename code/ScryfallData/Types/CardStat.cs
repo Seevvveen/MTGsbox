@@ -1,4 +1,4 @@
-﻿namespace Sandbox.__Rewrite.Types;
+﻿namespace Sandbox.ScryfallData.Types;
 
 public readonly struct CardStat
 {
