@@ -1,98 +1,67 @@
 ﻿using System;
-using Sandbox;
-using Sandbox.__Rewrite.Gameplay;
+using Sandbox.__Rewrite.Data;
+using Sandbox.__Rewrite.Types;
 
 namespace Sandbox.__Rewrite;
 
 public static class CardDatabase
 {
-    private const string GameplayBlobPath = "scryfall/gameplay_cards.blob";
+    private static CardBlobReader     _cards;
+    private static PrintingBlobReader _printings;
 
-    private static GameplayCardsBlob _blob;
-    private static bool _loaded;
+    public static bool IsReady         => _cards != null;
+    public static bool PrintingsReady  => _printings != null;
 
-    public static bool IsLoaded => _loaded;
-
-    public static bool TryLoadFromDisk()
+    public static void Initialize( CardBlobReader cards )
     {
-        try
-        {
-            var path = FileSystem.NormalizeFilename( GameplayBlobPath );
-            if ( !FileSystem.Data.FileExists( path ) )
-            {
-                Log.Warning( $"Gameplay blob missing at {path}" );
-                _loaded = false;
-                return false;
-            }
-
-            var bytes = FileSystem.Data.ReadAllBytes( path );
-            Log.Info( $"Loading gameplay blob bytes: {bytes.Length}" );
-            if ( bytes == null || bytes.Length == 0 )
-            {
-                Log.Warning( "Gameplay blob file empty." );
-                _loaded = false;
-                return false;
-            }
-
-            _blob = new GameplayCardsBlob();
-
-            // Our simple file format: [int version][blob payload...]
-            var bs = ByteStream.CreateReader( bytes );
-            int dataVersion = bs.Read<int>();
-
-            var reader = new BlobData.Reader { Stream = bs, DataVersion = dataVersion };
-
-            if ( dataVersion < _blob.Version )
-                _blob.Upgrade( ref reader, dataVersion );
-            else
-                _blob.Deserialize( ref reader );
-
-            // Make sure index is ready.
-            _blob.RebuildOracleIndex();
-
-            _loaded = true;
-            Log.Info( $"CardDatabase loaded: {_blob.Cards.Count} records." );
-            return true;
-        }
-        catch ( Exception e )
-        {
-            Log.Error( $"CardDatabase load failed: {e}" );
-            _loaded = false;
-            return false;
-        }
+        _cards = cards;
+        Log.Info( $"CardDatabase ready — {cards.CardCount} oracle cards indexed." );
     }
 
-    public static bool TryGetRecordByOracleId( string oracleId, out GameplayCardsBlob.CardRecord rec )
+    public static void InitializePrintings( PrintingBlobReader printings )
     {
-        rec = default;
-
-        if ( !_loaded || _blob == null )
-            return false;
-
-        if ( !_blob.TryGetIndexByOracleId( oracleId, out var index ) )
-            return false;
-
-        rec = _blob.Cards[index];
-        return true;
+        _printings = printings;
+        Log.Info( $"CardDatabase ready — {printings.PrintingCount} printings indexed." );
     }
 
-    /// <summary>
-    /// Convenience: returns common string fields without allocating a full GameplayCard.
-    /// </summary>
-    public static bool TryGetTextFieldsByOracleId(
-        string oracleId,
-        out string name,
-        out string typeLine,
-        out string oracleText )
-    {
-        name = typeLine = oracleText = null;
+    // ── Oracle lookups ───────────────────────────────────────────
 
-        if ( !TryGetRecordByOracleId( oracleId, out var rec ) )
-            return false;
+    public static GameplayCard Fetch( Guid oracleId )
+        => _cards?.Fetch( oracleId );
 
-        name = _blob.GetString( rec.NameSid );
-        typeLine = _blob.GetString( rec.TypeLineSid );
-        oracleText = _blob.GetString( rec.OracleTextSid );
-        return true;
-    }
+    public static List<GameplayCard> FetchBatch( IEnumerable<Guid> oracleIds )
+        => _cards?.FetchBatch( oracleIds ) ?? new();
+
+    public static bool Contains( Guid oracleId )
+        => _cards?.Contains( oracleId ) ?? false;
+
+    public static int CardCount
+        => _cards?.CardCount ?? 0;
+
+    // ── Printing lookups ─────────────────────────────────────────
+
+    public static GameplayPrinting FetchPrinting( Guid scryfallId )
+        => _printings?.Fetch( scryfallId );
+
+    public static GameplayPrinting FetchPreferredPrinting( Guid oracleId )
+        => _printings?.FetchPreferred( oracleId );
+
+    public static List<GameplayPrinting> FetchAllPrintings( Guid oracleId )
+        => _printings?.FetchAllForOracle( oracleId ) ?? new();
+
+    public static bool ContainsPrinting( Guid scryfallId )
+        => _printings?.Contains( scryfallId ) ?? false;
+
+    public static int PrintingCount
+        => _printings?.PrintingCount ?? 0;
+
+    // ── Combined lookups ─────────────────────────────────────────
+
+    /// Fetch oracle card and its preferred printing in one call.
+    public static (GameplayCard Card, GameplayPrinting Printing) FetchWithPreferredPrinting( Guid oracleId )
+        => (_cards?.Fetch( oracleId ), _printings?.FetchPreferred( oracleId ));
+
+    /// Fetch oracle card and all of its printings in one call.
+    public static (GameplayCard Card, List<GameplayPrinting> Printings) FetchWithAllPrintings( Guid oracleId )
+        => (_cards?.Fetch( oracleId ), _printings?.FetchAllForOracle( oracleId ) ?? new());
 }
